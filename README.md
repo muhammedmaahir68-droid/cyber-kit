@@ -19,11 +19,14 @@ This architecture deploys the **FastAPI Python Backend on Render** (for full per
    * **Name**: `cyber-kit-backend`
    * **Runtime**: `Python 3`
    * **Build Command**:  
-     `pip install -r backend/requirements.txt && pip install pydantic-settings && python backend/train_model.py`
+     `pip install -r backend/requirements.txt && pip install pydantic-settings && PYTHONPATH=backend python backend/train_model.py`
    * **Start Command**:  
-     `python -m uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
-5. Click **Create Web Service**.
-6. Copy your Render Backend URL (e.g. `https://cyber-kit-backend.onrender.com`).
+     `PYTHONPATH=backend python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Under **Environment Variables**, add:
+   * **Key**: `PYTHONPATH` | **Value**: `backend`
+   * **Key**: `PYTHON_VERSION` | **Value**: `3.10.12`
+6. Click **Create Web Service**.
+7. Copy your Render Backend URL (e.g. `https://cyber-kit-backend.onrender.com`).
 
 ---
 
