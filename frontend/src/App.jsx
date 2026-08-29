@@ -14,14 +14,20 @@ export default function App() {
   const [agentTraces, setAgentTraces] = useState([]);
   const [sha256Hash, setSha256Hash] = useState('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
 
+  const getApiBase = () => {
+    if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+    return window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+  };
+
   const startScan = async () => {
     setIsScanning(true);
     setProgress(0);
     setEvidenceItems([]);
     setAgentTraces([]);
     
+    const apiBase = getApiBase();
     try {
-      const res = await fetch('http://localhost:8000/api/v1/scan/start', { method: 'POST' });
+      const res = await fetch(`${apiBase}/api/v1/scan/start`, { method: 'POST' });
       if (res.ok) {
         const data = await res.json();
         setSessionUuid(data.session_uuid);
@@ -88,7 +94,7 @@ export default function App() {
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-3">
-              CYBER KIT <span className="text-xs px-2.5 py-1 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 font-mono">v1.0-UNIFIED</span>
+              CYBER KIT <span className="text-xs px-2.5 py-1 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 font-mono">v1.0-ENTERPRISE</span>
             </h1>
             <p className="text-xs text-slate-400">On-Scene Digital Forensics, Local ML Triage, Dial 100/112 ERSS Mesh & Biometric Security</p>
           </div>

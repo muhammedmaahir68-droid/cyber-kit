@@ -6,13 +6,18 @@ export default function FacialRecognitionScanner() {
   const [isScanning, setIsScanning] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
 
+  const getApiBase = () => {
+    if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+    return window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+  };
+
   const runAllIndiaFacialScan = async (presetOverride, photoDataUrl) => {
     const preset = presetOverride || photoPreset;
     const photoToUse = photoDataUrl || selectedPhoto;
     setIsScanning(true);
     setSearchResult(null);
 
-    const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+    const apiBase = getApiBase();
 
     try {
       const res = await fetch(`${apiBase}/api/v1/national-sec/scan-suspect-photo`, {

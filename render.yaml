@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: cyber-kit-backend
+    env: python
+    region: singapore
+    buildCommand: "pip install -r backend/requirements.txt && pip install pydantic-settings && python backend/train_model.py"
+    startCommand: "python -m uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: HW_WRITE_BLOCKER_ENFORCED
+        value: "True"

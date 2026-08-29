@@ -7,6 +7,11 @@ export default function EmergencyMesh() {
   const [isPhotoScanning, setIsPhotoScanning] = useState(false);
   const [approvalStatus, setApprovalStatus] = useState(null);
 
+  const getApiBase = () => {
+    if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+    return window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+  };
+
   const activeAlerts = [
     {
       uuid: 'ERSS-2026-9912',
@@ -30,8 +35,9 @@ export default function EmergencyMesh() {
 
   const handlePhotoScan = async () => {
     setIsPhotoScanning(true);
+    const apiBase = getApiBase();
     try {
-      const res = await fetch('http://localhost:8000/api/v1/national-sec/scan-suspect-photo', {
+      const res = await fetch(`${apiBase}/api/v1/national-sec/scan-suspect-photo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ photo_b64: 'DATA_SUSPECT' })
@@ -59,8 +65,9 @@ export default function EmergencyMesh() {
   };
 
   const requestApproval = async () => {
+    const apiBase = getApiBase();
     try {
-      const res = await fetch('http://localhost:8000/api/v1/national-sec/request-approval', {
+      const res = await fetch(`${apiBase}/api/v1/national-sec/request-approval`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_uuid: 'FX-20260829-9941', requesting_officer_id: 'OFFICER #4412' })

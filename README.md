@@ -1,42 +1,47 @@
-# Cyber Kit — On-Scene Digital Forensics & Edge AI Triage Platform
+# Cyber Kit — Enterprise Digital Forensics & Edge AI Triage Platform
 
-**Cyber Kit** is an enterprise digital forensics and field threat triage platform designed for law enforcement officers. It combines hardware-enforced read-only write blocking, raw storage sector carving, local quantized Machine Learning models, an **offline Agentic AI reasoning engine**, an **All-India NCRB Suspect Photo Scanner**, and **Dial 100/112 ERSS Emergency Patrol Dispatch**.
-
----
-
-## ⚡ Deployment on Vercel
-
-This repository is pre-configured with `vercel.json` for 1-click full-stack deployment on Vercel (building the React + Vite frontend and running the Python FastAPI backend serverless functions automatically).
-
-### Option 1: Vercel Dashboard (Recommended)
-
-1. Go to **[Vercel Dashboard](https://vercel.com/new)** and sign in.
-2. Click **"Import Repository"** and select `muhammedmaahir68-droid/cyber-kit`.
-3. Vercel will automatically detect `vercel.json`.
-4. Click **"Deploy"**.
-5. Once deployment completes, Vercel will provide your live public production URL (e.g., `https://cyber-kit.vercel.app`)!
+**Cyber Kit** is an enterprise digital forensics and field threat triage platform designed for law enforcement. It features hardware write-blocker enforcement, raw sector carving, local ML model triage, offline Agentic AI reasoning, an **All-India NCRB Suspect Photo Scanner**, and **Dial 100/112 ERSS Emergency Patrol Mesh**.
 
 ---
 
-### Option 2: Deploying via Vercel CLI
+## 🚀 Recommended Deployment: Render (Backend) + Vercel (Frontend)
 
-```bash
-# 1. Install Vercel CLI
-npm install -g vercel
+This architecture deploys the **FastAPI Python Backend on Render** (for full persistent server execution, SQLite database, and ML models) and the **React SPA Frontend on Vercel** (for high-speed CDN delivery).
 
-# 2. Login to Vercel
-vercel login
+---
 
-# 3. Deploy to production
-cd "C:\Users\mahir\OneDrive\Desktop\cyber kit"
-vercel --prod
-```
+### Step 1: Deploy Backend on Render (`https://render.com`)
+
+1. Log in to **[Render Dashboard](https://dashboard.render.com)**.
+2. Click **New +** $\rightarrow$ **Web Service**.
+3. Connect your GitHub repository: `muhammedmaahir68-droid/cyber-kit`.
+4. Configure the Web Service settings:
+   * **Name**: `cyber-kit-backend`
+   * **Runtime**: `Python 3`
+   * **Build Command**:  
+     `pip install -r backend/requirements.txt && pip install pydantic-settings && python backend/train_model.py`
+   * **Start Command**:  
+     `python -m uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
+5. Click **Create Web Service**.
+6. Copy your Render Backend URL (e.g. `https://cyber-kit-backend.onrender.com`).
+
+---
+
+### Step 2: Deploy Frontend on Vercel (`https://vercel.com`)
+
+1. Log in to **[Vercel Dashboard](https://vercel.com/new)**.
+2. Click **Import Repository** and select `muhammedmaahir68-droid/cyber-kit`.
+3. Under **Environment Variables**, add:
+   * **Key**: `VITE_API_URL`
+   * **Value**: `https://cyber-kit-backend.onrender.com` *(Replace with your Render URL)*
+4. Click **Deploy**.
+5. Vercel will build and host your frontend on a fast global CDN (e.g. `https://cyber-kit.vercel.app`)!
 
 ---
 
 ## 💻 Local Quickstart Guide
 
-### Option 1: Running with Python & Node
+### Option 1: Running via Python & Node
 1. **Backend**:
    ```bash
    cd backend
@@ -55,36 +60,32 @@ vercel --prod
 
 ---
 
-### Option 2: Running with Docker Compose
+### Option 2: Running via Docker Compose
 ```bash
 docker-compose up --build
 ```
-Access Frontend UI at `http://localhost:3000` and API docs at `http://localhost:8000/docs`.
 
 ---
 
-## 📂 Project Structure
+## 📂 Architecture & Directory Structure
 
 ```
 cyber kit/
-├── api/
-│   └── index.py                        # Vercel Serverless Function entrypoint
-├── backend/
+├── backend/                             # Python FastAPI Backend
 │   ├── app/
-│   │   ├── main.py                     # FastAPI application entrypoint
-│   │   ├── config.py                   # App settings & flags
-│   │   ├── db/                         # Database ORM models
+│   │   ├── main.py                     # FastAPI Entrypoint
+│   │   ├── db/                         # SQLAlchemy Database ORM
 │   │   ├── routers/                    # API Endpoints (/scan, /ai, /agent, /national-sec, /emergency)
 │   │   └── services/                   # Carving engine, Local ML, Agentic AI
-│   └── data/                           # Forensic dataset & trained .joblib model
-├── frontend/
+│   ├── data/                           # Forensic dataset & trained .joblib model
+│   └── requirements.txt                # Python Dependencies
+├── frontend/                            # React + Vite Frontend
 │   ├── index.html                      # SPA entrypoint
 │   ├── src/
 │   │   ├── App.jsx                     # Unified 4-Core Layout
 │   │   └── components/                 # FieldConsole, IntelligenceCenter, EmergencyMesh, UE5TwinView
-├── k8s/                                # Kubernetes manifests
-├── vercel.json                         # Vercel deployment configuration
-├── requirements.txt                    # Root Python dependencies for Vercel
-├── docker-compose.yml                  # Docker Compose setup
+├── render.yaml                          # Render Deployment Blueprint
+├── vercel.json                          # Vercel React SPA Routing
+├── docker-compose.yml                  # Docker Compose configuration
 └── README.md                           # Documentation
 ```
