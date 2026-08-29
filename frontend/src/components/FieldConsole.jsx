@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
+import FacialRecognitionScanner from './FacialRecognitionScanner';
 
 export default function FieldConsole({ isScanning, progress, carveSpeed, sessionUuid, sha256Hash, onStartScan }) {
   const [viewMode, setViewMode] = useState('ai_filtered'); // ai_filtered vs unfiltered_all
-  const [isUnlocked, setIsUnlocked] = useState(true);
-  const [authStatus, setAuthStatus] = useState({ officer: 'OFFICER #4412 (Cyber Cell)', badge: 'DEFENSE-LEVEL-3' });
 
   const allFiles = [
     { icon: '🖼️', name: 'CARVED_IMG_4910.JPG', size: '1.2 MB', class: 'CONTRABAND', detail: 'Weapon: Glock 19 (96.4%)' },
@@ -39,7 +38,7 @@ export default function FieldConsole({ isScanning, progress, carveSpeed, session
         <div className="flex items-center gap-2 text-xs font-mono">
           <span className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-purple-400 font-bold flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-purple-400"></span>
-            {authStatus.officer}
+            OFFICER #4412 (Cyber Cell)
           </span>
         </div>
       </div>
@@ -88,7 +87,6 @@ export default function FieldConsole({ isScanning, progress, carveSpeed, session
             <p className="text-xs text-slate-400">Switch between AI-Triage Filtered High-Risk Evidence and 100% Unfiltered Raw Storage Browser.</p>
           </div>
 
-          {/* Unified Mode Toggle */}
           <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono">
             <button
               onClick={() => setViewMode('ai_filtered')}
@@ -134,6 +132,9 @@ export default function FieldConsole({ isScanning, progress, carveSpeed, session
           ))}
         </div>
       </div>
+
+      {/* ALL-INDIA FACIAL RECOGNITION SCANNER WIDGET (PROMINENTLY INTEGRATED RIGHT HERE) */}
+      <FacialRecognitionScanner />
     </div>
   );
 }
