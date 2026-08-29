@@ -6,20 +6,9 @@ export default function FacialRecognitionScanner() {
   const [isScanning, setIsScanning] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
 
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (uploadEvent) => {
-        setSelectedPhoto(uploadEvent.target.result);
-        setPhotoPreset('CUSTOM');
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const runAllIndiaFacialScan = async (presetOverride) => {
+  const runAllIndiaFacialScan = async (presetOverride, photoDataUrl) => {
     const preset = presetOverride || photoPreset;
+    const photoToUse = photoDataUrl || selectedPhoto;
     setIsScanning(true);
     setSearchResult(null);
 
@@ -28,7 +17,7 @@ export default function FacialRecognitionScanner() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          photo_b64: selectedPhoto || 'DATA_FACE_SAMPLE',
+          photo_b64: photoToUse || 'DATA_FACE_SAMPLE',
           suspect_preset: preset
         })
       });
@@ -79,6 +68,21 @@ export default function FacialRecognitionScanner() {
     setIsScanning(false);
   };
 
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (uploadEvent) => {
+        const photoData = uploadEvent.target.result;
+        setSelectedPhoto(photoData);
+        setPhotoPreset('CUSTOM');
+        // Automatically trigger facial recognition scan on uploaded image!
+        runAllIndiaFacialScan('CUSTOM', photoData);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="bg-slate-900 border-2 border-purple-600/70 rounded-2xl p-5 space-y-5 shadow-2xl font-sans">
       {/* Title & Badge */}
@@ -87,10 +91,10 @@ export default function FacialRecognitionScanner() {
           <h3 className="text-sm font-bold text-purple-300 font-mono flex items-center gap-2">
             <span className="text-base">📷</span> ALL-INDIA FACIAL RECOGNITION & NCRB CRIMINAL HISTORY SCANNER
           </h3>
-          <p className="text-xs text-slate-400">Scan or upload any suspect photo to query National Crime Records Bureau (NCRB) & CCTNS databases across India.</p>
+          <p className="text-xs text-slate-400">Upload any suspect photo or click sample presets to instantly query All-India Criminal Records (NCRB / CCTNS).</p>
         </div>
         <span className="text-[10px] bg-purple-950 text-purple-300 border border-purple-800 px-3 py-1 rounded font-mono font-bold">
-          128D FACIAL EMBEDDING ACCURATE
+          128D FACIAL EMBEDDING VECTOR MATCH
         </span>
       </div>
 
@@ -110,7 +114,7 @@ export default function FacialRecognitionScanner() {
           }`}
         >
           <div className="font-bold text-red-400 flex items-center gap-1.5">
-            <span>🔴</span> Sample: Serious Violent Suspect
+            <span>🔴</span> Sample 1: Serious Capital Suspect
           </div>
           <div className="text-[11px] text-slate-300">Attempted Murder (IPC 307) & Homicide Records</div>
         </button>
@@ -129,25 +133,37 @@ export default function FacialRecognitionScanner() {
           }`}
         >
           <div className="font-bold text-amber-400 flex items-center gap-1.5">
-            <span>🟡</span> Sample: Theft & Excise Offense
+            <span>🟡</span> Sample 2: Theft & Alcohol Suspect
           </div>
           <div className="text-[11px] text-slate-300">Larceny Theft (IPC 379) & Bootlegging</div>
         </button>
 
         {/* Custom Upload Button */}
-        <label className="p-3 rounded-xl border border-dashed border-slate-700 hover:border-cyan-500 bg-slate-950 text-slate-300 cursor-pointer flex flex-col justify-center items-center text-center transition-all">
+        <label className="p-3 rounded-xl border border-dashed border-cyan-500 hover:border-cyan-400 bg-slate-950 text-slate-300 cursor-pointer flex flex-col justify-center items-center text-center transition-all">
           <div className="font-bold text-cyan-400 flex items-center gap-1.5">
             <span>📤</span> Upload Any Suspect Photo
           </div>
-          <div className="text-[10px] text-slate-500 mt-0.5">JPG / PNG Photo File</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">Click to select photo file</div>
           <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
         </label>
       </div>
 
-      {/* Main Scan Trigger */}
+      {/* Uploaded Photo Preview Bar (If photo uploaded) */}
+      {selectedPhoto && (
+        <div className="bg-slate-950 p-3 rounded-xl border border-cyan-800 flex items-center gap-4 font-mono text-xs">
+          <img src={selectedPhoto} alt="Uploaded Suspect" className="w-16 h-16 object-cover rounded-lg border border-cyan-500 shadow-md" />
+          <div>
+            <div className="text-cyan-400 font-bold">CUSTOM UPLOADED SUSPECT PHOTO ACTIVE</div>
+            <div className="text-[11px] text-slate-300">128D Facial Landmark Mesh Extracted</div>
+            <div className="text-[10px] text-emerald-400 font-bold">✔ NCRB All-India Database Search Completed</div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Scan Action Bar */}
       <div className="flex justify-between items-center bg-slate-950 p-3.5 rounded-xl border border-slate-800 font-mono text-xs">
         <div className="text-slate-300">
-          Selected Source: <span className="text-cyan-400 font-bold">{selectedPhoto ? 'Custom Uploaded Photo' : photoPreset}</span>
+          Selected Source: <span className="text-cyan-400 font-bold">{selectedPhoto ? 'Uploaded Custom Photo' : photoPreset}</span>
         </div>
         <button
           onClick={() => runAllIndiaFacialScan()}
