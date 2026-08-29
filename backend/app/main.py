@@ -4,12 +4,15 @@ from app.config import settings
 from app.db.database import engine, Base
 from app.routers import scan, ai, agent, national_sec, emergency_dispatch
 
-# Create DB tables
-Base.metadata.create_all(bind=engine)
+# Create DB tables safely
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    print(f"[-] DB init warning: {e}")
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="Cyber Kit: On-Scene Handheld Digital Forensics, Local ML Triage, Dial 100/112 Emergency Patrol Dispatch & Biometric Security Engine",
+    description="Cyber Kit: On-Scene Handheld Digital Forensics, Local ML Triage, Dial 100/112 ERSS Patrol Dispatch & Biometric Security Engine",
     version="1.0.0"
 )
 

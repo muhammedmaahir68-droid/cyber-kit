@@ -6,5 +6,6 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", "backend"))
 
 from app.main import app
 
-# Vercel Python runtime entrypoint
+# Export app for Vercel Python WSGI/ASGI Serverless Function
+app = app
 handler = app
