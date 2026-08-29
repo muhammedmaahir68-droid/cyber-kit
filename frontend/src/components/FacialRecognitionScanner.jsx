@@ -12,8 +12,10 @@ export default function FacialRecognitionScanner() {
     setIsScanning(true);
     setSearchResult(null);
 
+    const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+
     try {
-      const res = await fetch('http://localhost:8000/api/v1/national-sec/scan-suspect-photo', {
+      const res = await fetch(`${apiBase}/api/v1/national-sec/scan-suspect-photo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -76,7 +78,6 @@ export default function FacialRecognitionScanner() {
         const photoData = uploadEvent.target.result;
         setSelectedPhoto(photoData);
         setPhotoPreset('CUSTOM');
-        // Automatically trigger facial recognition scan on uploaded image!
         runAllIndiaFacialScan('CUSTOM', photoData);
       };
       reader.readAsDataURL(file);
