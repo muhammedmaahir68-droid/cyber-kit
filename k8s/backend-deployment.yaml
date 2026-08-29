@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cyber-kit-backend
+  labels:
+    app: cyber-kit-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cyber-kit-backend
+  template:
+    metadata:
+      labels:
+        app: cyber-kit-backend
+    spec:
+      containers:
+      - name: backend
+        image: cyber-kit-backend:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://postgres:postgres_password@cyber-kit-db:5432/cyber_kit_db"
+        - name: HW_WRITE_BLOCKER_ENFORCED
+          value: "true"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cyber-kit-backend-service
+spec:
+  selector:
+    app: cyber-kit-backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP

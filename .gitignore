@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Node / React
+node_modules/
+dist/
+build/
+.npm
+*.log
+
+# Database & OS
+*.db
+*.sqlite3
+.DS_Store
+Thumbs.db
