@@ -17,9 +17,26 @@ export default function EmergencyMesh() {
   const [showPairModal, setShowPairModal] = useState(false);
   const lastAlertUuidRef = useRef(null);
 
+  // PWA Install & Push State
+  const [pushSubscribed, setPushSubscribed] = useState(false);
+  const [deferredInstallPrompt, setDeferredInstallPrompt] = useState(null);
+  const [appInstalled, setAppInstalled] = useState(false);
+
   const getApiBase = () => {
     if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
     return window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+  };
+
+  // Convert VAPID public key from base64url to Uint8Array for push subscription
+  const urlBase64ToUint8Array = (base64String) => {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
   };
 
   // Web Audio API Police Siren
@@ -63,25 +80,77 @@ export default function EmergencyMesh() {
     }
   };
 
-  // Browser Native Push Notification Request
-  const requestPushPermission = () => {
-    if ('Notification' in window && Notification.permission !== 'granted') {
-      Notification.requestPermission().then((perm) => {
-        if (perm === 'granted') {
-          alert('✔ Real-Time Mobile Push Notifications Enabled!');
+  // Subscribe to REAL Web Push Notifications (works in background even when phone is locked)
+  const subscribeToPush = async () => {
+    const apiBase = getApiBase();
+    try {
+      // 1. Request notification permission
+      if ('Notification' in window && Notification.permission !== 'granted') {
+        const perm = await Notification.requestPermission();
+        if (perm !== 'granted') {
+          alert('❌ You must ALLOW notifications for real-time SOS alerts!');
+          return;
         }
+      }
+
+      // 2. Get service worker registration
+      const registration = await navigator.serviceWorker.ready;
+
+      // 3. Get VAPID public key from backend
+      let vapidPublicKey;
+      try {
+        const keyRes = await fetch(`${apiBase}/api/v1/push/vapid-public-key`);
+        const keyData = await keyRes.json();
+        vapidPublicKey = keyData.public_key;
+      } catch (e) {
+        // Fallback to hardcoded key
+        vapidPublicKey = 'BHeZKsSuj7QOtWGie-3bJOB4MZeWAYvt1q2b6n7Zq-G5qyommY82cxY_wZa6c2FYVq3-JXi7bf_1iWli_6gvg8E';
+      }
+
+      // 4. Subscribe to push
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
       });
-    } else if ('Notification' in window && Notification.permission === 'granted') {
-      alert('✔ Real-Time Mobile Push Notifications are ALREADY ENABLED!');
+
+      // 5. Send subscription to backend
+      const subJson = subscription.toJSON();
+      await fetch(`${apiBase}/api/v1/push/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          endpoint: subJson.endpoint,
+          keys: subJson.keys
+        })
+      });
+
+      setPushSubscribed(true);
+      alert('✅ REAL-TIME PUSH NOTIFICATIONS ACTIVATED!\n\nYour phone will now receive SOS alerts even when the screen is OFF or the browser is CLOSED!');
+
+    } catch (e) {
+      console.log('Push subscription error:', e);
+      // Fallback to basic notification permission
+      if ('Notification' in window && Notification.permission !== 'granted') {
+        Notification.requestPermission();
+      }
+      alert('⚠ Push subscription requires HTTPS or localhost. Using basic notifications instead.');
     }
   };
 
-  // Detect mobile screen width
+  // Capture PWA install prompt
   useEffect(() => {
+    const handleBeforeInstall = (e) => {
+      e.preventDefault();
+      setDeferredInstallPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    window.addEventListener('appinstalled', () => setAppInstalled(true));
+
     if (window.innerWidth < 768) {
       setIsMobileMode(true);
     }
-    requestPushPermission();
+
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
   }, []);
 
   // REAL-TIME SYNC POLL LOOP (Runs every 2 seconds to check for new alerts triggered from any device)
@@ -294,20 +363,25 @@ export default function EmergencyMesh() {
             <div className="text-amber-400 font-bold">HOW TO SHOWCASE REAL NOTIFICATIONS ON YOUR ACTUAL PHONE:</div>
             
             <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5 text-[11px]">
-              <div>1️⃣ <span className="text-cyan-400 font-bold">Open this URL on your mobile phone browser:</span></div>
+              <div>1️⃣ <span className="text-cyan-400 font-bold">Open this URL on your mobile phone browser (Chrome/Safari):</span></div>
               <div className="bg-slate-900 p-2 rounded text-emerald-400 font-bold break-all border border-slate-700">
                 https://cyber-kit-police.vercel.app
               </div>
             </div>
 
             <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
-              <div>2️⃣ On your mobile phone screen, tap: <span className="text-purple-400 font-bold">"Enable Desktop/Phone Push"</span> and tap <span className="text-emerald-400 font-bold">ALLOW</span>.</div>
+              <div>2️⃣ Tap <span className="text-emerald-400 font-bold">"📱 INSTALL APP ON PHONE"</span> or Chrome menu → <span className="text-cyan-400 font-bold">"Add to Home Screen"</span>.</div>
+              <div className="text-slate-400">This installs **CyberKit Police** as a real standalone app on your phone home screen!</div>
             </div>
 
             <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
-              <div>3️⃣ Now click <span className="text-red-400 font-bold">"🚨 TRIGGER REAL-TIME SOS"</span> on your laptop screen!</div>
+              <div>3️⃣ Open the installed app & tap <span className="text-red-400 font-bold">"🔔 ACTIVATE REAL PUSH ALERTS"</span> → Tap <span className="text-emerald-400 font-bold">ALLOW</span>.</div>
+            </div>
+
+            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
+              <div>4️⃣ Now click <span className="text-red-400 font-bold">"🚨 TRIGGER REAL-TIME SOS"</span> on your laptop screen!</div>
               <div className="text-emerald-400 font-bold pt-1">
-                👉 Your REAL MOBILE PHONE will instantly sound the police siren, vibrate in your hand, and display the emergency notification banner!
+                👉 Even if your phone screen is OFF, locked, or the app is closed, your phone will vibrate, sound the siren, and pop up the real-time emergency push alert!
               </div>
             </div>
           </div>
@@ -385,17 +459,43 @@ export default function EmergencyMesh() {
               <span>Invisible Mobile Mesh: <span className="text-emerald-400 font-bold">Officer Phone Sync (Live 2s Loop)</span></span>
             </div>
             <div className="flex flex-wrap items-center gap-2 text-[11px]">
+              {/* INSTALL APP BUTTON */}
+              {deferredInstallPrompt && !appInstalled && (
+                <button
+                  onClick={async () => {
+                    deferredInstallPrompt.prompt();
+                    const { outcome } = await deferredInstallPrompt.userChoice;
+                    if (outcome === 'accepted') setAppInstalled(true);
+                    setDeferredInstallPrompt(null);
+                  }}
+                  className="bg-emerald-950 text-emerald-300 border border-emerald-600 px-3 py-1 rounded font-bold hover:bg-emerald-900 transition-all flex items-center gap-1 animate-pulse"
+                >
+                  <span>📱</span> INSTALL APP ON PHONE
+                </button>
+              )}
+              {appInstalled && (
+                <span className="bg-emerald-950 text-emerald-300 border border-emerald-700 px-3 py-1 rounded font-bold">
+                  ✅ APP INSTALLED
+                </span>
+              )}
+
+              {/* SUBSCRIBE TO REAL PUSH */}
+              <button
+                onClick={subscribeToPush}
+                className={`px-3 py-1 rounded font-bold transition-all flex items-center gap-1 ${
+                  pushSubscribed
+                    ? 'bg-emerald-950 text-emerald-300 border border-emerald-700'
+                    : 'bg-red-950 text-red-300 border border-red-600 animate-pulse hover:bg-red-900'
+                }`}
+              >
+                {pushSubscribed ? '✅ PUSH ACTIVE (Background)' : '🔔 ACTIVATE REAL PUSH ALERTS'}
+              </button>
+
               <button
                 onClick={() => setShowPairModal(true)}
                 className="bg-cyan-950 text-cyan-300 border border-cyan-700 px-3 py-1 rounded font-bold hover:bg-cyan-900 transition-all flex items-center gap-1"
               >
                 <span>📲</span> PAIR YOUR PHYSICAL PHONE
-              </button>
-              <button
-                onClick={requestPushPermission}
-                className="bg-purple-950 text-purple-300 border border-purple-700 px-3 py-1 rounded font-bold hover:bg-purple-900 transition-all"
-              >
-                Enable Push & Siren
               </button>
             </div>
           </div>

@@ -4,10 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cyber Kit - On-Scene Digital Forensics & AI Triage Platform</title>
+    <meta name="description" content="AAROHAN-X Real-Time Digital Forensics, NCRB Facial Recognition & Dial 100/112 Emergency Patrol Mesh" />
+    <meta name="theme-color" content="#dc2626" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="CyberKit Police" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/pwa-icon-192.png" />
+    <link rel="icon" type="image/png" href="/pwa-icon-192.png" />
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   </head>
   <body class="bg-slate-950 text-slate-100 antialiased selection:bg-cyan-500 selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Register Service Worker for background push notifications
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((reg) => {
+              console.log('[CyberKit] Service Worker registered. Scope:', reg.scope);
+            })
+            .catch((err) => {
+              console.log('[CyberKit] Service Worker registration failed:', err);
+            });
+        });
+      }
+    </script>
   </body>
 </html>
