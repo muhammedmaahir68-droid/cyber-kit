@@ -24,7 +24,11 @@ export default function EmergencyMesh() {
 
   const getApiBase = () => {
     if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-    return window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+    const host = window.location.hostname;
+    if (host === 'localhost' || host.startsWith('10.') || host.startsWith('192.168.') || host.startsWith('172.')) {
+      return `http://${host}:8000`;
+    }
+    return 'https://cyber-kit-backend.onrender.com';
   };
 
   // Convert VAPID public key from base64url to Uint8Array for push subscription
@@ -454,11 +458,28 @@ export default function EmergencyMesh() {
           
           {/* Real-time Phone Mesh Connectivity Bar */}
           <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center text-xs space-y-2 md:space-y-0">
-            <div className="flex items-center gap-2 text-slate-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>Invisible Mobile Mesh: <span className="text-emerald-400 font-bold">Officer Phone Sync (Live 2s Loop)</span></span>
+            <div className="flex flex-col gap-1 text-slate-300">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Invisible Mobile Mesh: <span className="text-emerald-400 font-bold">Officer Phone Sync Active (2s Loop)</span></span>
+              </div>
+              <div className="text-[10px] text-cyan-400">
+                🌐 Connected Backend Target: <span className="font-bold underline">{getApiBase()}</span>
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-2 text-[11px]">
+              {/* TEST SOUND & PERMISSION BUTTON */}
+              <button
+                onClick={() => {
+                  triggerAudioSiren();
+                  triggerMobileVibration();
+                  subscribeToPush();
+                }}
+                className="bg-amber-950 text-amber-300 border border-amber-600 px-3 py-1.5 rounded-lg font-bold hover:bg-amber-900 transition-all flex items-center gap-1 animate-pulse"
+              >
+                <span>⚡</span> TEST SOUND & ACTIVATE ALERTS
+              </button>
+
               {/* INSTALL APP BUTTON */}
               {deferredInstallPrompt && !appInstalled && (
                 <button
@@ -468,7 +489,7 @@ export default function EmergencyMesh() {
                     if (outcome === 'accepted') setAppInstalled(true);
                     setDeferredInstallPrompt(null);
                   }}
-                  className="bg-emerald-950 text-emerald-300 border border-emerald-600 px-3 py-1 rounded font-bold hover:bg-emerald-900 transition-all flex items-center gap-1 animate-pulse"
+                  className="bg-emerald-950 text-emerald-300 border border-emerald-600 px-3 py-1.5 rounded-lg font-bold hover:bg-emerald-900 transition-all flex items-center gap-1"
                 >
                   <span>📱</span> INSTALL APP ON PHONE
                 </button>

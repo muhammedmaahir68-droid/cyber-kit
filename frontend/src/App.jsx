@@ -16,7 +16,11 @@ export default function App() {
 
   const getApiBase = () => {
     if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-    return window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+    const host = window.location.hostname;
+    if (host === 'localhost' || host.startsWith('10.') || host.startsWith('192.168.') || host.startsWith('172.')) {
+      return `http://${host}:8000`;
+    }
+    return 'https://cyber-kit-backend.onrender.com';
   };
 
   const startScan = async () => {
