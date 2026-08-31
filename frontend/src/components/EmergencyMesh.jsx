@@ -454,10 +454,19 @@ export default function EmergencyMesh() {
               <div>3️⃣ Open the installed app & tap <span className="text-red-400 font-bold">"🔔 ACTIVATE REAL PUSH ALERTS"</span> → Tap <span className="text-emerald-400 font-bold">ALLOW</span>.</div>
             </div>
 
-            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
-              <div>4️⃣ Now click <span className="text-red-400 font-bold">"🚨 TRIGGER REAL-TIME SOS"</span> on your laptop screen!</div>
-              <div className="text-emerald-400 font-bold pt-1">
-                👉 Even if your phone screen is OFF, locked, or the app is closed, your phone will vibrate, sound the siren, and pop up the real-time emergency push alert!
+            <div className="bg-slate-950 p-4 rounded-xl border border-amber-500/60 flex flex-col sm:flex-row items-center gap-4 text-[11px]">
+              <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://ntfy.sh/cyberkit-police-sih2026-maahir"
+                alt="QR Code for Mobile Push"
+                className="w-28 h-28 rounded-lg border border-slate-700 bg-white p-1 shadow-md"
+              />
+              <div className="space-y-1.5 flex-1 text-slate-200">
+                <div className="text-amber-300 font-bold text-xs">⚡ FOR GUARANTEED LOCKSCREEN PUSH ALERTS WHEN PHONE IS SLEEPING:</div>
+                <div>1. Scan QR code or install free <span className="text-cyan-400 font-bold">ntfy app</span> from Play Store / App Store.</div>
+                <div>2. Subscribe to topic: <span className="text-cyan-400 font-bold">cyberkit-police-sih2026-maahir</span></div>
+                <div className="text-emerald-400 font-bold pt-1">
+                  👉 Your phone will now VIBRATE and play POLICE SIREN even when screen is locked & sleeping!
+                </div>
               </div>
             </div>
           </div>
