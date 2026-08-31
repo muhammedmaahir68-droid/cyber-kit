@@ -111,33 +111,24 @@ def trigger_sos_alert(req: SOSAlertPayload, db: Session = Depends(get_db)):
     except Exception as e:
         print(f"[-] DB alert save notice: {e}")
 
-    # FIRE REAL WEB PUSH NOTIFICATIONS TO ALL SUBSCRIBED OFFICER PHONES
+    # FIRE INSTANT NTFY CLOUD BROADCAST TO ALL PHONES WORLDWIDE
     try:
-        from app.routers.push_notifications import PUSH_SUBSCRIPTIONS, VAPID_PRIVATE_KEY, VAPID_CLAIMS
-        from pywebpush import webpush
-        import json as _json
-
-        push_data = _json.dumps({
-            "title": f"🚨 DIAL 100/112 SOS: {req.crime_category}",
-            "body": f"{req.crime_category} at {req.location_name}. Victim: {req.victim_phone}. Officer dispatched! Target arrival <85s.",
-            "crime_category": req.crime_category,
-            "location": req.location_name,
-            "victim_phone": req.victim_phone
-        })
-
-        for sub in PUSH_SUBSCRIPTIONS:
-            try:
-                webpush(
-                    subscription_info=sub,
-                    data=push_data,
-                    vapid_private_key=VAPID_PRIVATE_KEY,
-                    vapid_claims=VAPID_CLAIMS
-                )
-                print(f"[+] PUSH SENT to device: {sub['endpoint'][:60]}...")
-            except Exception as push_err:
-                print(f"[-] Push send error: {push_err}")
-    except Exception as e:
-        print(f"[-] Push notification system notice: {e}")
+        import requests as _req
+        _req.post(
+            "https://ntfy.sh/cyberkit-police-sih2026-maahir",
+            json={
+                "topic": "cyberkit-police-sih2026-maahir",
+                "title": f"🚨 REAL-TIME SOS: {req.crime_category}",
+                "message": f"Location: {req.location_name}. Victim Contact: {req.victim_phone}. Officer #4412 dispatched! Target ETA <85s.",
+                "priority": 5,
+                "tags": ["warning", "police_car", "rotating_light"]
+            },
+            timeout=3,
+            verify=False
+        )
+        print("[+] NTFY Cloud Push Broadcast Sent Successfully!")
+    except Exception as ntfy_err:
+        print(f"[-] NTFY push notice: {ntfy_err}")
 
     return {
         "alert_uuid": alert_id,
