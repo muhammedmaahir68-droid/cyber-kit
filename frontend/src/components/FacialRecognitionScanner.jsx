@@ -12,7 +12,7 @@ export default function FacialRecognitionScanner() {
     if (host === 'localhost' || host.startsWith('10.') || host.startsWith('192.168.') || host.startsWith('172.')) {
       return `http://${host}:8000`;
     }
-    return 'https://cyber-kit-backend.onrender.com';
+    return 'https://444ef2e5cecfe1c2-157-51-88-220.serveousercontent.com';
   };
 
   const runAllIndiaFacialScan = async (presetOverride, photoDataUrl) => {

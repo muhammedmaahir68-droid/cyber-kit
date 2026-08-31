@@ -28,7 +28,7 @@ export default function EmergencyMesh() {
     if (host === 'localhost' || host.startsWith('10.') || host.startsWith('192.168.') || host.startsWith('172.')) {
       return `http://${host}:8000`;
     }
-    return 'https://cyber-kit-backend.onrender.com';
+    return 'https://444ef2e5cecfe1c2-157-51-88-220.serveousercontent.com';
   };
 
   // Convert VAPID public key from base64url to Uint8Array for push subscription
