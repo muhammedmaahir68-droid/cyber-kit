@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export default function EmergencyMesh() {
   const [subTab, setSubTab] = useState('erss_alerts'); // erss_alerts, suspect_scanner, national_hub
@@ -10,12 +10,19 @@ export default function EmergencyMesh() {
   const [etaCountdown, setEtaCountdown] = useState(85);
   const [phoneNotification, setPhoneNotification] = useState(null);
 
+  // Real-Time Sync State
+  const [alertsList, setAlertsList] = useState([]);
+  const [isMobileMode, setIsMobileMode] = useState(false);
+  const [autoSyncEnabled, setAutoSyncEnabled] = useState(true);
+  const [showPairModal, setShowPairModal] = useState(false);
+  const lastAlertUuidRef = useRef(null);
+
   const getApiBase = () => {
     if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
     return window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
   };
 
-  // Play synthetic Web Audio API Police Siren
+  // Web Audio API Police Siren
   const triggerAudioSiren = () => {
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -31,7 +38,7 @@ export default function EmergencyMesh() {
       osc.frequency.linearRampToValueAtTime(1200, ctx.currentTime + 1.2);
       osc.frequency.linearRampToValueAtTime(600, ctx.currentTime + 1.6);
 
-      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.0);
 
       osc.connect(gain);
@@ -45,18 +52,104 @@ export default function EmergencyMesh() {
     }
   };
 
-  // Request browser desktop push notification permission if supported
-  const requestPushPermission = () => {
-    if ('Notification' in window && Notification.permission !== 'granted') {
-      Notification.requestPermission();
+  // Hardware Vibration API for physical mobile phone feedback
+  const triggerMobileVibration = () => {
+    if ('vibrate' in navigator) {
+      try {
+        navigator.vibrate([300, 100, 300, 100, 500]);
+      } catch (e) {
+        console.log('Vibration failed', e);
+      }
     }
   };
 
+  // Browser Native Push Notification Request
+  const requestPushPermission = () => {
+    if ('Notification' in window && Notification.permission !== 'granted') {
+      Notification.requestPermission().then((perm) => {
+        if (perm === 'granted') {
+          alert('✔ Real-Time Mobile Push Notifications Enabled!');
+        }
+      });
+    } else if ('Notification' in window && Notification.permission === 'granted') {
+      alert('✔ Real-Time Mobile Push Notifications are ALREADY ENABLED!');
+    }
+  };
+
+  // Detect mobile screen width
   useEffect(() => {
+    if (window.innerWidth < 768) {
+      setIsMobileMode(true);
+    }
     requestPushPermission();
   }, []);
 
-  // ETA countdown timer effect when SOS is active
+  // REAL-TIME SYNC POLL LOOP (Runs every 2 seconds to check for new alerts triggered from any device)
+  useEffect(() => {
+    let syncInterval;
+
+    const fetchLiveAlerts = async () => {
+      if (!autoSyncEnabled) return;
+      const apiBase = getApiBase();
+      try {
+        const res = await fetch(`${apiBase}/api/v1/emergency/active-alerts`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.alerts && data.alerts.length > 0) {
+            setAlertsList(data.alerts);
+            const latest = data.alerts[0];
+
+            // If a brand new alert arrived that we haven't notified yet!
+            if (latest && latest.alert_uuid !== lastAlertUuidRef.current) {
+              // Ignore initial load assignment
+              if (lastAlertUuidRef.current !== null) {
+                // New alert detected from backend! Trigger real-time mobile feedback
+                triggerAudioSiren();
+                triggerMobileVibration();
+                setEtaCountdown(85);
+
+                setSosActive({
+                  alert_uuid: latest.alert_uuid,
+                  crime_category: latest.crime_category,
+                  victim_phone: latest.victim_phone || '+91-9988776655',
+                  victim_location: { name: latest.location || 'Sector 4 Market' },
+                  assigned_patrol_unit: latest.assigned_unit || 'PATROL_VAN_SECTOR_4',
+                  nearest_patrol_distance_km: 0.35,
+                  estimated_arrival_secs: 85
+                });
+
+                setPhoneNotification({
+                  title: `🚨 REAL-TIME SOS ALERT: ${latest.crime_category}`,
+                  phone: latest.victim_phone || '+91-9988776655',
+                  location: latest.location || 'Sector 4 Market',
+                  distance: '0.35 km away',
+                  officer: 'OFFICER #4412 (Your Mobile Linked via Mesh)',
+                  uuid: latest.alert_uuid
+                });
+
+                if ('Notification' in window && Notification.permission === 'granted') {
+                  new Notification(`🚨 REAL-TIME SOS ALERT (${latest.crime_category})`, {
+                    body: `Location: ${latest.location}. Officer #4412 Dispatched! Target Arrival <85s.`,
+                    icon: '/favicon.ico'
+                  });
+                }
+              }
+              lastAlertUuidRef.current = latest.alert_uuid;
+            }
+          }
+        }
+      } catch (e) {
+        console.log('Backend sync check notice');
+      }
+    };
+
+    fetchLiveAlerts();
+    syncInterval = setInterval(fetchLiveAlerts, 2000);
+
+    return () => clearInterval(syncInterval);
+  }, [autoSyncEnabled]);
+
+  // ETA countdown timer
   useEffect(() => {
     let timer;
     if (sosActive && etaCountdown > 0) {
@@ -69,6 +162,7 @@ export default function EmergencyMesh() {
 
   const handleTriggerSOS = async (type = 'WOMEN_SAFETY_SOS_CRITICAL', phone = '+91-9988776655', loc = 'Sector 4 Market (0.35 km away)', lat = 28.6139, lng = 77.2090) => {
     triggerAudioSiren();
+    triggerMobileVibration();
     setEtaCountdown(85);
 
     const apiBase = getApiBase();
@@ -94,8 +188,9 @@ export default function EmergencyMesh() {
     }
 
     if (!alertData) {
+      const generatedUuid = 'ERSS-' + Math.floor(1000 + Math.random() * 9000);
       alertData = {
-        alert_uuid: 'ERSS-' + Math.floor(1000 + Math.random() * 9000),
+        alert_uuid: generatedUuid,
         source_system: 'DIAL_100_112_ERSS_NATIONAL',
         crime_category: type,
         victim_phone: phone,
@@ -109,19 +204,18 @@ export default function EmergencyMesh() {
       };
     }
 
+    lastAlertUuidRef.current = alertData.alert_uuid;
     setSosActive(alertData);
 
-    // Set real-time mobile push notification alert banner
     setPhoneNotification({
       title: type === 'WOMEN_SAFETY_SOS_CRITICAL' ? '🚨 REAL-TIME SOS: WOMEN SAFETY / RAPE ATTEMPT DETECTED' : '🚨 REAL-TIME SOS: VIOLENT CRIME IN-PROGRESS',
       phone: phone,
       location: loc,
       distance: '0.35 km away',
       officer: 'OFFICER #4412 (Your Device Linked via BLE Mesh)',
-      coordinates: `${lat}° N, ${lng}° E`
+      uuid: alertData.alert_uuid
     });
 
-    // Send browser native notification if permitted
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('🚨 DIAL 100/112 REAL-TIME SOS ALERT', {
         body: `CRITICAL: ${type} at ${loc}. Officer #4412 dispatched! Arrival target <85s.`,
@@ -129,27 +223,6 @@ export default function EmergencyMesh() {
       });
     }
   };
-
-  const activeAlerts = [
-    {
-      uuid: 'ERSS-2026-9912',
-      category: 'WOMEN_SAFETY_SOS_CRITICAL',
-      phone: '+91-9988776655',
-      location: 'Sector 4 Market (0.35 km away)',
-      assigned: 'PATROL_VAN_SECTOR_4 (Officer #4412 Mobile Linked)',
-      target_time: '1m 25s',
-      audio_ai: 'Distress screams & call for help detected by AI microphone sensor'
-    },
-    {
-      uuid: 'ERSS-2026-8840',
-      category: 'ATTEMPTED_ARMED_ROBBERY',
-      phone: '+91-9811223344',
-      location: 'Main Highway Junction (0.85 km away)',
-      assigned: 'TRAFFIC_POLICE_UNIT_12',
-      target_time: '2m 10s',
-      audio_ai: 'Gunshot acoustic signature recognized by sensor'
-    }
-  ];
 
   const handlePhotoScan = async () => {
     setIsPhotoScanning(true);
@@ -207,6 +280,40 @@ export default function EmergencyMesh() {
   return (
     <div className="space-y-5 font-sans">
       
+      {/* MOBILE PAIRING INSTRUCTION MODAL / CALLOUT */}
+      {showPairModal && (
+        <div className="bg-slate-900 border-2 border-cyan-500 rounded-2xl p-5 shadow-2xl space-y-4 font-mono text-xs">
+          <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+            <h4 className="font-bold text-cyan-300 flex items-center gap-2 text-sm">
+              <span>📱</span> REAL MOBILE PHONE PAIRING & LIVE PUSH SETUP
+            </h4>
+            <button onClick={() => setShowPairModal(false)} className="text-slate-400 hover:text-white text-xs">✕ CLOSE</button>
+          </div>
+
+          <div className="space-y-2 text-slate-200">
+            <div className="text-amber-400 font-bold">HOW TO SHOWCASE REAL NOTIFICATIONS ON YOUR ACTUAL PHONE:</div>
+            
+            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5 text-[11px]">
+              <div>1️⃣ <span className="text-cyan-400 font-bold">Open this URL on your mobile phone browser:</span></div>
+              <div className="bg-slate-900 p-2 rounded text-emerald-400 font-bold break-all border border-slate-700">
+                https://cyber-kit-police.vercel.app
+              </div>
+            </div>
+
+            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
+              <div>2️⃣ On your mobile phone screen, tap: <span className="text-purple-400 font-bold">"Enable Desktop/Phone Push"</span> and tap <span className="text-emerald-400 font-bold">ALLOW</span>.</div>
+            </div>
+
+            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
+              <div>3️⃣ Now click <span className="text-red-400 font-bold">"🚨 TRIGGER REAL-TIME SOS"</span> on your laptop screen!</div>
+              <div className="text-emerald-400 font-bold pt-1">
+                👉 Your REAL MOBILE PHONE will instantly sound the police siren, vibrate in your hand, and display the emergency notification banner!
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* REAL-TIME OFFICER PHONE PUSH NOTIFICATION BANNER */}
       {phoneNotification && (
         <div className="bg-gradient-to-r from-red-950 via-slate-900 to-red-950 border-2 border-red-500 rounded-2xl p-4 shadow-2xl animate-bounce space-y-2 font-mono">
@@ -275,17 +382,20 @@ export default function EmergencyMesh() {
           <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center text-xs space-y-2 md:space-y-0">
             <div className="flex items-center gap-2 text-slate-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>Invisible Mobile Link: <span className="text-emerald-400 font-bold">Officer #4412 Phone Paired (BLE / Wi-Fi Direct)</span></span>
+              <span>Invisible Mobile Mesh: <span className="text-emerald-400 font-bold">Officer Phone Sync (Live 2s Loop)</span></span>
             </div>
-            <div className="flex items-center gap-3 text-[11px]">
-              <span className="bg-slate-900 text-cyan-400 border border-slate-700 px-2.5 py-0.5 rounded font-bold">
-                14 OFFICERS IN NEARBY MESH
-              </span>
+            <div className="flex flex-wrap items-center gap-2 text-[11px]">
+              <button
+                onClick={() => setShowPairModal(true)}
+                className="bg-cyan-950 text-cyan-300 border border-cyan-700 px-3 py-1 rounded font-bold hover:bg-cyan-900 transition-all flex items-center gap-1"
+              >
+                <span>📲</span> PAIR YOUR PHYSICAL PHONE
+              </button>
               <button
                 onClick={requestPushPermission}
-                className="text-slate-400 hover:text-cyan-300 underline"
+                className="bg-purple-950 text-purple-300 border border-purple-700 px-3 py-1 rounded font-bold hover:bg-purple-900 transition-all"
               >
-                Enable Desktop/Phone Push
+                Enable Push & Siren
               </button>
             </div>
           </div>
@@ -354,20 +464,20 @@ export default function EmergencyMesh() {
             </div>
           )}
 
-          {/* Incident Feed List */}
+          {/* Incident Feed List (Live Synced with Backend) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {activeAlerts.map((alert, idx) => (
+            {alertsList.map((alert, idx) => (
               <div key={idx} className="bg-slate-950 p-4 rounded-xl border border-red-800 space-y-2">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-red-400">{alert.category}</span>
+                  <span className="font-bold text-red-400">{alert.crime_category}</span>
                   <span className="text-[10px] bg-red-950 text-white px-2 py-0.5 rounded border border-red-800 font-bold">
-                    ARRIVAL: {alert.target_time}
+                    ARRIVAL: {alert.arrival_time_target || '85s'}
                   </span>
                 </div>
                 <div className="text-xs text-slate-200">📍 Location: {alert.location}</div>
-                <div className="text-xs text-cyan-400">🚔 Assigned Unit: {alert.assigned}</div>
+                <div className="text-xs text-cyan-400">🚔 Assigned Unit: {alert.assigned_unit}</div>
                 <div className="text-[11px] text-amber-300 bg-slate-900 p-2 rounded border border-slate-800">
-                  🎙 Audio AI: {alert.audio_ai}
+                  🎙 Audio AI: {alert.audio_ai_analysis}
                 </div>
               </div>
             ))}
