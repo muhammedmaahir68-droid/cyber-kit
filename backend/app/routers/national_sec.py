@@ -14,7 +14,7 @@ class ThreatMatchRequest(BaseModel):
 
 class PhotoScanRequest(BaseModel):
     photo_b64: Optional[str] = "DATA_SUSPECT_FACE"
-    suspect_preset: Optional[str] = "SERIOUS_MURDER" # SERIOUS_MURDER, MINOR_THEFT, CUSTOM
+    suspect_preset: Optional[str] = "SERIOUS_MURDER" # SERIOUS_MURDER, MINOR_THEFT, CLEAN_RECORD, CUSTOM
 
 @router.post("/check-watchlist")
 def check_national_watchlist(req: ThreatMatchRequest, db: Session = Depends(get_db)):
@@ -40,7 +40,25 @@ def check_national_watchlist(req: ThreatMatchRequest, db: Session = Depends(get_
 
 @router.post("/scan-suspect-photo")
 def scan_suspect_photo_all_india(req: PhotoScanRequest, db: Session = Depends(get_db)):
-    if req.suspect_preset == "MINOR_THEFT":
+    preset = req.suspect_preset or "SERIOUS_MURDER"
+
+    if preset == "CLEAN_RECORD":
+        return {
+            "status": "NO_CRIMINAL_RECORD_FOUND",
+            "ncrb_record_id": "NCRB-IND-2026-CLEAN",
+            "suspect_name": "Citizen Profile: Verified (Clean Record)",
+            "facial_match_confidence": 0.991,
+            "crime_severity": "NO_CRIME_REGISTERED",
+            "warrant_status": "NO_ACTIVE_WARRANTS",
+            "operating_states": [],
+            "serious_crimes_involved": [],
+            "minor_crimes_involved": [],
+            "cases_summary": "NO CRIMINAL CASES OR FIRs REGISTERED ACROSS ALL INDIA (NCRB / CCTNS CLEAR)",
+            "action_required": "VERIFIED CITIZEN — No Police Action Required",
+            "control_room_alerted": "SYSTEM LOG: CLEAR VERIFICATION RECORDED"
+        }
+
+    if preset == "MINOR_THEFT":
         return {
             "status": "ALL_INDIA_CRIME_RECORD_MATCH_FOUND",
             "ncrb_record_id": "NCRB-IND-2024-33102",
@@ -54,11 +72,12 @@ def scan_suspect_photo_all_india(req: PhotoScanRequest, db: Session = Depends(ge
                 {"fir_no": "FIR #112/2024", "station": "Kotwali PS Delhi", "offense": "Theft & Pickpocketing (IPC 379 / BNS 303)"},
                 {"fir_no": "FIR #88/2023", "station": "Excise Branch PS Gurugram", "offense": "Illicit Liquor Bootlegging (Excise Act Sec 61)"}
             ],
-            "action_required": "NOTICE FOR INQUIRY — Issue Summons & File Field Report",
+            "cases_summary": "REGISTERED CASES: 2 Property/Theft & Bootlegging Offenses (No Capital Crimes)",
+            "action_required": "NOTICE FOR INQUIRY — Issue Local Summons & File Field Entry",
             "control_room_alerted": "LOCAL BEAT PATROL NOTIFIED"
         }
     
-    # Default: SERIOUS_MURDER & Violent Crimes
+    # Default / SERIOUS_MURDER
     return {
         "status": "ALL_INDIA_CRIME_RECORD_MATCH_FOUND",
         "ncrb_record_id": "NCRB-IND-2025-88412",
@@ -74,6 +93,7 @@ def scan_suspect_photo_all_india(req: PhotoScanRequest, db: Session = Depends(ge
         "minor_crimes_involved": [
             {"fir_no": "FIR #108/2023", "station": "State Cyber Cell Mohali", "offense": "Vehicle Theft & Identity Fraud"}
         ],
+        "cases_summary": "REGISTERED CASES: 3 Severe Capital & Syndicate Crimes (Attempted Murder & Homicide)",
         "action_required": "IMMEDIATE ON-SCENE ARREST & DETENTION — Inter-State Fugitive Warrant Executable",
         "control_room_alerted": "DELHI, MUMBAI & PUNJAB PCR NOTIFIED VIA MESH"
     }
