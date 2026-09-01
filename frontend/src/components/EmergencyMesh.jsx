@@ -654,14 +654,14 @@ export default function EmergencyMesh() {
                 </div>
 
                 <div className="bg-slate-900/90 p-2.5 rounded-lg border border-red-900 space-y-1">
-                  <div className="text-slate-400">PHONE MESH PUSH</div>
-                  <div className="text-amber-400 font-bold">✔ OFFICER PHONE ALERTED</div>
-                  <div className="text-emerald-300">Auto GPS Route Active</div>
+                  <div className="text-slate-400">DUAL MOBILE MESH ALERT</div>
+                  <div className="text-amber-400 font-bold">✔ NEAREST OFFICER PHONE ALERTED</div>
+                  <div className="text-emerald-300">Overrides DND / Silent / Sleep Mode</div>
                 </div>
               </div>
 
               <div className="bg-red-900/60 p-2 rounded-lg text-center text-[10px] font-bold text-red-200">
-                ⚡ REAL-TIME ACTION: Intercept route pushed to officer mobile screen. Audio microphone alert stream active.
+                ⚡ DUAL DISPATCH: Patrol Van auto-routed + High-priority DND override alert pushed to nearest officer personal phone (wakes officer if sleeping).
               </div>
             </div>
           )}
