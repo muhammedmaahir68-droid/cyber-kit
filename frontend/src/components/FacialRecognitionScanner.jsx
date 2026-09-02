@@ -112,17 +112,20 @@ export default function FacialRecognitionScanner() {
   };
 
   return (
-    <div className="bg-slate-900 border-2 border-purple-600/70 rounded-2xl p-5 space-y-5 shadow-2xl font-sans">
+    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-5 shadow-xl font-sans">
       {/* Title & Badge */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-purple-950 pb-3">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3">
         <div>
-          <h3 className="text-sm font-bold text-purple-300 font-mono flex items-center gap-2">
-            <span className="text-base">📷</span> ALL-INDIA FACIAL RECOGNITION & NCRB CRIMINAL HISTORY SCANNER
+          <h3 className="text-xs font-bold text-purple-300 font-mono uppercase tracking-wider flex items-center gap-2">
+            <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            ALL-INDIA FACIAL RECOGNITION & NCRB CRIMINAL DOSSIER SCANNER
           </h3>
-          <p className="text-xs text-slate-400">Upload any suspect photo or click sample presets to query All-India Criminal Records (NCRB / CCTNS) and detect registered cases.</p>
+          <p className="text-[11px] text-slate-400 font-sans mt-0.5">Upload suspect photograph or select preset dossiers to query All-India Criminal Database (NCRB / CCTNS).</p>
         </div>
         <span className="text-[10px] bg-purple-950 text-purple-300 border border-purple-800 px-3 py-1 rounded font-mono font-bold">
-          128D FACIAL VECTOR SCANNER
+          128D VECTOR SCANNER
         </span>
       </div>
 
@@ -141,10 +144,10 @@ export default function FacialRecognitionScanner() {
               : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
           }`}
         >
-          <div className="font-bold text-red-400 flex items-center gap-1.5">
-            <span>🔴</span> Sample 1: Serious Murder Suspect
+          <div className="font-bold text-red-400 uppercase text-[11px]">
+            Sample 1: Murder Suspect
           </div>
-          <div className="text-[11px] text-slate-300">Attempted Murder (IPC 307) & Homicide</div>
+          <div className="text-[10px] text-slate-300">Attempted Murder (IPC 307) & Homicide</div>
         </button>
 
         {/* Preset 2: Minor Theft & Bootlegging */}
@@ -160,10 +163,10 @@ export default function FacialRecognitionScanner() {
               : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
           }`}
         >
-          <div className="font-bold text-amber-400 flex items-center gap-1.5">
-            <span>🟡</span> Sample 2: Theft & Alcohol Suspect
+          <div className="font-bold text-amber-400 uppercase text-[11px]">
+            Sample 2: Theft / Excise
           </div>
-          <div className="text-[11px] text-slate-300">Theft (IPC 379) & Bootlegging</div>
+          <div className="text-[10px] text-slate-300">Theft (IPC 379) & Bootlegging</div>
         </button>
 
         {/* Preset 3: Clean Record Citizen */}
@@ -179,18 +182,18 @@ export default function FacialRecognitionScanner() {
               : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
           }`}
         >
-          <div className="font-bold text-emerald-400 flex items-center gap-1.5">
-            <span>🟢</span> Sample 3: Clean Citizen Profile
+          <div className="font-bold text-emerald-400 uppercase text-[11px]">
+            Sample 3: Clean Profile
           </div>
-          <div className="text-[11px] text-slate-300">No Cases / 0 FIRs Registered</div>
+          <div className="text-[10px] text-slate-300">0 Registered FIRs / Clear</div>
         </button>
 
         {/* Custom Upload Button */}
-        <label className="p-3 rounded-xl border border-dashed border-cyan-500 hover:border-cyan-400 bg-slate-950 text-slate-300 cursor-pointer flex flex-col justify-center items-center text-center transition-all">
-          <div className="font-bold text-cyan-400 flex items-center gap-1.5">
-            <span>📤</span> Upload Sample Photo
+        <label className="p-3 rounded-xl border border-dashed border-cyan-500/70 hover:border-cyan-400 bg-slate-950 text-slate-300 cursor-pointer flex flex-col justify-center items-center text-center transition-all">
+          <div className="font-bold text-cyan-400 text-[11px] uppercase tracking-wider">
+            Upload Image File
           </div>
-          <div className="text-[10px] text-slate-400 mt-0.5">Click to browse photo file</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">Browse suspect photograph</div>
           <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
         </label>
       </div>
@@ -204,7 +207,7 @@ export default function FacialRecognitionScanner() {
               <div>
                 <div className="text-cyan-400 font-bold">CUSTOM UPLOADED SUSPECT PHOTO ACTIVE</div>
                 <div className="text-[11px] text-slate-300">128D Facial Embedding Mesh Extracted</div>
-                <div className="text-[10px] text-emerald-400 font-bold">✔ Ready for All-India Criminal Database Search</div>
+                <div className="text-[10px] text-emerald-400 font-bold">Vector Matrix Ready for NCRB Lookup</div>
               </div>
             </div>
 
@@ -221,7 +224,7 @@ export default function FacialRecognitionScanner() {
                   customAnalysisType === 'SERIOUS_MURDER' ? 'bg-red-600 text-white' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                Murder/Serious Case
+                Murder Case
               </button>
               <button
                 onClick={() => {
@@ -262,7 +265,7 @@ export default function FacialRecognitionScanner() {
           disabled={isScanning}
           className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition-all shadow-lg shadow-purple-600/30 flex items-center gap-2"
         >
-          {isScanning ? 'EXTRACTING 128D VECTORS...' : '🔍 SEARCH ALL-INDIA CRIMINAL RECORDS'}
+          {isScanning ? 'EXTRACTING 128D VECTORS...' : 'SEARCH ALL-INDIA CRIMINAL RECORDS'}
         </button>
       </div>
 
@@ -280,10 +283,10 @@ export default function FacialRecognitionScanner() {
                   : 'bg-amber-950 text-amber-400 border border-amber-800'
               }`}>
                 {searchResult.crime_severity === 'HIGH_SEVERITY_CAPITAL_CRIME'
-                  ? '🚨 MATCH FOUND: HIGH-SEVERITY CAPITAL CRIME'
+                  ? 'MATCH FOUND: HIGH-SEVERITY CAPITAL CRIME'
                   : searchResult.crime_severity === 'NO_CRIME_REGISTERED'
-                  ? '🟢 VERIFIED: NO CRIMINAL RECORD FOUND (CLEAN RECORD)'
-                  : '⚠️ MATCH FOUND: MODERATE / PROPERTY OFFENSE'}
+                  ? 'VERIFIED: NO CRIMINAL RECORD FOUND (CLEAN RECORD)'
+                  : 'MATCH FOUND: MODERATE / PROPERTY OFFENSE'}
               </span>
             </div>
 
@@ -295,7 +298,7 @@ export default function FacialRecognitionScanner() {
           {/* Suspect Info & Cases Summary */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             <div className="bg-slate-900 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-              <div className="text-slate-400">REGISTERED RECORD PROFILE</div>
+              <div className="text-slate-400 text-[10px] uppercase">REGISTERED RECORD PROFILE</div>
               <div className="font-bold text-white text-sm">{searchResult.suspect_name}</div>
               <div className="text-slate-400 text-[11px]">NCRB ID: {searchResult.ncrb_record_id}</div>
               <div className={`font-bold pt-1 ${
@@ -319,7 +322,7 @@ export default function FacialRecognitionScanner() {
               {/* Serious Murder / Attempted Murder Cases */}
               {searchResult.serious_crimes_involved?.length > 0 && (
                 <div>
-                  <div className="text-red-400 font-bold text-xs mb-1 mt-2">🔴 SERIOUS CAPITAL CRIMES (Murder / Attempted Murder)</div>
+                  <div className="text-red-400 font-bold text-xs mb-1 mt-2 uppercase">Serious Capital Crimes (Murder / Attempted Murder)</div>
                   {searchResult.serious_crimes_involved.map((fir, idx) => (
                     <div key={idx} className="bg-slate-950 p-2 rounded border border-red-950 text-[11px] mb-1">
                       <span className="text-cyan-400 font-bold">{fir.fir_no}</span> — <span className="text-red-300 font-bold">{fir.offense}</span> ({fir.station})
@@ -331,7 +334,7 @@ export default function FacialRecognitionScanner() {
               {/* Minor Theft / Bootlegging Cases */}
               {searchResult.minor_crimes_involved?.length > 0 && (
                 <div>
-                  <div className="text-amber-400 font-bold text-xs mb-1 mt-2">🟡 PROPERTY / THEFT / EXCISE OFFENSES</div>
+                  <div className="text-amber-400 font-bold text-xs mb-1 mt-2 uppercase">Property / Theft / Excise Offenses</div>
                   {searchResult.minor_crimes_involved.map((fir, idx) => (
                     <div key={idx} className="bg-slate-950 p-2 rounded border border-amber-950 text-[11px] mb-1">
                       <span className="text-cyan-400 font-bold">{fir.fir_no}</span> — {fir.offense} ({fir.station})
@@ -343,21 +346,21 @@ export default function FacialRecognitionScanner() {
               {/* Clean Record Message */}
               {searchResult.crime_severity === 'NO_CRIME_REGISTERED' && (
                 <div className="bg-emerald-950/60 p-2.5 rounded border border-emerald-800 text-[11px] text-emerald-300 font-bold">
-                  ✔ All 36 States & UT Police Registries (CCTNS) Checked. Zero Active Cases or Pending Warrants Found.
+                  All 36 States & UT Police Registries (CCTNS) Checked. Zero Active Cases or Pending Warrants Found.
                 </div>
               )}
             </div>
           </div>
 
           {/* Action Required Banner */}
-          <div className={`p-3 rounded-xl border text-xs font-bold text-center ${
+          <div className={`p-3 rounded-xl border text-xs font-bold text-center uppercase tracking-wider ${
             searchResult.crime_severity === 'HIGH_SEVERITY_CAPITAL_CRIME'
-              ? 'bg-red-950 border-red-600 text-white animate-glow'
+              ? 'bg-red-950 border-red-600 text-white'
               : searchResult.crime_severity === 'NO_CRIME_REGISTERED'
               ? 'bg-emerald-950 border-emerald-600 text-emerald-200'
               : 'bg-amber-950 border-amber-600 text-amber-200'
           }`}>
-            ⚡ POLICE ACTION: {searchResult.action_required}
+            POLICE ACTION: {searchResult.action_required}
           </div>
         </div>
       )}

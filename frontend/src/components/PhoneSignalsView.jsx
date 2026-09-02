@@ -17,7 +17,7 @@ export default function PhoneSignalsView() {
           <div className="text-xs font-bold font-mono text-cyan-400">SUPPORTED PHONE OS</div>
           <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
             <div className="flex items-center gap-3">
-              <span className="text-xl">🤖</span>
+              <span className="text-xl"></span>
               <div>
                 <div className="font-bold text-slate-200">Android (5.0 – 15+)</div>
                 <div className="text-[11px] text-slate-400">Samsung, Pixel, Xiaomi, OnePlus, Vivo</div>
@@ -28,7 +28,7 @@ export default function PhoneSignalsView() {
 
           <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono">
             <div className="flex items-center gap-3">
-              <span className="text-xl">🍎</span>
+              <span className="text-xl"></span>
               <div>
                 <div className="font-bold text-slate-200">iOS (Backup Protocol)</div>
                 <div className="text-[11px] text-slate-400">iPhone, iPad encrypted extraction</div>

@@ -2,16 +2,16 @@ import React from 'react';
 
 export default function AICapabilitiesView() {
   const capabilities = [
-    { icon: '🔫', title: 'Weapons', desc: 'Handguns, rifles, knives, explosives', metric: '96.4% mAP', color: 'text-red-400 border-red-800 bg-red-950/40' },
-    { icon: '💊', title: 'Narcotics', desc: 'Drug packaging, pills, powders', metric: '91.8% mAP', color: 'text-amber-400 border-amber-800 bg-amber-950/40' },
-    { icon: '👤', title: 'Face Detection', desc: 'Suspect face isolation & matching', metric: '94.2% Prec', color: 'text-cyan-400 border-cyan-800 bg-cyan-950/40' },
-    { icon: '📄', title: 'Documents', desc: 'IDs, passports, contracts, receipts', metric: '92.5% mAP', color: 'text-blue-400 border-blue-800 bg-blue-950/40' },
-    { icon: '💬', title: 'Chat NLP', desc: 'Threat keywords, drug trade, fraud', metric: '89.7% F1', color: 'text-emerald-400 border-emerald-800 bg-emerald-950/40' },
+    { icon: '', title: 'Weapons', desc: 'Handguns, rifles, knives, explosives', metric: '96.4% mAP', color: 'text-red-400 border-red-800 bg-red-950/40' },
+    { icon: '', title: 'Narcotics', desc: 'Drug packaging, pills, powders', metric: '91.8% mAP', color: 'text-amber-400 border-amber-800 bg-amber-950/40' },
+    { icon: '', title: 'Face Detection', desc: 'Suspect face isolation & matching', metric: '94.2% Prec', color: 'text-cyan-400 border-cyan-800 bg-cyan-950/40' },
+    { icon: '', title: 'Documents', desc: 'IDs, passports, contracts, receipts', metric: '92.5% mAP', color: 'text-blue-400 border-blue-800 bg-blue-950/40' },
+    { icon: '', title: 'Chat NLP', desc: 'Threat keywords, drug trade, fraud', metric: '89.7% F1', color: 'text-emerald-400 border-emerald-800 bg-emerald-950/40' },
     { icon: '⏰', title: 'Timestamp Tamper', desc: 'EXIF vs MACB conflict audit', metric: '96.8% AUC', color: 'text-purple-400 border-purple-800 bg-purple-950/40' },
-    { icon: '💰', title: 'Currency & Cash', desc: 'Large cash bundles & stacks', metric: '88.3% mAP', color: 'text-amber-400 border-amber-800 bg-amber-950/40' },
-    { icon: '🚗', title: 'License Plates', desc: 'Vehicle plate OCR from photos', metric: '93.1% Acc', color: 'text-slate-300 border-slate-700 bg-slate-900' },
-    { icon: '🔞', title: 'CSAM/NSFW', desc: 'Illegal media content classifier', metric: '97.2% Prec', color: 'text-red-400 border-red-800 bg-red-950/40' },
-    { icon: '📍', title: 'GPS Extraction', desc: 'EXIF map coordinate parsing', metric: '100% Parse', color: 'text-emerald-400 border-emerald-800 bg-emerald-950/40' },
+    { icon: '', title: 'Currency & Cash', desc: 'Large cash bundles & stacks', metric: '88.3% mAP', color: 'text-amber-400 border-amber-800 bg-amber-950/40' },
+    { icon: '', title: 'License Plates', desc: 'Vehicle plate OCR from photos', metric: '93.1% Acc', color: 'text-slate-300 border-slate-700 bg-slate-900' },
+    { icon: '', title: 'CSAM/NSFW', desc: 'Illegal media content classifier', metric: '97.2% Prec', color: 'text-red-400 border-red-800 bg-red-950/40' },
+    { icon: '', title: 'GPS Extraction', desc: 'EXIF map coordinate parsing', metric: '100% Parse', color: 'text-emerald-400 border-emerald-800 bg-emerald-950/40' },
   ];
 
   return (

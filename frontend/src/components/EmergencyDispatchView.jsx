@@ -94,7 +94,7 @@ export default function EmergencyDispatchView() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
             <div className="text-xs font-bold text-slate-200 font-mono flex items-center gap-2">
-              <span className="text-base">🔐</span> DUAL BIOMETRIC AUTHENTICATION LOCK
+              <span className="text-base"></span> DUAL BIOMETRIC AUTHENTICATION LOCK
             </div>
             <div className="text-[11px] text-slate-400">Requires officer fingerprint scanner + 3D facial recognition to unlock sensitive forensic & national defense features.</div>
           </div>
@@ -103,13 +103,13 @@ export default function EmergencyDispatchView() {
             onClick={handleBiometricUnlock}
             className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-mono text-xs font-bold shadow-lg shadow-emerald-600/20 flex items-center gap-2"
           >
-            <span className="text-sm">👆</span> SCAN FINGERPRINT & FACE
+            <span className="text-sm"></span> SCAN FINGERPRINT & FACE
           </button>
         </div>
 
         {authLog && (
           <div className="bg-slate-900 p-3 rounded-xl border border-emerald-800 text-xs font-mono space-y-1">
-            <div className="text-emerald-400 font-bold">✔ OFFICER AUTHENTICATED: {authLog.officer_badge_id}</div>
+            <div className="text-emerald-400 font-bold"> OFFICER AUTHENTICATED: {authLog.officer_badge_id}</div>
             <div className="text-slate-300">Fingerprint: VERIFIED | Face Match: {(authLog.face_match_confidence * 100).toFixed(1)}%</div>
             <div className="text-cyan-400">Paired Mobile: {authLog.mobile_linked} (BLE Encrypted)</div>
           </div>
@@ -131,16 +131,16 @@ export default function EmergencyDispatchView() {
             onClick={triggerEmergencySOS}
             className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold shadow-lg shadow-red-600/30 flex items-center gap-2 animate-pulse"
           >
-            🚨 SIMULATE DIAL 100/112 SOS ALERT
+             SIMULATE DIAL 100/112 SOS ALERT
           </button>
         </div>
 
         {sosTriggered && (
           <div className="bg-red-950/80 p-3 rounded-xl border border-red-600 text-xs font-mono text-white space-y-1 animate-glow">
-            <div className="font-bold text-red-300 text-sm">⚠ CRITICAL ALERTS: WOMEN SAFETY SOS DISPATCHED</div>
+            <div className="font-bold text-red-300 text-sm"> CRITICAL ALERTS: WOMEN SAFETY SOS DISPATCHED</div>
             <div>Nearest Patrol Unit: PATROL_VAN_SECTOR_4 (Distance: 0.45 km)</div>
             <div>Target Arrival Time: 90 Seconds (En Route)</div>
-            <div className="text-emerald-300 font-bold">✔ Automated GPS Route & Audio Stream Pushed to Officer Mobile</div>
+            <div className="text-emerald-300 font-bold"> Automated GPS Route & Audio Stream Pushed to Officer Mobile</div>
           </div>
         )}
 
@@ -154,10 +154,10 @@ export default function EmergencyDispatchView() {
                   TARGET: {alert.target_time}
                 </span>
               </div>
-              <div className="text-xs text-slate-200 font-mono">📍 Location: {alert.location}</div>
-              <div className="text-xs text-cyan-400 font-mono">🚔 Assigned Unit: {alert.assigned}</div>
+              <div className="text-xs text-slate-200 font-mono"> Location: {alert.location}</div>
+              <div className="text-xs text-cyan-400 font-mono"> Assigned Unit: {alert.assigned}</div>
               <div className="text-[11px] text-amber-300 font-mono bg-slate-950 p-2 rounded border border-slate-800">
-                🎙 Audio AI: {alert.audio_ai}
+                 Audio AI: {alert.audio_ai}
               </div>
             </div>
           ))}

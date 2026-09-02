@@ -92,7 +92,7 @@ export default function EmergencyMesh() {
       if ('Notification' in window && Notification.permission !== 'granted') {
         const perm = await Notification.requestPermission();
         if (perm !== 'granted') {
-          alert('❌ You must ALLOW notifications for real-time SOS alerts!');
+          alert(' You must ALLOW notifications for real-time SOS alerts!');
           return;
         }
       }
@@ -129,7 +129,7 @@ export default function EmergencyMesh() {
       });
 
       setPushSubscribed(true);
-      alert('✅ REAL-TIME PUSH NOTIFICATIONS ACTIVATED!\n\nYour phone will now receive SOS alerts even when the screen is OFF or the browser is CLOSED!');
+      alert(' REAL-TIME PUSH NOTIFICATIONS ACTIVATED!\n\nYour phone will now receive SOS alerts even when the screen is OFF or the browser is CLOSED!');
 
     } catch (e) {
       console.log('Push subscription error:', e);
@@ -137,7 +137,7 @@ export default function EmergencyMesh() {
       if ('Notification' in window && Notification.permission !== 'granted') {
         Notification.requestPermission();
       }
-      alert('⚠ Push subscription requires HTTPS or localhost. Using basic notifications instead.');
+      alert(' Push subscription requires HTTPS or localhost. Using basic notifications instead.');
     }
   };
 
@@ -170,7 +170,7 @@ export default function EmergencyMesh() {
             triggerMobileVibration();
             setEtaCountdown(85);
 
-            let alertTitle = rawData.title || '🚨 REAL-TIME SOS ALERT';
+            let alertTitle = rawData.title || ' REAL-TIME SOS ALERT';
             let alertMsg = rawData.message || '';
 
             setPhoneNotification({
@@ -247,7 +247,7 @@ export default function EmergencyMesh() {
                 });
 
                 setPhoneNotification({
-                  title: `🚨 REAL-TIME SOS ALERT: ${latest.crime_category}`,
+                  title: ` REAL-TIME SOS ALERT: ${latest.crime_category}`,
                   phone: latest.victim_phone || '+91-9988776655',
                   location: latest.location || 'Sector 4 Market',
                   distance: '0.35 km away',
@@ -256,7 +256,7 @@ export default function EmergencyMesh() {
                 });
 
                 if ('Notification' in window && Notification.permission === 'granted') {
-                  new Notification(`🚨 REAL-TIME SOS ALERT (${latest.crime_category})`, {
+                  new Notification(` REAL-TIME SOS ALERT (${latest.crime_category})`, {
                     body: `Location: ${latest.location}. Officer #4412 Dispatched! Target Arrival <85s.`,
                     icon: '/favicon.ico'
                   });
@@ -300,7 +300,7 @@ export default function EmergencyMesh() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           topic: 'cyberkit-police-sih2026-maahir',
-          title: `🚨 REAL-TIME SOS: ${type}`,
+          title: ` REAL-TIME SOS: ${type}`,
           message: `Location: ${loc}. Victim Contact: ${phone}. Officer #4412 dispatched! Target ETA <85s.`,
           priority: 5,
           tags: ['warning', 'police_car', 'rotating_light']
@@ -353,7 +353,7 @@ export default function EmergencyMesh() {
     setSosActive(alertData);
 
     setPhoneNotification({
-      title: type === 'WOMEN_SAFETY_SOS_CRITICAL' ? '🚨 REAL-TIME SOS: WOMEN SAFETY / RAPE ATTEMPT DETECTED' : '🚨 REAL-TIME SOS: VIOLENT CRIME IN-PROGRESS',
+      title: type === 'WOMEN_SAFETY_SOS_CRITICAL' ? ' REAL-TIME SOS: WOMEN SAFETY / RAPE ATTEMPT DETECTED' : ' REAL-TIME SOS: VIOLENT CRIME IN-PROGRESS',
       phone: phone,
       location: loc,
       distance: '0.35 km away',
@@ -362,7 +362,7 @@ export default function EmergencyMesh() {
     });
 
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('🚨 DIAL 100/112 REAL-TIME SOS ALERT', {
+      new Notification(' DIAL 100/112 REAL-TIME SOS ALERT', {
         body: `CRITICAL: ${type} at ${loc}. Officer #4412 dispatched! Arrival target <85s.`,
         icon: '/favicon.ico'
       });
@@ -430,9 +430,9 @@ export default function EmergencyMesh() {
         <div className="bg-slate-900 border-2 border-cyan-500 rounded-2xl p-5 shadow-2xl space-y-4 font-mono text-xs">
           <div className="flex justify-between items-center border-b border-slate-800 pb-3">
             <h4 className="font-bold text-cyan-300 flex items-center gap-2 text-sm">
-              <span>📱</span> REAL MOBILE PHONE PAIRING & LIVE PUSH SETUP
+              <span></span> REAL MOBILE PHONE PAIRING & LIVE PUSH SETUP
             </h4>
-            <button onClick={() => setShowPairModal(false)} className="text-slate-400 hover:text-white text-xs">✕ CLOSE</button>
+            <button onClick={() => setShowPairModal(false)} className="text-slate-400 hover:text-white text-xs"> CLOSE</button>
           </div>
 
           <div className="space-y-2 text-slate-200">
@@ -446,12 +446,12 @@ export default function EmergencyMesh() {
             </div>
 
             <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
-              <div>2️⃣ Tap <span className="text-emerald-400 font-bold">"📱 INSTALL APP ON PHONE"</span> or Chrome menu → <span className="text-cyan-400 font-bold">"Add to Home Screen"</span>.</div>
+              <div>2️⃣ Tap <span className="text-emerald-400 font-bold">" INSTALL APP ON PHONE"</span> or Chrome menu → <span className="text-cyan-400 font-bold">"Add to Home Screen"</span>.</div>
               <div className="text-slate-400">This installs **CyberKit Police** as a real standalone app on your phone home screen!</div>
             </div>
 
             <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
-              <div>3️⃣ Open the installed app & tap <span className="text-red-400 font-bold">"🔔 ACTIVATE REAL PUSH ALERTS"</span> → Tap <span className="text-emerald-400 font-bold">ALLOW</span>.</div>
+              <div>3️⃣ Open the installed app & tap <span className="text-red-400 font-bold">" ACTIVATE REAL PUSH ALERTS"</span> → Tap <span className="text-emerald-400 font-bold">ALLOW</span>.</div>
             </div>
 
             <div className="bg-slate-950 p-4 rounded-xl border border-amber-500/60 flex flex-col sm:flex-row items-center gap-4 text-[11px]">
@@ -461,11 +461,11 @@ export default function EmergencyMesh() {
                 className="w-28 h-28 rounded-lg border border-slate-700 bg-white p-1 shadow-md"
               />
               <div className="space-y-1.5 flex-1 text-slate-200">
-                <div className="text-amber-300 font-bold text-xs">⚡ FOR GUARANTEED LOCKSCREEN PUSH ALERTS WHEN PHONE IS SLEEPING:</div>
+                <div className="text-amber-300 font-bold text-xs"> FOR GUARANTEED LOCKSCREEN PUSH ALERTS WHEN PHONE IS SLEEPING:</div>
                 <div>1. Scan QR code or install free <span className="text-cyan-400 font-bold">ntfy app</span> from Play Store / App Store.</div>
                 <div>2. Subscribe to topic: <span className="text-cyan-400 font-bold">cyberkit-police-sih2026-maahir</span></div>
                 <div className="text-emerald-400 font-bold pt-1">
-                  👉 Your phone will now VIBRATE and play POLICE SIREN even when screen is locked & sleeping!
+                   Your phone will now VIBRATE and play POLICE SIREN even when screen is locked & sleeping!
                 </div>
               </div>
             </div>
@@ -478,18 +478,18 @@ export default function EmergencyMesh() {
         <div className="bg-gradient-to-r from-red-950 via-slate-900 to-red-950 border-2 border-red-500 rounded-2xl p-4 shadow-2xl animate-bounce space-y-2 font-mono">
           <div className="flex justify-between items-center">
             <span className="bg-red-600 text-white text-[10px] px-2.5 py-1 rounded font-bold tracking-wider animate-pulse flex items-center gap-1.5">
-              <span>📲</span> INSTANT PHONE PUSH ALERT RECEIVED
+              <span></span> INSTANT PHONE PUSH ALERT RECEIVED
             </span>
-            <button onClick={() => setPhoneNotification(null)} className="text-slate-400 hover:text-white text-xs">✕ DISMISS</button>
+            <button onClick={() => setPhoneNotification(null)} className="text-slate-400 hover:text-white text-xs"> DISMISS</button>
           </div>
           <div className="text-xs font-bold text-red-300">{phoneNotification.title}</div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] text-slate-300">
-            <div>📍 Location: <span className="text-cyan-400 font-bold">{phoneNotification.location}</span></div>
-            <div>📞 Victim Contact: <span className="text-amber-400 font-bold">{phoneNotification.phone}</span></div>
-            <div>🚔 Linked Mobile Unit: <span className="text-emerald-400 font-bold">{phoneNotification.officer}</span></div>
+            <div> Location: <span className="text-cyan-400 font-bold">{phoneNotification.location}</span></div>
+            <div> Victim Contact: <span className="text-amber-400 font-bold">{phoneNotification.phone}</span></div>
+            <div> Linked Mobile Unit: <span className="text-emerald-400 font-bold">{phoneNotification.officer}</span></div>
           </div>
           <div className="bg-red-900/40 p-2 rounded-lg border border-red-700 text-[10px] text-red-200 flex justify-between items-center">
-            <span>⚡ INVISIBLE MESH ROUTE: Intercept navigation pushed to officer mobile screen</span>
+            <span> INVISIBLE MESH ROUTE: Intercept navigation pushed to officer mobile screen</span>
             <span className="font-bold text-emerald-400">STATUS: EN ROUTE ({etaCountdown}s Target ETA)</span>
           </div>
         </div>
@@ -545,7 +545,7 @@ export default function EmergencyMesh() {
                 <span>Invisible Mobile Mesh: <span className="text-emerald-400 font-bold">Officer Phone Sync Active (2s Loop)</span></span>
               </div>
               <div className="text-[10px] text-cyan-400">
-                🌐 Connected Backend Target: <span className="font-bold underline">{getApiBase()}</span>
+                 Connected Backend Target: <span className="font-bold underline">{getApiBase()}</span>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2 text-[11px]">
@@ -556,9 +556,9 @@ export default function EmergencyMesh() {
                   triggerMobileVibration();
                   subscribeToPush();
                 }}
-                className="bg-amber-950 text-amber-300 border border-amber-600 px-3 py-1.5 rounded-lg font-bold hover:bg-amber-900 transition-all flex items-center gap-1 animate-pulse"
+                className="bg-amber-950 text-amber-300 border border-amber-600 px-3 py-1.5 rounded-lg font-bold hover:bg-amber-900 transition-all flex items-center gap-1"
               >
-                <span>⚡</span> TEST SOUND & ACTIVATE ALERTS
+                TEST AUDIO & ALERTS
               </button>
 
               {/* INSTALL APP BUTTON */}
@@ -572,12 +572,12 @@ export default function EmergencyMesh() {
                   }}
                   className="bg-emerald-950 text-emerald-300 border border-emerald-600 px-3 py-1.5 rounded-lg font-bold hover:bg-emerald-900 transition-all flex items-center gap-1"
                 >
-                  <span>📱</span> INSTALL APP ON PHONE
+                  INSTALL PWA APP
                 </button>
               )}
               {appInstalled && (
                 <span className="bg-emerald-950 text-emerald-300 border border-emerald-700 px-3 py-1 rounded font-bold">
-                  ✅ APP INSTALLED
+                  APP INSTALLED
                 </span>
               )}
 
@@ -587,17 +587,17 @@ export default function EmergencyMesh() {
                 className={`px-3 py-1 rounded font-bold transition-all flex items-center gap-1 ${
                   pushSubscribed
                     ? 'bg-emerald-950 text-emerald-300 border border-emerald-700'
-                    : 'bg-red-950 text-red-300 border border-red-600 animate-pulse hover:bg-red-900'
+                    : 'bg-red-950 text-red-300 border border-red-600 hover:bg-red-900'
                 }`}
               >
-                {pushSubscribed ? '✅ PUSH ACTIVE (Background)' : '🔔 ACTIVATE REAL PUSH ALERTS'}
+                {pushSubscribed ? 'PUSH ACTIVE (Background)' : 'ACTIVATE PUSH ALERTS'}
               </button>
 
               <button
                 onClick={() => setShowPairModal(true)}
                 className="bg-cyan-950 text-cyan-300 border border-cyan-700 px-3 py-1 rounded font-bold hover:bg-cyan-900 transition-all flex items-center gap-1"
               >
-                <span>📲</span> PAIR YOUR PHYSICAL PHONE
+                PAIR OFFICER PHONE
               </button>
             </div>
           </div>
@@ -605,24 +605,24 @@ export default function EmergencyMesh() {
           {/* SOS Trigger Action Bar */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-950 p-4 rounded-xl border border-red-950">
             <div>
-              <div className="text-xs font-bold text-red-400 flex items-center gap-1.5">
-                <span>🚨</span> REAL-TIME DIAL 100/112 EMERGENCY SOS TRIGGER
+              <div className="text-xs font-bold text-red-400 flex items-center gap-1.5 uppercase tracking-wider">
+                REAL-TIME DIAL 100/112 EMERGENCY SOS TRIGGER
               </div>
-              <div className="text-[11px] text-slate-400">Click to simulate citizen distress call & instant invisible push alert to officer phone.</div>
+              <div className="text-[11px] text-slate-400 font-sans">Click to simulate citizen distress call & instant push alert to officer phone.</div>
             </div>
 
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => handleTriggerSOS('WOMEN_SAFETY_SOS_CRITICAL', '+91-9988776655', 'Sector 4 Market (0.35 km away)', 28.6139, 77.2090)}
-                className="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-600/30 flex items-center gap-1.5 animate-pulse"
+                className="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-600/30 flex items-center gap-1.5"
               >
-                <span>💃</span> Women Safety / Crime SOS
+                Women Safety SOS
               </button>
               <button
                 onClick={() => handleTriggerSOS('ATTEMPTED_ARMED_ROBBERY', '+91-9811223344', 'Main Highway Junction (0.85 km away)', 28.6210, 77.2150)}
                 className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow-lg shadow-amber-600/30 flex items-center gap-1.5"
               >
-                <span>🔫</span> Armed Robbery SOS
+                Armed Robbery SOS
               </button>
             </div>
           </div>
@@ -631,7 +631,7 @@ export default function EmergencyMesh() {
           {sosActive && (
             <div className="bg-red-950 p-4 rounded-xl border-2 border-red-600 text-xs text-white space-y-3 shadow-2xl">
               <div className="flex justify-between items-center border-b border-red-800 pb-2">
-                <div className="font-bold text-red-300 text-sm flex items-center gap-2">
+                <div className="font-bold text-red-300 text-sm flex items-center gap-2 uppercase tracking-wider">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-400 animate-ping"></span>
                   CRITICAL DISPATCH ACTIVE: {sosActive.crime_category}
                 </div>
@@ -642,26 +642,26 @@ export default function EmergencyMesh() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px]">
                 <div className="bg-slate-900/90 p-2.5 rounded-lg border border-red-900 space-y-1">
-                  <div className="text-slate-400">VICTIM DETAILS</div>
+                  <div className="text-slate-400 uppercase text-[10px]">VICTIM DETAILS</div>
                   <div className="text-white font-bold">{sosActive.victim_phone}</div>
-                  <div className="text-cyan-400">📍 {sosActive.victim_location.name}</div>
+                  <div className="text-cyan-400 font-sans">Location: {sosActive.victim_location.name}</div>
                 </div>
 
                 <div className="bg-slate-900/90 p-2.5 rounded-lg border border-red-900 space-y-1">
-                  <div className="text-slate-400">ASSIGNED PATROL UNIT</div>
+                  <div className="text-slate-400 uppercase text-[10px]">ASSIGNED PATROL UNIT</div>
                   <div className="text-emerald-400 font-bold">{sosActive.assigned_patrol_unit}</div>
                   <div className="text-slate-300">Distance: {sosActive.nearest_patrol_distance_km} km away</div>
                 </div>
 
                 <div className="bg-slate-900/90 p-2.5 rounded-lg border border-red-900 space-y-1">
-                  <div className="text-slate-400">DUAL MOBILE MESH ALERT</div>
-                  <div className="text-amber-400 font-bold">✔ NEAREST OFFICER PHONE ALERTED</div>
+                  <div className="text-slate-400 uppercase text-[10px]">DUAL MOBILE MESH ALERT</div>
+                  <div className="text-amber-400 font-bold">OFFICER PHONE ALERTED</div>
                   <div className="text-emerald-300">Overrides DND / Silent / Sleep Mode</div>
                 </div>
               </div>
 
-              <div className="bg-red-900/60 p-2 rounded-lg text-center text-[10px] font-bold text-red-200">
-                ⚡ DUAL DISPATCH: Patrol Van auto-routed + High-priority DND override alert pushed to nearest officer personal phone (wakes officer if sleeping).
+              <div className="bg-red-900/60 p-2 rounded-lg text-center text-[10px] font-bold text-red-200 uppercase tracking-wider">
+                DUAL DISPATCH: Patrol Van auto-routed + High-priority DND override alert pushed to nearest officer personal phone (wakes officer if sleeping).
               </div>
             </div>
           )}
@@ -676,10 +676,10 @@ export default function EmergencyMesh() {
                     ARRIVAL: {alert.arrival_time_target || '85s'}
                   </span>
                 </div>
-                <div className="text-xs text-slate-200">📍 Location: {alert.location}</div>
-                <div className="text-xs text-cyan-400">🚔 Assigned Unit: {alert.assigned_unit}</div>
+                <div className="text-xs text-slate-200"> Location: {alert.location}</div>
+                <div className="text-xs text-cyan-400"> Assigned Unit: {alert.assigned_unit}</div>
                 <div className="text-[11px] text-amber-300 bg-slate-900 p-2 rounded border border-slate-800">
-                  🎙 Audio AI: {alert.audio_ai_analysis}
+                   Audio AI: {alert.audio_ai_analysis}
                 </div>
               </div>
             ))}
@@ -701,14 +701,14 @@ export default function EmergencyMesh() {
               disabled={isPhotoScanning}
               className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-lg shadow-purple-600/30 flex items-center gap-2"
             >
-              {isPhotoScanning ? 'EXTRACTING 128D VECTOR...' : '📷 SCAN SUSPECT PHOTO & QUERY NCRB'}
+              {isPhotoScanning ? 'EXTRACTING 128D VECTOR...' : ' SCAN SUSPECT PHOTO & QUERY NCRB'}
             </button>
           </div>
 
           {photoMatch && (
             <div className="bg-slate-950 p-4 rounded-xl border border-red-800 space-y-3">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-red-400 text-sm">⚠ ALL-INDIA CRIMINAL RECORD MATCH FOUND</span>
+                <span className="font-bold text-red-400 text-sm"> ALL-INDIA CRIMINAL RECORD MATCH FOUND</span>
                 <span className="bg-red-950 text-red-300 px-2.5 py-0.5 rounded border border-red-800 font-bold">
                   {(photoMatch.facial_match_confidence * 100).toFixed(1)}% SIMILARITY
                 </span>
@@ -754,7 +754,7 @@ export default function EmergencyMesh() {
 
           {approvalStatus && (
             <div className="bg-slate-950 p-3 rounded-xl border border-emerald-800 text-xs space-y-1">
-              <div className="text-emerald-400 font-bold">✔ DIGITAL APPROVAL GRANTED</div>
+              <div className="text-emerald-400 font-bold"> DIGITAL APPROVAL GRANTED</div>
               <div className="text-slate-300">Approving Authority: {approvalStatus.approving_authority}</div>
               <div className="text-slate-500 text-[10px] break-all">Hash: {approvalStatus.digital_signature_hash}</div>
             </div>

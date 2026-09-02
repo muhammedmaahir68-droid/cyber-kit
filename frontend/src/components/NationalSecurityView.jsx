@@ -148,7 +148,7 @@ export default function NationalSecurityView() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
             <div className="text-xs font-bold text-purple-400 font-mono flex items-center gap-2">
-              <span className="text-sm">📷</span> ALL-INDIA SUSPECT PHOTO SCANNER & NCRB RECORD SEARCH
+              <span className="text-sm"></span> ALL-INDIA SUSPECT PHOTO SCANNER & NCRB RECORD SEARCH
             </div>
             <div className="text-[11px] text-slate-400">Scan suspect face in field to query All-India Criminal Records (NCRB / CCTNS) across all states.</div>
           </div>
@@ -158,14 +158,14 @@ export default function NationalSecurityView() {
             disabled={isPhotoScanning}
             className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold shadow-lg shadow-purple-600/30 flex items-center gap-2"
           >
-            {isPhotoScanning ? 'EXTRACTING 128D VECTOR...' : '📷 SCAN SUSPECT PHOTO & QUERY NCRB'}
+            {isPhotoScanning ? 'EXTRACTING 128D VECTOR...' : ' SCAN SUSPECT PHOTO & QUERY NCRB'}
           </button>
         </div>
 
         {photoSearchMatch && (
           <div className="bg-slate-900 p-4 rounded-xl border border-red-800 space-y-3">
             <div className="flex justify-between items-center text-xs font-mono">
-              <span className="font-bold text-red-400 text-sm">⚠ ALL-INDIA CRIMINAL RECORD MATCH FOUND</span>
+              <span className="font-bold text-red-400 text-sm"> ALL-INDIA CRIMINAL RECORD MATCH FOUND</span>
               <span className="bg-red-950 text-red-300 px-2.5 py-0.5 rounded border border-red-800 font-bold">
                 {(photoSearchMatch.facial_match_confidence * 100).toFixed(1)}% FACIAL EMBEDDING MATCH
               </span>
@@ -190,7 +190,7 @@ export default function NationalSecurityView() {
             </div>
 
             <div className="bg-red-950/80 p-2.5 rounded-xl border border-red-600 text-xs font-mono text-white text-center font-bold">
-              ⚡ ACTION REQUIRED: {photoSearchMatch.action_required}
+               ACTION REQUIRED: {photoSearchMatch.action_required}
             </div>
           </div>
         )}
@@ -217,7 +217,7 @@ export default function NationalSecurityView() {
         {watchlistResults && (
           <div className="space-y-2 mt-3 pt-3 border-t border-slate-800">
             <div className="text-xs font-bold font-mono text-red-400 flex items-center gap-2">
-              <span>⚠ HIGH PRIORITY THREAT MATCH FOUND ({watchlistResults.matches_count} Hits)</span>
+              <span> HIGH PRIORITY THREAT MATCH FOUND ({watchlistResults.matches_count} Hits)</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -257,7 +257,7 @@ export default function NationalSecurityView() {
 
         {approvalStatus && (
           <div className="bg-slate-900 p-3 rounded-xl border border-emerald-800/80 text-xs font-mono space-y-1 mt-2">
-            <div className="text-emerald-400 font-bold">✔ DIGITAL APPROVAL GRANTED</div>
+            <div className="text-emerald-400 font-bold"> DIGITAL APPROVAL GRANTED</div>
             <div className="text-slate-300">Approving Authority: {approvalStatus.approving_authority}</div>
             <div className="text-slate-300">Clearance: {approvalStatus.clearance_level}</div>
             <div className="text-slate-500 text-[10px] break-all">Digital Signature Hash: {approvalStatus.digital_signature_hash}</div>

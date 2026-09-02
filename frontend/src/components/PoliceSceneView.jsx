@@ -63,10 +63,10 @@ export default function PoliceSceneView() {
       ctx.fillStyle = 'rgba(214,69,69,0.15)'; ctx.strokeStyle = '#D64545'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(250, alertY, 260, 70, 6); ctx.fill(); ctx.stroke();
       ctx.fillStyle = '#D64545'; ctx.font = '10px monospace';
-      ctx.fillText('⚠ PROBABLE CAUSE ESTABLISHED ON SCENE', 260, alertY + 18);
+      ctx.fillText(' PROBABLE CAUSE ESTABLISHED ON SCENE', 260, alertY + 18);
       ctx.fillStyle = '#EDEFF2'; ctx.font = '9px monospace';
-      ctx.fillText('🔫 Weapon: Glock 19 (96.4% confidence)', 260, alertY + 34);
-      ctx.fillText('💊 Contraband Package (91.8% confidence)', 260, alertY + 48);
+      ctx.fillText(' Weapon: Glock 19 (96.4% confidence)', 260, alertY + 34);
+      ctx.fillText(' Contraband Package (91.8% confidence)', 260, alertY + 48);
 
       animId = requestAnimationFrame(render);
     };

@@ -2,18 +2,18 @@ import React from 'react';
 
 export default function UnfilteredItemsView() {
   const allFiles = [
-    { icon: '🖼️', name: 'IMG_0442.jpg', size: '240 KB', type: 'IMAGE', age: '3d ago' },
-    { icon: '🖼️', name: 'IMG_0501.jpg', size: '1.2 MB', type: 'IMAGE', age: '5d ago' },
-    { icon: '🎞️', name: 'VID_0117.mp4', size: '5.1 MB', type: 'VIDEO', age: '1w ago' },
-    { icon: '🖼️', name: 'IMG_0512.jpg', size: '890 KB', type: 'IMAGE', age: '2d ago' },
-    { icon: '💬', name: 'whatsapp_chat.sqlite', size: '45 KB', type: 'CHAT DB', age: '1d ago' },
-    { icon: '📄', name: 'receipt_scan.pdf', size: '88 KB', type: 'DOC', age: '3w ago' },
-    { icon: '🎵', name: 'voice_note_01.m4a', size: '320 KB', type: 'AUDIO', age: '4d ago' },
-    { icon: '🖼️', name: 'screenshot_PIN.png', size: '156 KB', type: 'IMAGE', age: '6d ago' },
-    { icon: '🎞️', name: 'VID_0122.mp4', size: '12 MB', type: 'VIDEO', age: '2w ago' },
-    { icon: '📋', name: 'contacts_backup.vcf', size: '12 KB', type: 'DATA', age: '1m ago' },
-    { icon: '🗺️', name: 'location_history.json', size: '340 KB', type: 'DATA', age: '3d ago' },
-    { icon: '🖼️', name: 'DCIM_deleted_0091.jpg', size: '2.1 MB', type: 'IMAGE', age: '8d ago' },
+    { icon: '️', name: 'IMG_0442.jpg', size: '240 KB', type: 'IMAGE', age: '3d ago' },
+    { icon: '️', name: 'IMG_0501.jpg', size: '1.2 MB', type: 'IMAGE', age: '5d ago' },
+    { icon: '️', name: 'VID_0117.mp4', size: '5.1 MB', type: 'VIDEO', age: '1w ago' },
+    { icon: '️', name: 'IMG_0512.jpg', size: '890 KB', type: 'IMAGE', age: '2d ago' },
+    { icon: '', name: 'whatsapp_chat.sqlite', size: '45 KB', type: 'CHAT DB', age: '1d ago' },
+    { icon: '', name: 'receipt_scan.pdf', size: '88 KB', type: 'DOC', age: '3w ago' },
+    { icon: '', name: 'voice_note_01.m4a', size: '320 KB', type: 'AUDIO', age: '4d ago' },
+    { icon: '️', name: 'screenshot_PIN.png', size: '156 KB', type: 'IMAGE', age: '6d ago' },
+    { icon: '️', name: 'VID_0122.mp4', size: '12 MB', type: 'VIDEO', age: '2w ago' },
+    { icon: '', name: 'contacts_backup.vcf', size: '12 KB', type: 'DATA', age: '1m ago' },
+    { icon: '️', name: 'location_history.json', size: '340 KB', type: 'DATA', age: '3d ago' },
+    { icon: '️', name: 'DCIM_deleted_0091.jpg', size: '2.1 MB', type: 'IMAGE', age: '8d ago' },
   ];
 
   return (

@@ -183,9 +183,9 @@ export default function UnrealEngine5Showcase({ isScanning, progress }) {
         
         {/* Live HUD Badges */}
         <div className="absolute bottom-3 left-3 bg-slate-950/80 backdrop-blur border border-slate-800 rounded-lg p-2 text-[10px] font-mono space-y-1">
-          <div className="text-emerald-400 font-bold">✔ HW WRITE-BLOCKER: BUS READ-ONLY</div>
-          <div className="text-cyan-400">⚡ ON-CHIP NPU: 35 FPS YOLOV8 INFERENCE</div>
-          <div className="text-purple-400">🤖 OFFLINE AGENTIC AI: ACTIVE</div>
+          <div className="text-emerald-400 font-bold"> HW WRITE-BLOCKER: BUS READ-ONLY</div>
+          <div className="text-cyan-400"> ON-CHIP NPU: 35 FPS YOLOV8 INFERENCE</div>
+          <div className="text-purple-400"> OFFLINE AGENTIC AI: ACTIVE</div>
         </div>
       </div>
     </div>
