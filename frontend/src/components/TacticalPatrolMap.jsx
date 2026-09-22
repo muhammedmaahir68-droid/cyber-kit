@@ -230,7 +230,7 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
     };
   }).sort((a, b) => a.distanceKm - b.distanceKm);
 
-  const nearestUnit = unitDistances[0];
+  const nearestUnit = unitDistances[0] || patrolUnits[0] || { id: 'FALLBACK', name: 'Patrol #01', callsign: 'UNIT-01', lat: 28.614, lng: 77.209, speed: 45, heading: 0, distanceKm: 0.5, etaFormatted: '45s' };
   const activeSelectedUnit = patrolUnits.find(u => u.id === selectedUnitId) || nearestUnit;
 
   // ── Dispatch Patrol Unit to Selected Touch Location ──
@@ -260,8 +260,8 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
   };
 
   // Convert points to SVG for rendering
-  const touchSvg = coordToSvg(touchTarget.lat, touchTarget.lng);
-  const nearestSvg = coordToSvg(nearestUnit.lat, nearestUnit.lng);
+  const touchSvg = coordToSvg(touchTarget?.lat || CENTER_LAT, touchTarget?.lng || CENTER_LNG);
+  const nearestSvg = coordToSvg(nearestUnit?.lat || CENTER_LAT, nearestUnit?.lng || CENTER_LNG);
 
   return (
     <div className="space-y-4 font-mono select-none">

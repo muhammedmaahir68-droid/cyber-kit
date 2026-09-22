@@ -8,6 +8,45 @@ import GovernmentAuthPortal from './components/GovernmentAuthPortal';
 import IntroSplash from './components/IntroSplash';
 import { AshokaLionCapital, IndianFlag } from './components/NationalEmblems';
 
+
+class ModuleErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('[Module Error Boundary caught]:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="bg-rose-950/60 border-2 border-rose-600 rounded-2xl p-6 text-slate-100 font-mono space-y-4">
+          <div className="flex items-center gap-3 text-rose-300 font-bold text-sm">
+            <span className="w-3 h-3 rounded-full bg-rose-500 animate-pulse" />
+            MODULE INITIALIZATION EXCEPTION RECOVERED
+          </div>
+          <p className="text-xs text-slate-300">
+            A temporary rendering error occurred in this module:
+          </p>
+          <div className="bg-[#020810] p-3 rounded-xl border border-rose-800/80 text-[11px] text-rose-400 font-mono">
+            {this.state.error?.message || 'Unknown component rendering error'}
+          </div>
+          <button
+            onClick={() => this.setState({ hasError: false, error: null })}
+            className="px-4 py-2 bg-rose-800 hover:bg-rose-700 text-white rounded-xl text-xs font-bold font-mono transition-all"
+          >
+            RE-INITIALIZE MODULE
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function App() {
   // Restore session from browser storage
   const savedSession = (() => {
@@ -262,7 +301,7 @@ export default function App() {
                 />
               )}
               {activeCore === 'emergency' && (
-                <EmergencyMesh officerSession={officerSession} />
+                <ModuleErrorBoundary><EmergencyMesh officerSession={officerSession} /></ModuleErrorBoundary>
               )}
             </div>
 

@@ -1,7 +1,7 @@
 import TacticalPatrolMap from './TacticalPatrolMap';
 import React, { useState, useEffect, useRef } from 'react';
 
-export default function EmergencyMesh() {
+export default function EmergencyMesh({ officerSession }) {
   const [subTab, setSubTab] = useState('patrol_map'); // erss_alerts, suspect_scanner, national_hub
   const [sosActive, setSosActive] = useState(null);
   const [photoMatch, setPhotoMatch] = useState(null);
