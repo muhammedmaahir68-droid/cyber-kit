@@ -5,23 +5,34 @@ import EmergencyMesh from './components/EmergencyMesh';
 import UE5TwinView from './components/UE5TwinView';
 import RealtimeOpsView from './components/RealtimeOpsView';
 import GovernmentAuthPortal from './components/GovernmentAuthPortal';
+import IntroSplash from './components/IntroSplash';
 import { AshokaLionCapital, IndianFlag } from './components/NationalEmblems';
 
 export default function App() {
-  const [officerSession, setOfficerSession] = useState(() => {
-    const saved = typeof window !== 'undefined' ? sessionStorage.getItem('ncis_officer_session') : null;
-    if (saved) { try { return JSON.parse(saved); } catch (e) { return null; } }
+  // ── Restore session from browser storage ──
+  const savedSession = (() => {
+    const raw = typeof window !== 'undefined' ? sessionStorage.getItem('ncis_officer_session') : null;
+    if (raw) { try { return JSON.parse(raw); } catch (e) { return null; } }
     return null;
-  });
+  })();
+
+  // ── App stage: 'intro' → 'login' → 'dashboard' ──
+  // If session already exists, skip intro + login entirely
+  const [appStage, setAppStage]           = useState(savedSession ? 'dashboard' : 'intro');
+  const [officerSession, setOfficerSession] = useState(savedSession);
+
+  const handleIntroDone = () => setAppStage('login');
 
   const handleAuthenticate = (sessionData) => {
     setOfficerSession(sessionData);
     sessionStorage.setItem('ncis_officer_session', JSON.stringify(sessionData));
+    setAppStage('dashboard');
   };
 
   const handleLogout = () => {
     sessionStorage.removeItem('ncis_officer_session');
     setOfficerSession(null);
+    setAppStage('intro');   // go back to intro on logout
   };
 
   const [sessionUuid, setSessionUuid]     = useState('FX-20260829-9941');
@@ -69,9 +80,20 @@ export default function App() {
     }, 200);
   };
 
-  if (!officerSession) return <GovernmentAuthPortal onAuthenticate={handleAuthenticate} />;
+  /* ══════════════════════════════════════════
+     SCREEN ROUTING
+  ══════════════════════════════════════════ */
+  if (appStage === 'intro') {
+    return <IntroSplash onDone={handleIntroDone} />;
+  }
 
-  /* ─────────── NAV ITEMS ─────────── */
+  if (appStage === 'login') {
+    return <GovernmentAuthPortal onAuthenticate={handleAuthenticate} />;
+  }
+
+  /* ══════════════════════════════════════════
+     DASHBOARD
+  ══════════════════════════════════════════ */
   const navItems = [
     { id:'realtime',     code:'MOD-01', label:'Live Surveillance',    sub:'Real-Time Ingestion & Vision',   color:'emerald', live:true },
     { id:'console',      code:'MOD-02', label:'Digital Forensics',    sub:'Physical Drive Carve IC',         color:'cyan' },
@@ -81,55 +103,27 @@ export default function App() {
   ];
 
   const colorMap = {
-    emerald: {
-      active:  'border-l-emerald-500 bg-emerald-950/60 text-emerald-200',
-      dot:     'bg-emerald-400',
-      badge:   'bg-emerald-950 text-emerald-400 border-emerald-700',
-    },
-    cyan: {
-      active:  'border-l-cyan-500 bg-cyan-950/60 text-cyan-200',
-      dot:     'bg-cyan-400',
-      badge:   'bg-cyan-950 text-cyan-400 border-cyan-700',
-    },
-    purple: {
-      active:  'border-l-purple-500 bg-purple-950/60 text-purple-200',
-      dot:     'bg-purple-400',
-      badge:   'bg-purple-950 text-purple-400 border-purple-700',
-    },
-    red: {
-      active:  'border-l-red-500 bg-red-950/60 text-red-200',
-      dot:     'bg-red-400',
-      badge:   'bg-red-950 text-red-400 border-red-700',
-    },
-    indigo: {
-      active:  'border-l-indigo-500 bg-indigo-950/60 text-indigo-200',
-      dot:     'bg-indigo-400',
-      badge:   'bg-indigo-950 text-indigo-400 border-indigo-700',
-    },
+    emerald: { active:'border-l-emerald-500 bg-emerald-950/60 text-emerald-200', dot:'bg-emerald-400', badge:'bg-emerald-950 text-emerald-400 border-emerald-700' },
+    cyan:    { active:'border-l-cyan-500 bg-cyan-950/60 text-cyan-200',          dot:'bg-cyan-400',    badge:'bg-cyan-950 text-cyan-400 border-cyan-700' },
+    purple:  { active:'border-l-purple-500 bg-purple-950/60 text-purple-200',    dot:'bg-purple-400',  badge:'bg-purple-950 text-purple-400 border-purple-700' },
+    red:     { active:'border-l-red-500 bg-red-950/60 text-red-200',             dot:'bg-red-400',     badge:'bg-red-950 text-red-400 border-red-700' },
+    indigo:  { active:'border-l-indigo-500 bg-indigo-950/60 text-indigo-200',    dot:'bg-indigo-400',  badge:'bg-indigo-950 text-indigo-400 border-indigo-700' },
   };
 
   return (
     <div className="min-h-screen bg-[#080f1a] text-slate-100 font-sans antialiased">
 
-      {/* ══════════════════════════════════════════════
-          TOP SAFFRON SOVEREIGNTY BAR
-      ══════════════════════════════════════════════ */}
+      {/* Tiranga top stripe */}
       <div className="w-full h-1 bg-gradient-to-r from-amber-500 via-white to-green-600" />
 
-      {/* ══════════════════════════════════════════════
-          AUTHORITY BANNER
-      ══════════════════════════════════════════════ */}
+      {/* ── AUTHORITY BANNER ── */}
       <header className="w-full bg-[#050c15] border-b border-slate-800/80 shadow-2xl shadow-black/60">
         <div className="max-w-screen-2xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
 
-          {/* LEFT — Emblem + System Identity */}
           <div className="flex items-center gap-5 min-w-0">
-            {/* Emblem ring */}
             <div className="flex-shrink-0 w-14 h-14 rounded-full border-2 border-amber-500/70 bg-[#020810] flex items-center justify-center shadow-lg shadow-amber-950/50 overflow-hidden">
               <AshokaLionCapital className="w-full h-full object-contain" />
             </div>
-
-            {/* Identity text column */}
             <div className="min-w-0">
               <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                 <IndianFlag className="w-6 h-4 rounded-sm flex-shrink-0" />
@@ -147,26 +141,18 @@ export default function App() {
                   National Cyber Crime Investigation Platform
                 </span>
               </h1>
-              <div className="sm:hidden text-[11px] text-slate-400 mt-0.5 font-mono">
-                National Cyber Crime Investigation Platform
-              </div>
+              <div className="sm:hidden text-[11px] text-slate-400 mt-0.5 font-mono">National Cyber Crime Investigation Platform</div>
             </div>
           </div>
 
-          {/* RIGHT — Classification + Officer + Logout */}
           <div className="flex-shrink-0 flex items-center gap-3">
-            {/* Classification pill */}
             <div className="hidden md:flex flex-col items-end gap-1">
               <span className="text-[10px] font-mono font-bold px-3 py-1 rounded-full border bg-rose-950/60 text-rose-300 border-rose-700/70 tracking-widest uppercase flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
                 RESTRICTED // LAW ENFORCEMENT
               </span>
-              <span className="text-[10px] font-mono text-slate-500 tracking-wider">
-                BNS 2023 Sec 63 &nbsp;|&nbsp; BSA Sec 65B
-              </span>
+              <span className="text-[10px] font-mono text-slate-500 tracking-wider">BNS 2023 Sec 63 &nbsp;|&nbsp; BSA Sec 65B</span>
             </div>
-
-            {/* Officer badge */}
             <div className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 flex items-center gap-2.5 shadow-md min-w-0">
               <div className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
               <div className="min-w-0">
@@ -174,7 +160,6 @@ export default function App() {
                 <div className="text-[10px] text-cyan-400 font-mono truncate max-w-[180px]">{officerSession?.officerId || 'IN-DL-4412-SIT'} &nbsp;|&nbsp; {officerSession?.city || 'New Delhi HQ'}</div>
               </div>
             </div>
-
             <button
               onClick={handleLogout}
               title="Secure Logout"
@@ -188,7 +173,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Agency / Legal sub-ribbon */}
+        {/* Agency sub-ribbon */}
         <div className="w-full border-t border-slate-800/60 bg-[#040a12]">
           <div className="max-w-screen-2xl mx-auto px-6 py-1.5 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-500">
             <div className="flex items-center gap-2 flex-wrap">
@@ -200,8 +185,7 @@ export default function App() {
             </div>
             <div className="flex items-center gap-3">
               <span className="text-emerald-400 font-bold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                WRITE-BLOCKER: ACTIVE
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />WRITE-BLOCKER: ACTIVE
               </span>
               <span className="text-slate-700">|</span>
               <span className="text-cyan-400 font-bold">NATGRID / CCTNS: CONNECTED</span>
@@ -212,9 +196,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* ══════════════════════════════════════════════
-          MODULE NAVIGATION TAB BAR
-      ══════════════════════════════════════════════ */}
+      {/* ── MODULE NAV TAB BAR ── */}
       <nav className="w-full bg-[#060d19] border-b-2 border-slate-800 shadow-xl">
         <div className="max-w-screen-2xl mx-auto px-6">
           <div className="flex overflow-x-auto scrollbar-none">
@@ -239,17 +221,12 @@ export default function App() {
                     </span>
                     {item.live && isActive && (
                       <span className="flex items-center gap-1 text-[9px] font-mono font-bold text-emerald-400">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                        LIVE
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />LIVE
                       </span>
                     )}
                   </div>
-                  <div className={`text-xs font-bold uppercase tracking-wide font-mono ${isActive ? '' : 'text-slate-400'}`}>
-                    {item.label}
-                  </div>
-                  <div className={`text-[10px] mt-0.5 ${isActive ? 'text-slate-400' : 'text-slate-600'}`}>
-                    {item.sub}
-                  </div>
+                  <div className={`text-xs font-bold uppercase tracking-wide font-mono ${isActive ? '' : 'text-slate-400'}`}>{item.label}</div>
+                  <div className={`text-[10px] mt-0.5 ${isActive ? 'text-slate-400' : 'text-slate-600'}`}>{item.sub}</div>
                 </button>
               );
             })}
@@ -257,61 +234,39 @@ export default function App() {
         </div>
       </nav>
 
-      {/* ══════════════════════════════════════════════
-          MAIN WORKSPACE
-      ══════════════════════════════════════════════ */}
+      {/* ── MAIN WORKSPACE ── */}
       <main className="max-w-screen-2xl mx-auto px-6 py-6">
         {activeCore === 'realtime' ? (
           <RealtimeOpsView getApiBase={getApiBase} officerSession={officerSession} />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left 8 Columns: Selected Core */}
             <div className="lg:col-span-8 space-y-6">
               {activeCore === 'console' && (
-                <FieldConsole
-                  isScanning={isScanning}
-                  progress={progress}
-                  carveSpeed={carveSpeed}
-                  sessionUuid={sessionUuid}
-                  sha256Hash={sha256Hash}
-                  onStartScan={startScan}
-                  officerSession={officerSession}
-                />
+                <FieldConsole isScanning={isScanning} progress={progress} carveSpeed={carveSpeed} sessionUuid={sessionUuid} sha256Hash={sha256Hash} onStartScan={startScan} officerSession={officerSession} />
               )}
               {activeCore === 'intelligence' && (
-                <IntelligenceCenter
-                  evidenceItems={evidenceItems}
-                  agentTraces={agentTraces}
-                  officerSession={officerSession}
-                />
+                <IntelligenceCenter evidenceItems={evidenceItems} agentTraces={agentTraces} officerSession={officerSession} />
               )}
               {activeCore === 'emergency' && (
                 <EmergencyMesh officerSession={officerSession} />
               )}
               {activeCore === 'twin' && (
-                <UE5TwinView
-                  isScanning={isScanning}
-                  progress={progress}
-                  officerSession={officerSession}
-                />
+                <UE5TwinView isScanning={isScanning} progress={progress} officerSession={officerSession} />
               )}
             </div>
 
-            {/* Right 4 Columns: System Telemetry + Chain of Custody */}
             <div className="lg:col-span-4 space-y-5">
-
               {/* System Telemetry */}
               <div className="bg-[#0a1525] border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl font-mono">
                 <h3 className="text-xs font-bold text-slate-200 uppercase tracking-widest flex items-center gap-2 pb-3 border-b border-slate-800">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                  System Telemetry &amp; Hardware Status
+                  <span className="w-2 h-2 rounded-full bg-cyan-400" />System Telemetry &amp; Hardware Status
                 </h3>
                 <div className="space-y-2 text-xs">
                   {[
-                    ['Carving Throughput',  carveSpeed,                'text-cyan-400'],
-                    ['Local NPU Accelerator','Hailo-8L (26 TOPS)',     'text-purple-400'],
-                    ['Write-Blocker Bus',   'READ-ONLY (HIGH)',        'text-emerald-400'],
-                    ['Control Room Link',   'NATGRID / CCTNS ACTIVE',  'text-cyan-400'],
+                    ['Carving Throughput',   carveSpeed,                'text-cyan-400'],
+                    ['Local NPU Accelerator','Hailo-8L (26 TOPS)',      'text-purple-400'],
+                    ['Write-Blocker Bus',    'READ-ONLY (HIGH)',         'text-emerald-400'],
+                    ['Control Room Link',    'NATGRID / CCTNS ACTIVE',  'text-cyan-400'],
                   ].map(([label, value, cls]) => (
                     <div key={label} className="bg-[#060d1a] p-3 rounded-xl border border-slate-800/70 flex justify-between items-center">
                       <span className="text-slate-400">{label}</span>
@@ -335,10 +290,10 @@ export default function App() {
                     <div className="text-emerald-400 break-all mt-1 font-mono text-[10px]">{sha256Hash}</div>
                   </div>
                   {[
-                    ['Investigator',  officerSession?.officerName || 'Inspector Vikramaditya Rao',  'text-slate-200'],
-                    ['Badge ID',      officerSession?.officerId   || 'IN-DL-4412-SIT',             'text-cyan-400'],
-                    ['Jurisdiction',  officerSession?.city        || 'New Delhi HQ',               'text-slate-300'],
-                    ['Integrity',     'SEALED & VERIFIED',                                         'text-emerald-400'],
+                    ['Investigator', officerSession?.officerName || 'Inspector Vikramaditya Rao', 'text-slate-200'],
+                    ['Badge ID',     officerSession?.officerId   || 'IN-DL-4412-SIT',            'text-cyan-400'],
+                    ['Jurisdiction', officerSession?.city        || 'New Delhi HQ',              'text-slate-300'],
+                    ['Integrity',    'SEALED & VERIFIED',                                        'text-emerald-400'],
                   ].map(([lbl, val, cls]) => (
                     <div key={lbl} className="flex justify-between gap-2">
                       <span className="text-slate-500 uppercase tracking-wider text-[10px]">{lbl}:</span>
@@ -349,8 +304,7 @@ export default function App() {
                 <button
                   onClick={() => alert(
                     `NATIONAL CYBER CRIME INVESTIGATION REPORT\n` +
-                    `Session: ${sessionUuid}\n` +
-                    `SHA-256: ${sha256Hash}\n` +
+                    `Session: ${sessionUuid}\nSHA-256: ${sha256Hash}\n` +
                     `Authorized Officer: ${officerSession?.officerName || 'Inspector Vikramaditya Rao'} (${officerSession?.officerId || 'IN-DL-4412-SIT'})\n` +
                     `Agency / Station: ${officerSession?.agency || 'I4C Central Command'} — ${officerSession?.city || 'New Delhi HQ'}\n` +
                     `Division: ${officerSession?.branch || 'Special Investigation Team'}\n` +
@@ -368,9 +322,7 @@ export default function App() {
         )}
       </main>
 
-      {/* ══════════════════════════════════════════════
-          FOOTER STATUS BAR
-      ══════════════════════════════════════════════ */}
+      {/* Footer */}
       <footer className="w-full border-t border-slate-800 bg-[#040a12] mt-8">
         <div className="max-w-screen-2xl mx-auto px-6 py-2 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-600">
           <span>NCIS-TACTICAL &nbsp;|&nbsp; I4C / MHA &nbsp;|&nbsp; CLASSIFIED — RESTRICTED LAW ENFORCEMENT USE ONLY</span>
