@@ -1,23 +1,64 @@
 version: '3.8'
 
 services:
+  # 1. Relational Database for Events, Warrants & Evidence Audit
+  db:
+    image: postgres:15-alpine
+    container_name: forensix_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: forensix_db
+      POSTGRES_USER: forensix_user
+      POSTGRES_PASSWORD: forensix_secure_pass_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # 2. In-Memory Message Broker / Queue (Redis 7)
+  redis:
+    image: redis:7-alpine
+    container_name: forensix_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
+  # 3. Real-Time Ingestion Engine, AI Triage & WebSocket Server (FastAPI)
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile.backend
+    container_name: forensix_backend
+    restart: always
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=sqlite:///./cyber_kit.db
+      - DATABASE_URL=postgresql://forensix_user:forensix_secure_pass_2026@db:5432/forensix_db
+      - REDIS_URL=redis://redis:6379/0
       - HW_WRITE_BLOCKER_ENFORCED=true
+      - API_V1_STR=/api/v1
     volumes:
       - ./backend/data:/app/data
+    depends_on:
+      - db
+      - redis
 
+  # 4. Operator Dashboard & Live CCTV Surveillance UI (React + Nginx)
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.frontend
+    container_name: forensix_frontend
+    restart: always
     ports:
       - "3000:80"
+    environment:
+      - VITE_API_URL=http://localhost:8000
     depends_on:
       - backend
+
+volumes:
+  pgdata:
+  redisdata:

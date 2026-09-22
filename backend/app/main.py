@@ -8,7 +8,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.db.database import engine, Base
-from app.routers import scan, ai, agent, national_sec, emergency_dispatch, push_notifications, criminal_network
+import asyncio
+from app.routers import scan, ai, agent, national_sec, emergency_dispatch, push_notifications, criminal_network, realtime_stream
 
 # Create DB tables safely
 try:
@@ -31,6 +32,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Background worker task handle
+worker_task = None
+
+@app.on_event("startup")
+async def startup_event():
+    global worker_task
+    worker_task = asyncio.create_task(realtime_stream.background_event_worker())
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    global worker_task
+    if worker_task:
+        worker_task.cancel()
+
 app.include_router(scan.router, prefix=settings.API_V1_STR)
 app.include_router(ai.router, prefix=settings.API_V1_STR)
 app.include_router(agent.router, prefix=settings.API_V1_STR)
@@ -38,6 +53,7 @@ app.include_router(national_sec.router, prefix=settings.API_V1_STR)
 app.include_router(emergency_dispatch.router, prefix=settings.API_V1_STR)
 app.include_router(push_notifications.router, prefix=settings.API_V1_STR)
 app.include_router(criminal_network.router, prefix=settings.API_V1_STR)
+app.include_router(realtime_stream.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():

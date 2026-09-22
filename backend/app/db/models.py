@@ -102,3 +102,44 @@ class CriminalRecordMatch(Base):
     warrant_status = Column(String, default="INTER_STATE_ARREST_WARRANT_ACTIVE")
     operating_states = Column(String, default="Delhi, Maharashtra, Punjab")
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+
+class AuthorizedSource(Base):
+    __tablename__ = "authorized_sources"
+
+    id = Column(Integer, primary_key=True, index=True)
+    source_id = Column(String, unique=True, index=True)
+    source_name = Column(String)
+    source_type = Column(String)  # CCTV, WEBCAM, IOT_SENSOR, POLICE_TERMINAL, CDR_FEED
+    location = Column(String)
+    status = Column(String, default="ACTIVE")
+    authorized_by = Column(String, default="SUPERINTENDENT_OF_POLICE")
+    fps_or_rate = Column(Float, default=15.0)
+    last_heartbeat = Column(DateTime, default=datetime.datetime.utcnow)
+
+class LiveIngestionEvent(Base):
+    __tablename__ = "live_ingestion_events"
+
+    id = Column(Integer, primary_key=True, index=True)
+    event_uuid = Column(String, unique=True, index=True)
+    source_id = Column(String, index=True)
+    event_type = Column(String)  # DETECTED_ACTIVITY, SUSPICIOUS_LOITERING, WEAPON_CONTRABAND, FACE_MATCH, CDR_ANOMALY
+    location = Column(String)
+    payload_json = Column(Text)
+    risk_score = Column(Float, default=0.0)
+    risk_level = Column(String, default="LOW")  # LOW, MEDIUM, HIGH, CRITICAL
+    processing_latency_ms = Column(Float, default=0.0)
+    sha256_seal = Column(String)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class RealtimeAlert(Base):
+    __tablename__ = "realtime_alerts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    alert_uuid = Column(String, unique=True, index=True)
+    source_id = Column(String, index=True)
+    title = Column(String)
+    description = Column(Text)
+    risk_level = Column(String, default="HIGH")
+    action_required = Column(String, default="DISPATCH_FIELD_UNIT")
+    status = Column(String, default="NEW")  # NEW, ACKNOWLEDGED, RESOLVED
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)

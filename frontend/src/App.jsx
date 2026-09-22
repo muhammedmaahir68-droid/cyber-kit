@@ -3,13 +3,14 @@ import FieldConsole from './components/FieldConsole';
 import IntelligenceCenter from './components/IntelligenceCenter';
 import EmergencyMesh from './components/EmergencyMesh';
 import UE5TwinView from './components/UE5TwinView';
+import RealtimeOpsView from './components/RealtimeOpsView';
 
 export default function App() {
   const [sessionUuid, setSessionUuid] = useState('FX-20260829-9941');
   const [isScanning, setIsScanning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [carveSpeed, setCarveSpeed] = useState('0.0 MB/s');
-  const [activeCore, setActiveCore] = useState('console'); // console, intelligence, emergency, twin
+  const [activeCore, setActiveCore] = useState('realtime'); // realtime, console, intelligence, emergency, twin
   const [evidenceItems, setEvidenceItems] = useState([]);
   const [agentTraces, setAgentTraces] = useState([]);
   const [sha256Hash, setSha256Hash] = useState('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
@@ -129,8 +130,31 @@ export default function App() {
         </div>
       </header>
 
-      {/* UNIFIED 4-CORE NAVIGATION BAR */}
-      <nav className="max-w-7xl mx-auto mb-6 grid grid-cols-2 md:grid-cols-4 gap-3 font-mono">
+      {/* UNIFIED 5-CORE NAVIGATION BAR */}
+      <nav className="max-w-7xl mx-auto mb-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 font-mono">
+        <button
+          onClick={() => setActiveCore('realtime')}
+          className={`p-3.5 rounded-xl border transition-all text-left flex items-center gap-3 ${
+            activeCore === 'realtime'
+              ? 'bg-emerald-950/90 border-emerald-500 text-emerald-300 shadow-md shadow-emerald-950/40 ring-1 ring-emerald-500/50'
+              : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+          }`}
+        >
+          <div className="p-2 rounded-lg bg-slate-950 border border-slate-800 text-emerald-400 relative">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 absolute top-1 right-1 animate-ping"></span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <div>
+            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
+              <span>0. Live Ops</span>
+              <span className="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 rounded">LIVE</span>
+            </div>
+            <div className="text-[11px] text-slate-400">Stream & Ingestion</div>
+          </div>
+        </button>
+
         <button
           onClick={() => setActiveCore('console')}
           className={`p-3.5 rounded-xl border transition-all text-left flex items-center gap-3 ${
@@ -164,7 +188,7 @@ export default function App() {
             </svg>
           </div>
           <div>
-            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">2. AI Network Intel</div>
+            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">2. AI Network</div>
             <div className="text-[11px] text-slate-400">GNN Graph (SIH 189)</div>
           </div>
         </button>
@@ -183,8 +207,8 @@ export default function App() {
             </svg>
           </div>
           <div>
-            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">3. ERSS Patrol Mesh</div>
-            <div className="text-[11px] text-slate-400">Dual Dispatch & Lockscreen</div>
+            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">3. ERSS Mesh</div>
+            <div className="text-[11px] text-slate-400">Dual Dispatch 100/112</div>
           </div>
         </button>
 
@@ -202,46 +226,49 @@ export default function App() {
             </svg>
           </div>
           <div>
-            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">4. Tactical 3D View</div>
-            <div className="text-[11px] text-slate-400">Hardware & Sector Map</div>
+            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">4. 3D Tactical</div>
+            <div className="text-[11px] text-slate-400">Hardware & Map</div>
           </div>
         </button>
       </nav>
 
       {/* MAIN UNIFIED WORKSPACE */}
-      <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <main className="max-w-7xl mx-auto">
+        {activeCore === 'realtime' ? (
+          <RealtimeOpsView getApiBase={getApiBase} />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left 8 Columns: Selected Core Workspace */}
+            <div className="lg:col-span-8 space-y-6">
+              {activeCore === 'console' && (
+                <FieldConsole
+                  isScanning={isScanning}
+                  progress={progress}
+                  carveSpeed={carveSpeed}
+                  sessionUuid={sessionUuid}
+                  sha256Hash={sha256Hash}
+                  onStartScan={startScan}
+                />
+              )}
 
-        {/* Left 8 Columns: Selected Core Workspace */}
-        <div className="lg:col-span-8 space-y-6">
-          {activeCore === 'console' && (
-            <FieldConsole
-              isScanning={isScanning}
-              progress={progress}
-              carveSpeed={carveSpeed}
-              sessionUuid={sessionUuid}
-              sha256Hash={sha256Hash}
-              onStartScan={startScan}
-            />
-          )}
+              {activeCore === 'intelligence' && (
+                <IntelligenceCenter
+                  evidenceItems={evidenceItems}
+                  agentTraces={agentTraces}
+                />
+              )}
 
-          {activeCore === 'intelligence' && (
-            <IntelligenceCenter
-              evidenceItems={evidenceItems}
-              agentTraces={agentTraces}
-            />
-          )}
+              {activeCore === 'emergency' && (
+                <EmergencyMesh />
+              )}
 
-          {activeCore === 'emergency' && (
-            <EmergencyMesh />
-          )}
-
-          {activeCore === 'twin' && (
-            <UE5TwinView
-              isScanning={isScanning}
-              progress={progress}
-            />
-          )}
-        </div>
+              {activeCore === 'twin' && (
+                <UE5TwinView
+                  isScanning={isScanning}
+                  progress={progress}
+                />
+              )}
+            </div>
 
         {/* Right 4 Columns: Persistent Telemetry & Chain of Custody */}
         <div className="lg:col-span-4 space-y-6">
@@ -307,6 +334,8 @@ export default function App() {
 
         </div>
 
+        </div>
+      )}
       </main>
     </div>
   );
