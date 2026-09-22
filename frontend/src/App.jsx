@@ -118,13 +118,13 @@ export default function App() {
             {/* Top Professional Header */}
       <header className="max-w-7xl mx-auto mb-6 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800 pb-4 gap-4 font-mono">
         <div className="flex items-center gap-3.5">
-          <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-900 border border-amber-500/50 shadow-lg shadow-amber-950/30">
-            <AshokaLionCapital className="w-10 h-12 shrink-0 drop-shadow-md" />
-            <IndianFlag className="w-8 h-5 shrink-0 rounded shadow-sm border border-slate-700/80" />
+          <div className="p-0.5 rounded-full bg-slate-900 border border-amber-500/60 shadow-xl shadow-amber-950/40">
+            <AshokaLionCapital className="w-12 h-12 sm:w-14 sm:h-14" />
           </div>
           <div>
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <IndianFlag className="w-5 h-3.5 rounded-xs inline-block" />
                 भारत सरकार • GOVT OF INDIA
               </span>
               <span className="text-slate-600">|</span>

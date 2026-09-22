@@ -100,18 +100,10 @@ export default function GovernmentAuthPortal({ onAuthenticate }) {
         
         {/* National Emblem & Institutional Header */}
         <div className="text-center space-y-3 border-b border-slate-800/80 pb-6">
-          {/* Emblem of India Graphic & Indian National Flag */}
+          {/* Official Emblem of India with Indian Flag Overlay Mask */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5 sm:gap-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-2xl bg-slate-950/90 border border-amber-500/50 shadow-xl shadow-amber-950/40">
-                <AshokaLionCapital className="w-16 h-20 drop-shadow-md" />
-              </div>
-              <div className="flex flex-col items-center gap-1.5">
-                <IndianFlag className="w-12 h-8 rounded shadow-md border border-slate-700/80" />
-                <span className="text-[9px] font-mono text-amber-300 font-bold uppercase tracking-widest">
-                  सत्यमेव जयते
-                </span>
-              </div>
+            <div className="p-1 rounded-full bg-slate-950/90 border border-amber-500/60 shadow-2xl shadow-amber-950/50">
+              <AshokaLionCapital className="w-20 h-20 sm:w-24 sm:h-24" />
             </div>
             
             <div className="text-center sm:text-left">
