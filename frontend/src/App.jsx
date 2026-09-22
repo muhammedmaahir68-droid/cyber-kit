@@ -3,6 +3,7 @@ import FieldConsole from './components/FieldConsole';
 import IntelligenceCenter from './components/IntelligenceCenter';
 import EmergencyMesh from './components/EmergencyMesh';
 import RealtimeOpsView from './components/RealtimeOpsView';
+import EdgeHardwareConsole from './components/EdgeHardwareConsole';
 import GovernmentAuthPortal from './components/GovernmentAuthPortal';
 import IntroSplash from './components/IntroSplash';
 import { AshokaLionCapital, IndianFlag } from './components/NationalEmblems';
@@ -16,7 +17,6 @@ export default function App() {
   })();
 
   // App stage: 'intro' → 'login' → 'dashboard'
-  // If session already exists, skip intro + login entirely
   const [appStage, setAppStage]             = useState(savedSession ? 'dashboard' : 'intro');
   const [officerSession, setOfficerSession] = useState(savedSession);
 
@@ -79,16 +79,24 @@ export default function App() {
     }, 200);
   };
 
+  const handleHardwareDataRetrieved = (data) => {
+    // When raw data is retrieved from physical edge hardware, we update the session hash and notify
+    if (data.hash) {
+      setSha256Hash(data.hash);
+    }
+  };
+
   /* ── Screen routing ── */
   if (appStage === 'intro') return <IntroSplash onDone={handleIntroDone} />;
   if (appStage === 'login') return <GovernmentAuthPortal onAuthenticate={handleAuthenticate} />;
 
-  /* ── Navigation modules (4 operational modules — no simulation hardware) ── */
+  /* ── Navigation modules (5 operational modules — pure hardware controller, zero simulations) ── */
   const navItems = [
     { id:'realtime',     code:'MOD-01', label:'Live Surveillance',  sub:'Real-Time Camera & Event Ingestion', color:'emerald', live:true },
     { id:'console',      code:'MOD-02', label:'Digital Forensics',  sub:'Physical Drive Carve & Analysis',    color:'cyan' },
     { id:'intelligence', code:'MOD-03', label:'Syndicate Intel',    sub:'GNN Network Graph Analysis',         color:'purple' },
     { id:'emergency',    code:'MOD-04', label:'ERSS Patrol Mesh',   sub:'Dial 112 Rapid Dispatch System',     color:'red' },
+    { id:'hardware',     code:'MOD-05', label:'Tactical Hardware',  sub:'Port Switch & Data Retrieval',       color:'indigo' },
   ];
 
   const colorMap = {
@@ -96,6 +104,7 @@ export default function App() {
     cyan:    { active:'border-l-cyan-500 bg-cyan-950/60 text-cyan-200',          badge:'bg-cyan-950 text-cyan-400 border-cyan-700' },
     purple:  { active:'border-l-purple-500 bg-purple-950/60 text-purple-200',    badge:'bg-purple-950 text-purple-400 border-purple-700' },
     red:     { active:'border-l-red-500 bg-red-950/60 text-red-200',             badge:'bg-red-950 text-red-400 border-red-700' },
+    indigo:  { active:'border-l-indigo-500 bg-indigo-950/60 text-indigo-200',    badge:'bg-indigo-950 text-indigo-400 border-indigo-700' },
   };
 
   return (
@@ -199,7 +208,7 @@ export default function App() {
                   onClick={() => setActiveCore(item.id)}
                   className={[
                     'relative flex-shrink-0 flex flex-col justify-center px-6 py-3.5 text-left',
-                    'border-l-4 border-b-2 transition-all duration-150 min-w-[180px]',
+                    'border-l-4 border-b-2 transition-all duration-150 min-w-[170px]',
                     isActive
                       ? `${c.active} border-b-transparent`
                       : 'border-l-slate-800 border-b-transparent bg-transparent text-slate-500 hover:bg-slate-900/60 hover:text-slate-300 hover:border-l-slate-600'
@@ -228,6 +237,8 @@ export default function App() {
       <main className="max-w-screen-2xl mx-auto px-6 py-6">
         {activeCore === 'realtime' ? (
           <RealtimeOpsView getApiBase={getApiBase} officerSession={officerSession} />
+        ) : activeCore === 'hardware' ? (
+          <EdgeHardwareConsole officerSession={officerSession} onDataRetrieved={handleHardwareDataRetrieved} />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left 8 Columns: Active Module */}
