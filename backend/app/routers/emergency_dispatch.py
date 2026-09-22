@@ -115,9 +115,9 @@ def trigger_sos_alert(req: SOSAlertPayload, db: Session = Depends(get_db)):
     try:
         import requests as _req
         _req.post(
-            "https://ntfy.sh/cyberkit-police-sih2026-maahir",
+            "https://ntfy.sh/cyberkit-police-command-dispatch",
             json={
-                "topic": "cyberkit-police-sih2026-maahir",
+                "topic": "cyberkit-police-command-dispatch",
                 "title": f"🚨 REAL-TIME SOS: {req.crime_category}",
                 "message": f"Location: {req.location_name}. Victim Contact: {req.victim_phone}. Officer #4412 dispatched! Target ETA <85s.",
                 "priority": 5,

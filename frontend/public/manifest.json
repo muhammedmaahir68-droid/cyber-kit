@@ -1,7 +1,7 @@
 {
-  "name": "Cyber Kit - Police ForensiX Tactical",
-  "short_name": "CyberKit Police",
-  "description": "AAROHAN-X Real-Time Digital Forensics, NCRB Facial Recognition & Dial 100/112 Emergency Patrol Mesh",
+  "name": "NCIS-Tactical Police Forensics & Cyber Crime System",
+  "short_name": "NCIS Tactical",
+  "description": "Real-Time Digital Forensics, Criminal Network Intelligence & Dial 100/112 Emergency Patrol Mesh",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",

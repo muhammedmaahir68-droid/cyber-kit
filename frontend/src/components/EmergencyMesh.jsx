@@ -161,7 +161,7 @@ export default function EmergencyMesh() {
   useEffect(() => {
     let eventSource;
     try {
-      eventSource = new EventSource('https://ntfy.sh/cyberkit-police-sih2026-maahir/sse');
+      eventSource = new EventSource('https://ntfy.sh/cyberkit-police-command-dispatch/sse');
       eventSource.onmessage = (event) => {
         try {
           const rawData = JSON.parse(event.data);
@@ -295,11 +295,11 @@ export default function EmergencyMesh() {
 
     // Publish alert to ntfy cloud topic for instant 0.1s mobile sync worldwide
     try {
-      fetch('https://ntfy.sh/cyberkit-police-sih2026-maahir', {
+      fetch('https://ntfy.sh/cyberkit-police-command-dispatch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          topic: 'cyberkit-police-sih2026-maahir',
+          topic: 'cyberkit-police-command-dispatch',
           title: ` REAL-TIME SOS: ${type}`,
           message: `Location: ${loc}. Victim Contact: ${phone}. Officer #4412 dispatched! Target ETA <85s.`,
           priority: 5,
@@ -456,14 +456,14 @@ export default function EmergencyMesh() {
 
             <div className="bg-slate-950 p-4 rounded-xl border border-amber-500/60 flex flex-col sm:flex-row items-center gap-4 text-[11px]">
               <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://ntfy.sh/cyberkit-police-sih2026-maahir"
+                src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://ntfy.sh/cyberkit-police-command-dispatch"
                 alt="QR Code for Mobile Push"
                 className="w-28 h-28 rounded-lg border border-slate-700 bg-white p-1 shadow-md"
               />
               <div className="space-y-1.5 flex-1 text-slate-200">
                 <div className="text-amber-300 font-bold text-xs"> FOR GUARANTEED LOCKSCREEN PUSH ALERTS WHEN PHONE IS SLEEPING:</div>
                 <div>1. Scan QR code or install free <span className="text-cyan-400 font-bold">ntfy app</span> from Play Store / App Store.</div>
-                <div>2. Subscribe to topic: <span className="text-cyan-400 font-bold">cyberkit-police-sih2026-maahir</span></div>
+                <div>2. Subscribe to topic: <span className="text-cyan-400 font-bold">cyberkit-police-command-dispatch</span></div>
                 <div className="text-emerald-400 font-bold pt-1">
                    Your phone will now VIBRATE and play POLICE SIREN even when screen is locked & sleeping!
                 </div>

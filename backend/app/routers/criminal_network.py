@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 
-router = APIRouter(prefix="/criminal-network", tags=["SIH 189: AI-Powered Criminal Network Analysis"])
+router = APIRouter(prefix="/criminal-network", tags=["Criminal Syndicate Graph & Entity Intelligence"])
 
 # ─── DATA MODELS ───
 class NLPEntityRequest(BaseModel):
@@ -642,7 +642,7 @@ def get_hardware_extension_spec():
     return {
         "system_classification": "SOFTWARE_CORE_WITH_OPTIONAL_HARDWARE_EXTENSION",
         "core_project": {
-            "name": "AAROHAN-X Real-Time Criminal Network Intelligence Platform",
+            "name": "National Cyber Crime Intelligence & Criminal Syndicate Graph Platform",
             "category": "Software",
             "deployment": "Real-time Cloud/Server Central Web Platform (CCTNS / NATGRID Compatible)",
             "real_time_capabilities": [

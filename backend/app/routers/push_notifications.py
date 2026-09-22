@@ -9,7 +9,7 @@ router = APIRouter(prefix="/push", tags=["Web Push Notifications"])
 # VAPID Keys for Web Push (generated for this project)
 VAPID_PUBLIC_KEY = "BHeZKsSuj7QOtWGie-3bJOB4MZeWAYvt1q2b6n7Zq-G5qyommY82cxY_wZa6c2FYVq3-JXi7bf_1iWli_6gvg8E"
 VAPID_PRIVATE_KEY = "E2Yk9reGoK10j0sRW1Of2MMQSavmVMhFbDiKMapp1gk"
-VAPID_CLAIMS = {"sub": "mailto:cyberkit-police@aarohanx.in"}
+VAPID_CLAIMS = {"sub": "mailto:cyberkit-police@mha.gov.in"}
 
 # In-memory store for push subscriptions from all connected devices
 PUSH_SUBSCRIPTIONS: List[Dict] = []

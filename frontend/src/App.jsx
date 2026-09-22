@@ -102,13 +102,13 @@ export default function App() {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-bold tracking-tight text-white font-mono">
-                AAROHAN-X <span className="text-slate-400 text-sm font-normal">| FORENSIX TACTICAL</span>
+                NCIS-TACTICAL <span className="text-slate-400 text-sm font-normal">| NATIONAL CYBER CRIME INVESTIGATION PLATFORM</span>
               </h1>
               <span className="text-[10px] px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 font-mono font-semibold tracking-wider">
-                SIH PS 189 ENTERPRISE
+                RESTRICTED // LAW ENFORCEMENT
               </span>
             </div>
-            <p className="text-xs text-slate-400 font-mono mt-0.5">On-Scene Field Triage • GNN Criminal Network Analysis • Dual ERSS Emergency Patrol Mesh</p>
+            <p className="text-xs text-slate-400 font-mono mt-0.5">Bureau of Police Research & Development (BPR&D) • Indian Cybercrime Coordination Centre (I4C) • CCTNS / ICJS Gateway</p>
           </div>
         </div>
 
@@ -148,10 +148,10 @@ export default function App() {
           </div>
           <div>
             <div className="font-bold text-xs text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
-              <span>0. Live Ops</span>
+              <span>0. Live Surveillance</span>
               <span className="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 rounded">LIVE</span>
             </div>
-            <div className="text-[11px] text-slate-400">Stream & Ingestion</div>
+            <div className="text-[11px] text-slate-400">Real-Time Ingestion & Vision</div>
           </div>
         </button>
 
@@ -169,8 +169,8 @@ export default function App() {
             </svg>
           </div>
           <div>
-            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">1. Field Console</div>
-            <div className="text-[11px] text-slate-400">Carve & Write-Blocker</div>
+            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">1. Digital Forensics</div>
+            <div className="text-[11px] text-slate-400">Physical Drive Carve IC</div>
           </div>
         </button>
 
@@ -188,8 +188,8 @@ export default function App() {
             </svg>
           </div>
           <div>
-            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">2. AI Network</div>
-            <div className="text-[11px] text-slate-400">GNN Graph (SIH 189)</div>
+            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">2. Syndicate Intel</div>
+            <div className="text-[11px] text-slate-400">GNN Syndicate Graph</div>
           </div>
         </button>
 
@@ -207,8 +207,8 @@ export default function App() {
             </svg>
           </div>
           <div>
-            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">3. ERSS Mesh</div>
-            <div className="text-[11px] text-slate-400">Dual Dispatch 100/112</div>
+            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">3. ERSS Patrol Mesh</div>
+            <div className="text-[11px] text-slate-400">Dial 112 Rapid Dispatch</div>
           </div>
         </button>
 
@@ -226,8 +226,8 @@ export default function App() {
             </svg>
           </div>
           <div>
-            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">4. 3D Tactical</div>
-            <div className="text-[11px] text-slate-400">Hardware & Map</div>
+            <div className="font-bold text-xs text-slate-100 uppercase tracking-wider">4. Edge Hardware</div>
+            <div className="text-[11px] text-slate-400">Tactical NPU Enclosure</div>
           </div>
         </button>
       </nav>
@@ -325,7 +325,7 @@ export default function App() {
             </div>
 
             <button 
-              onClick={() => alert(`FORENSIX COURT EVIDENCE REPORT\nSession: ${sessionUuid}\nSHA-256: ${sha256Hash}\nStatus: Certified Legally Sound under BNS Sec 63 / Evidence Act Sec 65B`)}
+              onClick={() => alert(`NATIONAL CYBER CRIME INVESTIGATION REPORT\nSession: ${sessionUuid}\nSHA-256: ${sha256Hash}\nStatutory Basis: Certified Court-Admissible under BNS 2023 Sec 63 & Bharatiya Sakshya Adhiniyam Sec 65B\nIssuing Agency: State Cyber Crime Police Station / Special Investigation Team`)}
               className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-bold rounded-xl border border-slate-700 transition-all font-mono"
             >
               EXPORT COURT EVIDENCE REPORT

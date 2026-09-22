@@ -1,6 +1,6 @@
-# AAROHAN-X: Production Deployment Guide & Real-Time Architecture
+# NCIS-TACTICAL: Production Deployment Guide & Real-Time Law Enforcement Architecture
 
-This guide details how to run the **AI-Powered Criminal Network Analysis & Field Triage System** as a genuine **real-time production service** on the cloud rather than an offline simulation or localhost-only setup.
+This guide details how to run the **National Cyber Crime Investigation & Forensic Analysis Platform (NCIS-Tactical)** as a genuine **real-time production service** on cloud infrastructure.
 
 ---
 
@@ -75,7 +75,7 @@ Services launched:
 3. Import your GitHub repository.
 4. Set **Root Directory** to \rontend\.
 5. Set Environment Variable:
-   - \VITE_API_URL\ = \https://your-backend-service.onrender.com6. Click **Deploy**. Vercel will output your live URL (e.g., \https://aarohan-x.vercel.app\).
+   - \VITE_API_URL\ = \https://your-backend-service.onrender.com6. Click **Deploy**. Vercel will output your live URL (e.g., \https://ncis-tactical.vercel.app\).
 
 #### Step 2: Deploy Backend to Render or Railway
 1. Go to [render.com](https://render.com) and create a **Web Service**.
