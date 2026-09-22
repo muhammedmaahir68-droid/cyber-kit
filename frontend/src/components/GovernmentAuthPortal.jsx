@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AshokaLionCapital, IndianFlag } from './NationalEmblems';
 
 export default function GovernmentAuthPortal({ onAuthenticate }) {
   const [officerId, setOfficerId] = useState('IN-DL-4412-SIT');
@@ -99,40 +100,36 @@ export default function GovernmentAuthPortal({ onAuthenticate }) {
         
         {/* National Emblem & Institutional Header */}
         <div className="text-center space-y-3 border-b border-slate-800/80 pb-6">
-          {/* Emblem of India Graphic (Ashoka Lion Capital SVG) */}
-          <div className="flex justify-center items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-amber-950/40 border border-amber-500/40 flex items-center justify-center p-2.5 shadow-lg shadow-amber-950/40">
-              <svg className="w-full h-full text-amber-400" viewBox="0 0 24 24" fill="currentColor">
-                {/* Ashoka Chakra & Lions Motif */}
-                <path d="M12 2L15 5H18V8L21 11V13L18 16V19H15L12 22L9 19H6V16L3 13V11L6 8V5H9L12 2Z" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-                <path d="M12 8V16M8 12H16M9.17 9.17L14.83 14.83M14.83 9.17L9.17 14.83" stroke="currentColor" strokeWidth="1" />
-              </svg>
+          {/* Emblem of India Graphic & Indian National Flag */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-5 sm:gap-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-2xl bg-slate-950/90 border border-amber-500/50 shadow-xl shadow-amber-950/40">
+                <AshokaLionCapital className="w-16 h-20 drop-shadow-md" />
+              </div>
+              <div className="flex flex-col items-center gap-1.5">
+                <IndianFlag className="w-12 h-8 rounded shadow-md border border-slate-700/80" />
+                <span className="text-[9px] font-mono text-amber-300 font-bold uppercase tracking-widest">
+                  सत्यमेव जयते
+                </span>
+              </div>
             </div>
             
-            <div className="text-left">
-              <div className="text-[11px] font-mono tracking-widest text-amber-400 uppercase font-bold flex items-center gap-2">
-                <span>GOVERNMENT OF INDIA</span>
+            <div className="text-center sm:text-left">
+              <div className="text-[11px] font-mono tracking-widest text-amber-400 uppercase font-bold flex items-center justify-center sm:justify-start gap-2">
+                <span>भारत सरकार • GOVERNMENT OF INDIA</span>
                 <span className="text-slate-500">•</span>
-                <span>MINISTRY OF HOME AFFAIRS</span>
+                <span>गृह मंत्रालय • MHA</span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold font-mono tracking-tight text-white mt-0.5">
+              <h1 className="text-xl sm:text-2xl font-bold font-mono tracking-tight text-white mt-1">
                 INDIAN CYBER CRIME COORDINATION CENTRE (I4C)
               </h1>
-              <div className="text-xs text-slate-400 font-mono flex items-center gap-2 mt-0.5">
-                <span>NATIONAL CYBER CRIME & FORENSIC INVESTIGATION SYSTEM (NCIS)</span>
-                <span className="text-[10px] bg-red-950/80 text-red-400 border border-red-800 px-2 py-0.2 rounded font-bold">
+              <div className="text-xs text-slate-400 font-mono flex items-center justify-center sm:justify-start gap-2 mt-1">
+                <span>NATIONAL CYBER CRIME &amp; FORENSIC INVESTIGATION SYSTEM (NCIS)</span>
+                <span className="text-[10px] bg-red-950/80 text-red-400 border border-red-800 px-2 py-0.5 rounded font-bold">
                   RESTRICTED // SECRET
                 </span>
               </div>
             </div>
-          </div>
-
-          <div className="text-center">
-            <span className="text-xs font-mono text-amber-300/80 tracking-widest font-semibold uppercase">
-              सत्यमेव जयते (SATYAMEVA JAYATE)
-            </span>
           </div>
 
           {/* Statutory Law Warning */}

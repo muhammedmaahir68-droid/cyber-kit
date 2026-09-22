@@ -5,6 +5,7 @@ import EmergencyMesh from './components/EmergencyMesh';
 import UE5TwinView from './components/UE5TwinView';
 import RealtimeOpsView from './components/RealtimeOpsView';
 import GovernmentAuthPortal from './components/GovernmentAuthPortal';
+import { AshokaLionCapital, IndianFlag } from './components/NationalEmblems';
 
 export default function App() {
   const [officerSession, setOfficerSession] = useState(() => {
@@ -117,17 +118,17 @@ export default function App() {
             {/* Top Professional Header */}
       <header className="max-w-7xl mx-auto mb-6 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800 pb-4 gap-4 font-mono">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-xl bg-amber-950/40 border border-amber-500/50 flex items-center justify-center p-2 text-amber-400 shadow-lg shadow-amber-950/40">
-            <svg className="w-full h-full" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L15 5H18V8L21 11V13L18 16V19H15L12 22L9 19H6V16L3 13V11L6 8V5H9L12 2Z" fill="none" stroke="currentColor" strokeWidth="1.5" />
-              <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-              <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-              <path d="M12 8V16M8 12H16M9.17 9.17L14.83 14.83M14.83 9.17L9.17 14.83" stroke="currentColor" strokeWidth="1" />
-            </svg>
+          <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-900 border border-amber-500/50 shadow-lg shadow-amber-950/30">
+            <AshokaLionCapital className="w-10 h-12 shrink-0 drop-shadow-md" />
+            <IndianFlag className="w-8 h-5 shrink-0 rounded shadow-sm border border-slate-700/80" />
           </div>
           <div>
             <div className="flex items-center gap-2.5 flex-wrap">
-              <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white">
+              <span className="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider">
+                भारत सरकार • GOVT OF INDIA
+              </span>
+              <span className="text-slate-600">|</span>
+              <h1 className="text-base sm:text-lg font-bold tracking-tight text-white">
                 NCIS-TACTICAL <span className="text-slate-400 text-xs sm:text-sm font-normal">| NATIONAL CYBER CRIME INVESTIGATION PLATFORM</span>
               </h1>
               <span className="text-[10px] px-2.5 py-0.5 rounded bg-emerald-950/80 text-emerald-400 border border-emerald-700/80 font-bold tracking-wider flex items-center gap-1.5">
@@ -136,7 +137,7 @@ export default function App() {
               </span>
             </div>
             <p className="text-[11px] text-slate-400 mt-0.5 font-sans">
-              Bureau of Police Research & Development (BPR&D) • Indian Cybercrime Coordination Centre (I4C) • Ministry of Home Affairs
+              Bureau of Police Research &amp; Development (BPR&amp;D) • Indian Cybercrime Coordination Centre (I4C) • Ministry of Home Affairs
             </p>
           </div>
         </div>
