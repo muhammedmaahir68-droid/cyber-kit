@@ -1,7 +1,8 @@
+import TacticalPatrolMap from './TacticalPatrolMap';
 import React, { useState, useEffect, useRef } from 'react';
 
 export default function EmergencyMesh() {
-  const [subTab, setSubTab] = useState('erss_alerts'); // erss_alerts, suspect_scanner, national_hub
+  const [subTab, setSubTab] = useState('patrol_map'); // erss_alerts, suspect_scanner, national_hub
   const [sosActive, setSosActive] = useState(null);
   const [photoMatch, setPhotoMatch] = useState(null);
   const [isPhotoScanning, setIsPhotoScanning] = useState(false);
@@ -439,19 +440,19 @@ export default function EmergencyMesh() {
             <div className="text-amber-400 font-bold">HOW TO SHOWCASE REAL NOTIFICATIONS ON YOUR ACTUAL PHONE:</div>
             
             <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5 text-[11px]">
-              <div>1️⃣ <span className="text-cyan-400 font-bold">Open this URL on your mobile phone browser (Chrome/Safari):</span></div>
+              <div>1. <span className="text-cyan-400 font-bold">Open this URL on your mobile phone browser (Chrome/Safari):</span></div>
               <div className="bg-slate-900 p-2 rounded text-emerald-400 font-bold break-all border border-slate-700">
                 https://cyber-kit-police.vercel.app
               </div>
             </div>
 
             <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
-              <div>2️⃣ Tap <span className="text-emerald-400 font-bold">" INSTALL APP ON PHONE"</span> or Chrome menu → <span className="text-cyan-400 font-bold">"Add to Home Screen"</span>.</div>
+              <div>2. Tap <span className="text-emerald-400 font-bold">" INSTALL APP ON PHONE"</span> or Chrome menu → <span className="text-cyan-400 font-bold">"Add to Home Screen"</span>.</div>
               <div className="text-slate-400">This installs **CyberKit Police** as a real standalone app on your phone home screen!</div>
             </div>
 
             <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
-              <div>3️⃣ Open the installed app & tap <span className="text-red-400 font-bold">" ACTIVATE REAL PUSH ALERTS"</span> → Tap <span className="text-emerald-400 font-bold">ALLOW</span>.</div>
+              <div>3. Open the installed app & tap <span className="text-red-400 font-bold">" ACTIVATE REAL PUSH ALERTS"</span> → Tap <span className="text-emerald-400 font-bold">ALLOW</span>.</div>
             </div>
 
             <div className="bg-slate-950 p-4 rounded-xl border border-amber-500/60 flex flex-col sm:flex-row items-center gap-4 text-[11px]">
@@ -505,7 +506,15 @@ export default function EmergencyMesh() {
           <p className="text-xs text-slate-400">Instant SOS distress alert dispatch, audio siren, and invisible officer phone push notification mesh.</p>
         </div>
 
-        <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono">
+        <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono flex-wrap gap-1">
+          <button
+            onClick={() => setSubTab('patrol_map')}
+            className={`px-3 py-1.5 rounded-lg transition-all ${
+              subTab === 'patrol_map' ? 'bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold' : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            Live GIS Patrol Map & Tracking
+          </button>
           <button
             onClick={() => setSubTab('erss_alerts')}
             className={`px-3 py-1.5 rounded-lg transition-all ${
@@ -532,6 +541,22 @@ export default function EmergencyMesh() {
           </button>
         </div>
       </div>
+
+            {/* Subtab 0: Live GIS Patrol Map & Touch Tracking */}
+      {subTab === 'patrol_map' && (
+        <TacticalPatrolMap
+          officerSession={officerSession}
+          onDispatchAlert={(d) => {
+            handleTriggerSOS(
+              'TACTICAL_PATROL_INTERCEPT',
+              '+91-9988776655',
+              `${d.target.name} (${d.distanceKm.toFixed(2)} km away, ETA ${d.eta})`,
+              d.target.lat,
+              d.target.lng
+            );
+          }}
+        />
+      )}
 
       {/* Subtab 1: ERSS Real-Time SOS Alerts */}
       {subTab === 'erss_alerts' && (
