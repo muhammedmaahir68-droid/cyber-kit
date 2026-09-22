@@ -268,40 +268,6 @@ export default function RealtimeOpsView({ getApiBase, officerSession }) {
         ))}
       </div>
 
-      {/* ─── PIPELINE ARCHITECTURE CHAIN ─── */}
-      <div className="bg-[#0a1525] border border-slate-800 rounded-xl px-5 py-4">
-        <div className="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-3 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-          Live End-to-End Ingestion Architecture &mdash; Zero Simulation Stubs
-        </div>
-        <div className="flex items-center gap-0 overflow-x-auto pb-1">
-          {[
-            { step:'01', label:'Sources',    sub:'CCTV / Webcam / IoT',     color:'text-cyan-400',    bg:'bg-cyan-950/40 border-cyan-800/60' },
-            { step:'02', label:'Ingestion',  sub:'FastAPI REST Endpoints',   color:'text-cyan-400',    bg:'bg-cyan-950/40 border-cyan-800/60' },
-            { step:'03', label:'Queue',      sub:'Async Queue / Redis',      color:'text-purple-400',  bg:'bg-purple-950/40 border-purple-800/60' },
-            { step:'04', label:'AI Engine',  sub:'OpenCV + Rule Engine',     color:'text-purple-400',  bg:'bg-purple-950/40 border-purple-800/60' },
-            { step:'05', label:'Storage',    sub:'PostgreSQL / SQLite',      color:'text-blue-400',    bg:'bg-blue-950/40 border-blue-800/60' },
-            { step:'06', label:'Broadcast',  sub:'WebSocket Push',           color:'text-emerald-400', bg:'bg-emerald-950/40 border-emerald-800/60' },
-          ].map((node, i, arr) => (
-            <div key={node.step} className="flex items-center flex-shrink-0">
-              <div className={`border ${node.bg} rounded-lg px-4 py-2.5 text-center min-w-[110px]`}>
-                <div className={`text-[9px] font-mono font-bold tracking-widest ${node.color} mb-0.5`}>{node.step}</div>
-                <div className={`text-xs font-bold font-mono ${node.color}`}>{node.label}</div>
-                <div className="text-[10px] text-slate-500 mt-0.5">{node.sub}</div>
-              </div>
-              {i < arr.length - 1 && (
-                <div className="flex items-center px-1.5">
-                  <div className="w-6 h-px bg-slate-700" />
-                  <svg className="w-3 h-3 text-slate-600 -ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5l8 7-8 7V5z"/>
-                  </svg>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* ─── MAIN SPLIT: CAMERA (left 5) + EVENT STREAM (right 7) ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
 

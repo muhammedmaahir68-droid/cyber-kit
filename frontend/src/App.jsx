@@ -2,23 +2,22 @@ import React, { useState } from 'react';
 import FieldConsole from './components/FieldConsole';
 import IntelligenceCenter from './components/IntelligenceCenter';
 import EmergencyMesh from './components/EmergencyMesh';
-import UE5TwinView from './components/UE5TwinView';
 import RealtimeOpsView from './components/RealtimeOpsView';
 import GovernmentAuthPortal from './components/GovernmentAuthPortal';
 import IntroSplash from './components/IntroSplash';
 import { AshokaLionCapital, IndianFlag } from './components/NationalEmblems';
 
 export default function App() {
-  // ── Restore session from browser storage ──
+  // Restore session from browser storage
   const savedSession = (() => {
     const raw = typeof window !== 'undefined' ? sessionStorage.getItem('ncis_officer_session') : null;
     if (raw) { try { return JSON.parse(raw); } catch (e) { return null; } }
     return null;
   })();
 
-  // ── App stage: 'intro' → 'login' → 'dashboard' ──
+  // App stage: 'intro' → 'login' → 'dashboard'
   // If session already exists, skip intro + login entirely
-  const [appStage, setAppStage]           = useState(savedSession ? 'dashboard' : 'intro');
+  const [appStage, setAppStage]             = useState(savedSession ? 'dashboard' : 'intro');
   const [officerSession, setOfficerSession] = useState(savedSession);
 
   const handleIntroDone = () => setAppStage('login');
@@ -32,7 +31,7 @@ export default function App() {
   const handleLogout = () => {
     sessionStorage.removeItem('ncis_officer_session');
     setOfficerSession(null);
-    setAppStage('intro');   // go back to intro on logout
+    setAppStage('intro');
   };
 
   const [sessionUuid, setSessionUuid]     = useState('FX-20260829-9941');
@@ -71,55 +70,45 @@ export default function App() {
         clearInterval(iv); setIsScanning(false); setCarveSpeed('0.0 MB/s');
         setSha256Hash('a7b89f32c1094e82b719024f0c829e1a388172df91023812831849182390a1bc');
         setAgentTraces([
-          { phase:'PERCEIVE',    step:1, thought:'Ingested 131,072 raw block sectors. Hardware write-blocker bus confirmed read-only.',       action:'Signal protocol high.' },
-          { phase:'ASSESS',      step:2, thought:'Ran local Hailo NPU YOLOv8 model. 2 Contraband & 1 Suspicious item identified.',            action:'Computed bounding box tensors.' },
-          { phase:'CORRELATE',   step:3, thought:'Correlated SQLite chat freelist strings with EXIF creation timestamps.',                    action:'Linked chat payload to Glock 19 image.' },
-          { phase:'SYNTHESIZE',  step:4, thought:'Probable cause threshold achieved (96.4% confidence).',                                     action:'Sealed SHA-256 evidence log for court presentation.' }
+          { phase:'PERCEIVE',   step:1, thought:'Ingested 131,072 raw block sectors. Hardware write-blocker bus confirmed read-only.',    action:'Signal protocol high.' },
+          { phase:'ASSESS',     step:2, thought:'Ran local Hailo NPU YOLOv8 model. 2 Contraband & 1 Suspicious item identified.',         action:'Computed bounding box tensors.' },
+          { phase:'CORRELATE',  step:3, thought:'Correlated SQLite chat freelist strings with EXIF creation timestamps.',                 action:'Linked chat payload to Glock 19 image.' },
+          { phase:'SYNTHESIZE', step:4, thought:'Probable cause threshold achieved (96.4% confidence).',                                  action:'Sealed SHA-256 evidence log for court presentation.' }
         ]);
       }
     }, 200);
   };
 
-  /* ══════════════════════════════════════════
-     SCREEN ROUTING
-  ══════════════════════════════════════════ */
-  if (appStage === 'intro') {
-    return <IntroSplash onDone={handleIntroDone} />;
-  }
+  /* ── Screen routing ── */
+  if (appStage === 'intro') return <IntroSplash onDone={handleIntroDone} />;
+  if (appStage === 'login') return <GovernmentAuthPortal onAuthenticate={handleAuthenticate} />;
 
-  if (appStage === 'login') {
-    return <GovernmentAuthPortal onAuthenticate={handleAuthenticate} />;
-  }
-
-  /* ══════════════════════════════════════════
-     DASHBOARD
-  ══════════════════════════════════════════ */
+  /* ── Navigation modules (4 operational modules — no simulation hardware) ── */
   const navItems = [
-    { id:'realtime',     code:'MOD-01', label:'Live Surveillance',    sub:'Real-Time Ingestion & Vision',   color:'emerald', live:true },
-    { id:'console',      code:'MOD-02', label:'Digital Forensics',    sub:'Physical Drive Carve IC',         color:'cyan' },
-    { id:'intelligence', code:'MOD-03', label:'Syndicate Intel',      sub:'GNN Network Graph Analysis',      color:'purple' },
-    { id:'emergency',    code:'MOD-04', label:'ERSS Patrol Mesh',     sub:'Dial 112 Rapid Dispatch',         color:'red' },
-    { id:'twin',         code:'MOD-05', label:'Edge Hardware',        sub:'Tactical NPU Enclosure',          color:'indigo' },
+    { id:'realtime',     code:'MOD-01', label:'Live Surveillance',  sub:'Real-Time Camera & Event Ingestion', color:'emerald', live:true },
+    { id:'console',      code:'MOD-02', label:'Digital Forensics',  sub:'Physical Drive Carve & Analysis',    color:'cyan' },
+    { id:'intelligence', code:'MOD-03', label:'Syndicate Intel',    sub:'GNN Network Graph Analysis',         color:'purple' },
+    { id:'emergency',    code:'MOD-04', label:'ERSS Patrol Mesh',   sub:'Dial 112 Rapid Dispatch System',     color:'red' },
   ];
 
   const colorMap = {
-    emerald: { active:'border-l-emerald-500 bg-emerald-950/60 text-emerald-200', dot:'bg-emerald-400', badge:'bg-emerald-950 text-emerald-400 border-emerald-700' },
-    cyan:    { active:'border-l-cyan-500 bg-cyan-950/60 text-cyan-200',          dot:'bg-cyan-400',    badge:'bg-cyan-950 text-cyan-400 border-cyan-700' },
-    purple:  { active:'border-l-purple-500 bg-purple-950/60 text-purple-200',    dot:'bg-purple-400',  badge:'bg-purple-950 text-purple-400 border-purple-700' },
-    red:     { active:'border-l-red-500 bg-red-950/60 text-red-200',             dot:'bg-red-400',     badge:'bg-red-950 text-red-400 border-red-700' },
-    indigo:  { active:'border-l-indigo-500 bg-indigo-950/60 text-indigo-200',    dot:'bg-indigo-400',  badge:'bg-indigo-950 text-indigo-400 border-indigo-700' },
+    emerald: { active:'border-l-emerald-500 bg-emerald-950/60 text-emerald-200', badge:'bg-emerald-950 text-emerald-400 border-emerald-700' },
+    cyan:    { active:'border-l-cyan-500 bg-cyan-950/60 text-cyan-200',          badge:'bg-cyan-950 text-cyan-400 border-cyan-700' },
+    purple:  { active:'border-l-purple-500 bg-purple-950/60 text-purple-200',    badge:'bg-purple-950 text-purple-400 border-purple-700' },
+    red:     { active:'border-l-red-500 bg-red-950/60 text-red-200',             badge:'bg-red-950 text-red-400 border-red-700' },
   };
 
   return (
     <div className="min-h-screen bg-[#080f1a] text-slate-100 font-sans antialiased">
 
-      {/* Tiranga top stripe */}
+      {/* Tiranga sovereignty stripe */}
       <div className="w-full h-1 bg-gradient-to-r from-amber-500 via-white to-green-600" />
 
       {/* ── AUTHORITY BANNER ── */}
       <header className="w-full bg-[#050c15] border-b border-slate-800/80 shadow-2xl shadow-black/60">
         <div className="max-w-screen-2xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
 
+          {/* LEFT: Emblem + System Identity */}
           <div className="flex items-center gap-5 min-w-0">
             <div className="flex-shrink-0 w-14 h-14 rounded-full border-2 border-amber-500/70 bg-[#020810] flex items-center justify-center shadow-lg shadow-amber-950/50 overflow-hidden">
               <AshokaLionCapital className="w-full h-full object-contain" />
@@ -145,6 +134,7 @@ export default function App() {
             </div>
           </div>
 
+          {/* RIGHT: Classification + Officer + Logout */}
           <div className="flex-shrink-0 flex items-center gap-3">
             <div className="hidden md:flex flex-col items-end gap-1">
               <span className="text-[10px] font-mono font-bold px-3 py-1 rounded-full border bg-rose-950/60 text-rose-300 border-rose-700/70 tracking-widest uppercase flex items-center gap-1.5">
@@ -173,7 +163,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Agency sub-ribbon */}
+        {/* Agency / Legal sub-ribbon */}
         <div className="w-full border-t border-slate-800/60 bg-[#040a12]">
           <div className="max-w-screen-2xl mx-auto px-6 py-1.5 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-500">
             <div className="flex items-center gap-2 flex-wrap">
@@ -196,7 +186,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* ── MODULE NAV TAB BAR ── */}
+      {/* ── MODULE NAVIGATION TAB BAR ── */}
       <nav className="w-full bg-[#060d19] border-b-2 border-slate-800 shadow-xl">
         <div className="max-w-screen-2xl mx-auto px-6">
           <div className="flex overflow-x-auto scrollbar-none">
@@ -209,7 +199,7 @@ export default function App() {
                   onClick={() => setActiveCore(item.id)}
                   className={[
                     'relative flex-shrink-0 flex flex-col justify-center px-6 py-3.5 text-left',
-                    'border-l-4 border-b-2 transition-all duration-150 min-w-[160px]',
+                    'border-l-4 border-b-2 transition-all duration-150 min-w-[180px]',
                     isActive
                       ? `${c.active} border-b-transparent`
                       : 'border-l-slate-800 border-b-transparent bg-transparent text-slate-500 hover:bg-slate-900/60 hover:text-slate-300 hover:border-l-slate-600'
@@ -240,22 +230,34 @@ export default function App() {
           <RealtimeOpsView getApiBase={getApiBase} officerSession={officerSession} />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left 8 Columns: Active Module */}
             <div className="lg:col-span-8 space-y-6">
               {activeCore === 'console' && (
-                <FieldConsole isScanning={isScanning} progress={progress} carveSpeed={carveSpeed} sessionUuid={sessionUuid} sha256Hash={sha256Hash} onStartScan={startScan} officerSession={officerSession} />
+                <FieldConsole
+                  isScanning={isScanning}
+                  progress={progress}
+                  carveSpeed={carveSpeed}
+                  sessionUuid={sessionUuid}
+                  sha256Hash={sha256Hash}
+                  onStartScan={startScan}
+                  officerSession={officerSession}
+                />
               )}
               {activeCore === 'intelligence' && (
-                <IntelligenceCenter evidenceItems={evidenceItems} agentTraces={agentTraces} officerSession={officerSession} />
+                <IntelligenceCenter
+                  evidenceItems={evidenceItems}
+                  agentTraces={agentTraces}
+                  officerSession={officerSession}
+                />
               )}
               {activeCore === 'emergency' && (
                 <EmergencyMesh officerSession={officerSession} />
               )}
-              {activeCore === 'twin' && (
-                <UE5TwinView isScanning={isScanning} progress={progress} officerSession={officerSession} />
-              )}
             </div>
 
+            {/* Right 4 Columns: Telemetry + Chain of Custody */}
             <div className="lg:col-span-4 space-y-5">
+
               {/* System Telemetry */}
               <div className="bg-[#0a1525] border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl font-mono">
                 <h3 className="text-xs font-bold text-slate-200 uppercase tracking-widest flex items-center gap-2 pb-3 border-b border-slate-800">
@@ -263,10 +265,10 @@ export default function App() {
                 </h3>
                 <div className="space-y-2 text-xs">
                   {[
-                    ['Carving Throughput',   carveSpeed,                'text-cyan-400'],
-                    ['Local NPU Accelerator','Hailo-8L (26 TOPS)',      'text-purple-400'],
-                    ['Write-Blocker Bus',    'READ-ONLY (HIGH)',         'text-emerald-400'],
-                    ['Control Room Link',    'NATGRID / CCTNS ACTIVE',  'text-cyan-400'],
+                    ['Carving Throughput',    carveSpeed,               'text-cyan-400'],
+                    ['Local NPU Accelerator', 'Hailo-8L (26 TOPS)',     'text-purple-400'],
+                    ['Write-Blocker Bus',     'READ-ONLY (HIGH)',        'text-emerald-400'],
+                    ['Control Room Link',     'NATGRID / CCTNS ACTIVE', 'text-cyan-400'],
                   ].map(([label, value, cls]) => (
                     <div key={label} className="bg-[#060d1a] p-3 rounded-xl border border-slate-800/70 flex justify-between items-center">
                       <span className="text-slate-400">{label}</span>
