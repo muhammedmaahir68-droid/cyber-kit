@@ -7,6 +7,7 @@
 ---
 
 ## 📌 SIH 2026 Official Submission Links
+* 📘 **Official Documentation Book & Master Defense Guide**: [docs/NCIS_TACTICAL_Master_Operations_Manual_and_Defense_Guide.md](docs/NCIS_TACTICAL_Master_Operations_Manual_and_Defense_Guide.md)
 * 📊 **Official PPTX Presentation (Direct Download)**: [Download SIH_Ideate_Template_AAROHAN-X.pptx](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/presentation/SIH_Ideate_Template_AAROHAN-X.pptx)
 * 🌐 **Live Web Application (Vercel)**: [https://cyber-kit-police.vercel.app](https://cyber-kit-police.vercel.app)
 * ⚡ **FastAPI Backend API Docs (Render)**: [https://cyber-kit-backend.onrender.com/docs](https://cyber-kit-backend.onrender.com/docs)
@@ -18,11 +19,11 @@
 
 | Slide 1: Title & Problem Statement | Slide 2: Proposed Solution |
 | :---: | :---: |
-| ![Slide 1](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/presentation/slides/Original_Template_Slide1.jpg) | ![Slide 2](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/presentation/slides/Original_Template_Slide2.jpg) |
+| ![Slide 1](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/docs/slides/Slide1_SIH189.jpg) | ![Slide 2](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/docs/slides/Slide2_SIH189.jpg) |
 | **Slide 3: Technical Approach** | **Slide 4: Feasibility & Viability** |
-| ![Slide 3](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/presentation/slides/Original_Template_Slide3.jpg) | ![Slide 4](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/presentation/slides/Original_Template_Slide4.jpg) |
+| ![Slide 3](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/docs/slides/Slide3_SIH189.jpg) | ![Slide 4](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/docs/slides/Slide4_SIH189.jpg) |
 | **Slide 5: Impact & Benefits** | **Slide 6: Research & References** |
-| ![Slide 5](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/presentation/slides/Original_Template_Slide5.jpg) | ![Slide 6](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/presentation/slides/Original_Template_Slide6.jpg) |
+| ![Slide 5](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/docs/slides/Slide5_SIH189.jpg) | ![Slide 6](https://raw.githubusercontent.com/muhammedmaahir68-droid/cyber-kit/main/docs/slides/Slide6_SIH189.jpg) |
 
 ---
 
