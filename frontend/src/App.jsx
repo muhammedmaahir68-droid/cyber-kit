@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import GovOverviewDashboard from './components/GovOverviewDashboard';
+import PratibimbMap from './components/PratibimbMap';
+import CrossStationRegistry from './components/CrossStationRegistry';
 import FieldConsole from './components/FieldConsole';
 import IntelligenceCenter from './components/IntelligenceCenter';
 import EmergencyMesh from './components/EmergencyMesh';
@@ -6,9 +9,7 @@ import RealtimeOpsView from './components/RealtimeOpsView';
 import EdgeHardwareConsole from './components/EdgeHardwareConsole';
 import GovernmentAuthPortal from './components/GovernmentAuthPortal';
 import IntroSplash from './components/IntroSplash';
-import CrossStationRegistry from './components/CrossStationRegistry';
 import { AshokaLionCapital, IndianFlag } from './components/NationalEmblems';
-
 
 class ModuleErrorBoundary extends React.Component {
   constructor(props) {
@@ -24,20 +25,20 @@ class ModuleErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="bg-rose-950/60 border-2 border-rose-600 rounded-2xl p-6 text-slate-100 font-mono space-y-4">
-          <div className="flex items-center gap-3 text-rose-300 font-bold text-sm">
-            <span className="w-3 h-3 rounded-full bg-rose-500 animate-pulse" />
+        <div className="bg-[#FFEBEE] border-2 border-[#EF5350] rounded-xl p-6 text-[#C62828] font-sans space-y-3">
+          <div className="flex items-center gap-2 font-bold text-sm">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#C62828] animate-pulse" />
             MODULE INITIALIZATION EXCEPTION RECOVERED
           </div>
-          <p className="text-xs text-slate-300">
-            A temporary rendering error occurred in this module:
+          <p className="text-xs text-[#263238]">
+            An unexpected rendering exception was caught safely:
           </p>
-          <div className="bg-[#020810] p-3 rounded-xl border border-rose-800/80 text-[11px] text-rose-400 font-mono">
+          <div className="bg-[#FFFFFF] p-3 rounded-lg border border-[#EF9A9A] text-xs font-mono text-[#B71C1C]">
             {this.state.error?.message || 'Unknown component rendering error'}
           </div>
           <button
             onClick={() => this.setState({ hasError: false, error: null })}
-            className="px-4 py-2 bg-rose-800 hover:bg-rose-700 text-white rounded-xl text-xs font-bold font-mono transition-all"
+            className="px-4 py-2 bg-[#C62828] hover:bg-[#B71C1C] text-white rounded-lg text-xs font-semibold transition-all shadow-sm"
           >
             RE-INITIALIZE MODULE
           </button>
@@ -56,7 +57,6 @@ export default function App() {
     return null;
   })();
 
-  // App stage: 'intro' → 'login' → 'dashboard'
   const [appStage, setAppStage]             = useState(savedSession ? 'dashboard' : 'intro');
   const [officerSession, setOfficerSession] = useState(savedSession);
 
@@ -78,7 +78,9 @@ export default function App() {
   const [isScanning, setIsScanning]       = useState(false);
   const [progress, setProgress]           = useState(0);
   const [carveSpeed, setCarveSpeed]       = useState('0.0 MB/s');
-  const [activeCore, setActiveCore]       = useState('realtime');
+  
+  // Navigation: defaults to 'dashboard' (Investigation Overview) or 'pratibimb' (Pratibimb Geo Map)
+  const [activeNav, setActiveNav]         = useState('dashboard');
   const [evidenceItems, setEvidenceItems] = useState([]);
   const [agentTraces, setAgentTraces]     = useState([]);
   const [sha256Hash, setSha256Hash]       = useState('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
@@ -120,272 +122,343 @@ export default function App() {
   };
 
   const handleHardwareDataRetrieved = (data) => {
-    // When raw data is retrieved from physical edge hardware, we update the session hash and notify
     if (data.hash) {
       setSha256Hash(data.hash);
     }
   };
 
-  /* ── Screen routing ── */
   if (appStage === 'intro') return <IntroSplash onDone={handleIntroDone} />;
   if (appStage === 'login') return <GovernmentAuthPortal onAuthenticate={handleAuthenticate} />;
 
-  /* ── Navigation modules ── */
-  const navItems = [
-    { id:'realtime',     code:'MOD-01', label:'LIVE SURVEILLANCE',       sub:'Camera · CCTV Footage · Events',   color:'emerald', live:true },
-    { id:'console',      code:'MOD-02', label:'DIGITAL FORENSICS',       sub:'Physical Drive Carve & Analysis',   color:'cyan' },
-    { id:'intelligence', code:'MOD-03', label:'SYNDICATE INTEL',         sub:'GNN Network & NLP Graph Analysis',  color:'purple' },
-    { id:'emergency',    code:'MOD-04', label:'ERSS PATROL MESH',        sub:'Dial 112 Rapid Dispatch',           color:'red' },
-    { id:'hardware',     code:'MOD-05', label:'TACTICAL HARDWARE',       sub:'Port Switch & Data Retrieval',      color:'indigo' },
-    { id:'crossstation', code:'MOD-06', label:'CROSS-STATION REGISTRY',  sub:'File Case · Search Face · History', color:'amber' },
+  // ── Official Government Navigation Sidebar Items ──
+  const sidebarNavItems = [
+    { id: 'dashboard',    label: 'DASHBOARD',              icon: '📊', sub: 'Investigation Overview & KPIs' },
+    { id: 'pratibimb',    label: 'GEO MAP (PRATIBIMB)',    icon: '🗺️', sub: 'Criminal & Crime Infra Grid' },
+    { id: 'crossstation', label: 'CASES & REGISTRY',       icon: '📋', sub: 'Cross-Station Suspect Match' },
+    { id: 'network',      label: 'ENTITIES & NETWORK',     icon: '🕸️', sub: 'Syndicate GNN Associative Graph' },
+    { id: 'surveillance', label: 'SURVEILLANCE & CAMERA',  icon: '🎥', sub: 'Live Feed & CCTV Footage AI' },
+    { id: 'hardware',     label: 'TACTICAL HARDWARE',      icon: '🔌', sub: 'Bitstream Carving & WebUSB' },
+    { id: 'patrolmesh',   label: 'PATROL MESH (ERSS 112)', icon: '🚨', sub: 'AIS-140 Live Device GPS Beacon' },
+    { id: 'forensics',    label: 'DIGITAL FORENSICS',      icon: '💾', sub: 'Drive Carve & Artifact Vault' },
+    { id: 'reports',      label: 'JUDICIAL REPORTS',       icon: '📜', sub: 'BSA Sec 65B & BNS Sec 63' },
   ];
 
-  const colorMap = {
-    emerald: { active:'border-l-emerald-500 bg-emerald-950/60 text-emerald-200', badge:'bg-emerald-950 text-emerald-400 border-emerald-700' },
-    cyan:    { active:'border-l-cyan-500 bg-cyan-950/60 text-cyan-200',          badge:'bg-cyan-950 text-cyan-400 border-cyan-700' },
-    purple:  { active:'border-l-purple-500 bg-purple-950/60 text-purple-200',    badge:'bg-purple-950 text-purple-400 border-purple-700' },
-    red:     { active:'border-l-red-500 bg-red-950/60 text-red-200',             badge:'bg-red-950 text-red-400 border-red-700' },
-    indigo:  { active:'border-l-indigo-500 bg-indigo-950/60 text-indigo-200',    badge:'bg-indigo-950 text-indigo-400 border-indigo-700' },
-    amber:   { active:'border-l-amber-500 bg-amber-950/60 text-amber-200',       badge:'bg-amber-950 text-amber-400 border-amber-700' },
-  };
-
   return (
-    <div className="min-h-screen bg-[#080f1a] text-slate-100 font-sans antialiased">
+    <div className="min-h-screen bg-[#F4F6F8] text-[#263238] font-sans antialiased flex flex-col">
 
-      {/* Tiranga sovereignty stripe */}
-      <div className="w-full h-1 bg-gradient-to-r from-amber-500 via-white to-green-600" />
+      {/* ── SOVEREIGNTY TRICOLOR RIBBON (TIRANGA) ── */}
+      <div className="w-full h-1.5 bg-gradient-to-r from-[#FF9933] via-white to-[#138808] flex-shrink-0" />
 
-      {/* ── AUTHORITY BANNER ── */}
-      <header className="w-full bg-[#050c15] border-b border-slate-800/80 shadow-2xl shadow-black/60">
-        <div className="max-w-screen-2xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
+      {/* ── TOP GOVERNMENT HEADER (#123B63) ── */}
+      <header className="w-full bg-[#123B63] text-white border-b border-[#0D2A4A] shadow-md flex-shrink-0">
+        <div className="max-w-screen-2xl mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 
-          {/* LEFT: Emblem + System Identity */}
-          <div className="flex items-center gap-5 min-w-0">
-            <div className="flex-shrink-0 w-14 h-14 rounded-full border-2 border-amber-500/70 bg-[#020810] flex items-center justify-center shadow-lg shadow-amber-950/50 overflow-hidden">
-              <AshokaLionCapital className="w-full h-full object-contain" />
+          {/* Left: Emblem + Ministry + System Identity */}
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="flex-shrink-0 w-13 h-13 rounded-full bg-white p-1 border-2 border-[#D9E1E8] shadow-sm overflow-hidden flex items-center justify-center">
+              <AshokaLionCapital className="w-10 h-10 object-contain text-[#123B63]" />
             </div>
+
             <div className="min-w-0">
               <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                <IndianFlag className="w-6 h-4 rounded-sm flex-shrink-0" />
-                <span className="text-[10px] font-mono font-bold tracking-widest text-amber-400 uppercase">
+                <IndianFlag className="w-5 h-3.5 rounded-sm flex-shrink-0 shadow-xs" />
+                <span className="text-[11px] font-bold text-[#E3F2FD] tracking-wider uppercase">
                   भारत सरकार &nbsp;|&nbsp; Government of India
                 </span>
-                <span className="hidden sm:inline text-slate-700">|</span>
-                <span className="hidden sm:inline text-[10px] font-mono text-slate-400 tracking-widest uppercase">
-                  Ministry of Home Affairs &nbsp;•&nbsp; I4C &nbsp;•&nbsp; BPR&D
+                <span className="hidden md:inline text-[#90CAF9] text-xs">•</span>
+                <span className="hidden md:inline text-[11px] text-[#B0BEC5] tracking-wide uppercase">
+                  Ministry of Home Affairs &nbsp;•&nbsp; I4C &nbsp;•&nbsp; BPR&amp;D
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight font-mono uppercase">
-                NCIS-TACTICAL
-                <span className="hidden sm:inline text-slate-400 font-bold text-sm ml-3 tracking-normal normal-case">
-                  National Cyber Crime Investigation Platform
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white leading-tight uppercase">
+                AAROHAN-X &nbsp;|&nbsp;
+                <span className="text-sm sm:text-base font-medium text-[#E0E0E0] normal-case ml-1">
+                  Cyber Intelligence &amp; Investigation Platform
                 </span>
               </h1>
-              <div className="sm:hidden text-[11px] text-slate-400 mt-0.5 font-mono">National Cyber Crime Investigation Platform</div>
             </div>
           </div>
 
-          {/* RIGHT: Classification + Officer + Logout */}
-          <div className="flex-shrink-0 flex items-center gap-3">
-            <div className="hidden md:flex flex-col items-end gap-1">
-              <span className="text-[10px] font-mono font-bold px-3 py-1 rounded-full border bg-rose-950/60 text-rose-300 border-rose-700/70 tracking-widest uppercase flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
-                RESTRICTED // LAW ENFORCEMENT
-              </span>
-              <span className="text-[10px] font-mono text-slate-500 tracking-wider">BNS 2023 Sec 63 &nbsp;|&nbsp; BSA Sec 65B</span>
-            </div>
-            <div className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 flex items-center gap-2.5 shadow-md min-w-0">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
-              <div className="min-w-0">
-                <div className="text-xs font-bold text-slate-100 whitespace-nowrap">{officerSession?.officerName || 'Inspector Vikramaditya Rao'}</div>
-                <div className="text-[10px] text-cyan-400 font-mono truncate max-w-[180px]">{officerSession?.officerId || 'IN-DL-4412-SIT'} &nbsp;|&nbsp; {officerSession?.city || 'New Delhi HQ'}</div>
+          {/* Right: Officer Profile, Unit & Logout */}
+          <div className="flex items-center gap-3 self-end sm:self-center">
+            <div className="bg-[#0D2A4A] border border-[#1E4E79] rounded-lg px-3 py-1.5 text-right hidden sm:block">
+              <div className="text-xs font-bold text-white whitespace-nowrap">
+                {officerSession?.officerName || 'Insp. Vikramaditya Rao'}
+              </div>
+              <div className="text-[11px] text-[#90CAF9] font-medium">
+                Unit: {officerSession?.branch || 'SIT Mule Ring Desk'} &nbsp;|&nbsp; {officerSession?.officerId || 'IN-DL-4412-SIT'}
               </div>
             </div>
+
             <button
               onClick={handleLogout}
               title="Secure Logout"
-              className="px-3 py-2 bg-slate-900 hover:bg-rose-950/70 text-slate-400 hover:text-rose-300 border border-slate-700 hover:border-rose-700 rounded-xl font-mono text-xs font-bold transition-all flex items-center gap-1.5 flex-shrink-0"
+              className="px-3.5 py-2 bg-[#0D2A4A] hover:bg-[#C62828] text-[#E0E0E0] hover:text-white border border-[#1E4E79] hover:border-[#C62828] rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
               </svg>
-              <span className="hidden sm:inline">Logout</span>
+              <span>Logout</span>
             </button>
           </div>
+
         </div>
 
-        {/* Agency / Legal sub-ribbon */}
-        <div className="w-full border-t border-slate-800/60 bg-[#040a12]">
-          <div className="max-w-screen-2xl mx-auto px-6 py-1.5 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-500">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-amber-400 font-bold uppercase tracking-wider">{officerSession?.agency || 'I4C CENTRAL COMMAND'}</span>
-              <span className="text-slate-700">/</span>
-              <span className="text-slate-300">{officerSession?.branch || 'SIT Financial Mule Ring Desk'}</span>
-              <span className="text-slate-700">/</span>
-              <span className="text-slate-400">{officerSession?.clearanceLevel || 'CLEARANCE: LEVEL-3 (SECRET)'}</span>
+        {/* Agency Sub-ribbon */}
+        <div className="w-full bg-[#0D2A4A] border-t border-[#1E4E79]/80 py-1 px-6">
+          <div className="max-w-screen-2xl mx-auto flex flex-wrap justify-between items-center text-[11px] text-[#B0BEC5]">
+            <div className="flex items-center gap-2">
+              <span className="text-[#FFB74D] font-bold">CLEARANCE: LEVEL-3 (SECRET)</span>
+              <span>•</span>
+              <span className="text-white">STATUTORY: BNS 2023 SEC 63 &amp; BSA SEC 65B</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-emerald-400 font-bold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />WRITE-BLOCKER: ACTIVE
+              <span className="text-[#A5D6A7] font-semibold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#A5D6A7]" /> WRITE-BLOCKER: ACTIVE
               </span>
-              <span className="text-slate-700">|</span>
-              <span className="text-cyan-400 font-bold">NATGRID / CCTNS: CONNECTED</span>
-              <span className="text-slate-700">|</span>
-              <span className="text-slate-400">SESSION: {sessionUuid}</span>
+              <span>|</span>
+              <span className="text-[#90CAF9] font-medium">NATGRID / CCTNS: CONNECTED</span>
+              <span>|</span>
+              <span>SESSION: {sessionUuid}</span>
             </div>
           </div>
         </div>
       </header>
 
-      {/* ── MODULE NAVIGATION TAB BAR ── */}
-      <nav className="w-full bg-[#060d19] border-b-2 border-slate-800 shadow-xl">
-        <div className="max-w-screen-2xl mx-auto px-6">
-          <div className="flex overflow-x-auto scrollbar-none">
-            {navItems.map((item) => {
-              const isActive = activeCore === item.id;
-              const c = colorMap[item.color];
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveCore(item.id)}
-                  className={[
-                    'relative flex-shrink-0 flex flex-col justify-center px-6 py-3.5 text-left',
-                    'border-l-4 border-b-2 transition-all duration-150 min-w-[170px]',
-                    isActive
-                      ? `${c.active} border-b-transparent`
-                      : 'border-l-slate-800 border-b-transparent bg-transparent text-slate-500 hover:bg-slate-900/60 hover:text-slate-300 hover:border-l-slate-600'
-                  ].join(' ')}
-                >
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border ${isActive ? c.badge : 'bg-slate-900 text-slate-600 border-slate-700'}`}>
-                      {item.code}
-                    </span>
-                    {item.live && isActive && (
-                      <span className="flex items-center gap-1 text-[9px] font-mono font-bold text-emerald-400">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />LIVE
-                      </span>
-                    )}
-                  </div>
-                  <div className={`text-xs font-black uppercase tracking-wider font-mono ${isActive ? '' : 'text-slate-400'}`}>{item.label}</div>
-                  <div className={`text-[10px] mt-0.5 font-bold ${isActive ? 'text-slate-400' : 'text-slate-600'}`}>{item.sub}</div>
-                </button>
-              );
-            })}
+      {/* ── CORE GOVERNMENT LAYOUT: SIDEBAR (#102A43) + MAIN WORKSPACE (#F4F6F8) ── */}
+      <div className="flex-1 flex max-w-screen-2xl mx-auto w-full">
+
+        {/* ── LEFT SIDEBAR: DARK NAVY (#102A43) ── */}
+        <aside className="w-64 bg-[#102A43] text-white flex-shrink-0 hidden md:flex flex-col justify-between border-r border-[#0A1B2C] shadow-lg">
+          <div className="py-4">
+            <div className="px-5 pb-3 mb-2 border-b border-[#1E3A5F]">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-[#90CAF9]">
+                INVESTIGATION SECTIONS
+              </span>
+            </div>
+
+            <nav className="space-y-1 px-2.5">
+              {sidebarNavItems.map((item) => {
+                const isActive = activeNav === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveNav(item.id)}
+                    className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-left transition-all ${
+                      isActive
+                        ? 'bg-[#1565C0] text-white font-semibold shadow-sm'
+                        : 'text-[#B0BEC5] hover:bg-[#1A3B5C] hover:text-white font-medium'
+                    }`}
+                  >
+                    <span className="text-base flex-shrink-0">{item.icon}</span>
+                    <div className="min-w-0">
+                      <div className="text-xs tracking-wide">{item.label}</div>
+                      <div className={`text-[10px] truncate ${isActive ? 'text-[#BBDEFB]' : 'text-[#78909C]'}`}>
+                        {item.sub}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </nav>
           </div>
+
+          {/* Sidebar Footer Info Card */}
+          <div className="p-4 border-t border-[#1E3A5F] bg-[#0C2237] text-[11px] text-[#90A4AE] space-y-1">
+            <div className="text-white font-semibold text-xs flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#2E7D32]" />
+              I4C Command Online
+            </div>
+            <div>Jurisdiction: Pan-India (All 36 States/UTs)</div>
+            <div className="text-[10px] text-[#78909C]">Build: PROD-MHA-2026.09</div>
+          </div>
+        </aside>
+
+        {/* ── MOBILE HORIZONTAL NAV TAB STRIP (SM SCREENS) ── */}
+        <div className="md:hidden w-full bg-[#102A43] text-white border-b border-[#0A1B2C] overflow-x-auto scrollbar-none flex p-2 gap-1 flex-shrink-0">
+          {sidebarNavItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActiveNav(item.id)}
+              className={`px-3 py-1.5 rounded text-xs whitespace-nowrap font-medium transition-colors ${
+                activeNav === item.id
+                  ? 'bg-[#1565C0] text-white font-bold'
+                  : 'text-[#B0BEC5] bg-[#0D2A4A]'
+              }`}
+            >
+              {item.icon} {item.label}
+            </button>
+          ))}
         </div>
-      </nav>
 
-      {/* ── MAIN WORKSPACE ── */}
-      <main className="max-w-screen-2xl mx-auto px-6 py-6">
-        {activeCore === 'realtime' ? (
-          <RealtimeOpsView getApiBase={getApiBase} officerSession={officerSession} />
-        ) : activeCore === 'hardware' ? (
-          <EdgeHardwareConsole officerSession={officerSession} onDataRetrieved={handleHardwareDataRetrieved} />
-        ) : activeCore === 'crossstation' ? (
-          <CrossStationRegistry officerSession={officerSession} />
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left 8 Columns: Active Module */}
-            <div className="lg:col-span-8 space-y-6">
-              {activeCore === 'console' && (
-                <FieldConsole
-                  isScanning={isScanning}
-                  progress={progress}
-                  carveSpeed={carveSpeed}
-                  sessionUuid={sessionUuid}
-                  sha256Hash={sha256Hash}
-                  onStartScan={startScan}
-                  officerSession={officerSession}
-                />
-              )}
-              {activeCore === 'intelligence' && (
-                <IntelligenceCenter
-                  evidenceItems={evidenceItems}
-                  agentTraces={agentTraces}
-                  officerSession={officerSession}
-                />
-              )}
-              {activeCore === 'emergency' && (
-                <ModuleErrorBoundary><EmergencyMesh officerSession={officerSession} /></ModuleErrorBoundary>
-              )}
-            </div>
+        {/* ── MAIN WORKSPACE CONTENT AREA (LIGHT GREY #F4F6F8) ── */}
+        <main className="flex-1 p-5 md:p-6 overflow-y-auto bg-[#F4F6F8]">
+          <ModuleErrorBoundary>
+            {activeNav === 'dashboard' && (
+              <GovOverviewDashboard
+                onNavigateToSection={(section) => setActiveNav(section)}
+                officerSession={officerSession}
+              />
+            )}
 
-            {/* Right 4 Columns: Telemetry + Chain of Custody */}
-            <div className="lg:col-span-4 space-y-5">
+            {activeNav === 'pratibimb' && (
+              <PratibimbMap officerSession={officerSession} />
+            )}
 
-              {/* System Telemetry */}
-              <div className="bg-[#0a1525] border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl font-mono">
-                <h3 className="text-xs font-bold text-slate-200 uppercase tracking-widest flex items-center gap-2 pb-3 border-b border-slate-800">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400" />System Telemetry &amp; Hardware Status
-                </h3>
-                <div className="space-y-2 text-xs">
-                  {[
-                    ['Carving Throughput',    carveSpeed,               'text-cyan-400'],
-                    ['Local NPU Accelerator', 'Hailo-8L (26 TOPS)',     'text-purple-400'],
-                    ['Write-Blocker Bus',     'READ-ONLY (HIGH)',        'text-emerald-400'],
-                    ['Control Room Link',     'NATGRID / CCTNS ACTIVE', 'text-cyan-400'],
-                  ].map(([label, value, cls]) => (
-                    <div key={label} className="bg-[#060d1a] p-3 rounded-xl border border-slate-800/70 flex justify-between items-center">
-                      <span className="text-slate-400">{label}</span>
-                      <span className={`font-bold ${cls}`}>{value}</span>
-                    </div>
-                  ))}
+            {activeNav === 'crossstation' && (
+              <CrossStationRegistry officerSession={officerSession} />
+            )}
+
+            {activeNav === 'network' && (
+              <IntelligenceCenter
+                evidenceItems={evidenceItems}
+                agentTraces={agentTraces}
+                officerSession={officerSession}
+              />
+            )}
+
+            {activeNav === 'surveillance' && (
+              <RealtimeOpsView
+                getApiBase={getApiBase}
+                officerSession={officerSession}
+              />
+            )}
+
+            {activeNav === 'hardware' && (
+              <EdgeHardwareConsole
+                officerSession={officerSession}
+                onDataRetrieved={handleHardwareDataRetrieved}
+              />
+            )}
+
+            {activeNav === 'patrolmesh' && (
+              <EmergencyMesh officerSession={officerSession} />
+            )}
+
+            {activeNav === 'forensics' && (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="lg:col-span-8">
+                  <FieldConsole
+                    isScanning={isScanning}
+                    progress={progress}
+                    carveSpeed={carveSpeed}
+                    sessionUuid={sessionUuid}
+                    sha256Hash={sha256Hash}
+                    onStartScan={startScan}
+                    officerSession={officerSession}
+                  />
                 </div>
-              </div>
-
-              {/* Chain of Custody */}
-              <div className="bg-[#0a1525] border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl font-mono">
-                <h3 className="text-xs font-bold text-slate-200 uppercase tracking-widest flex items-center gap-2 pb-3 border-b border-slate-800">
-                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                  </svg>
-                  Chain of Custody Log
-                </h3>
-                <div className="bg-[#060d1a] p-3.5 rounded-xl border border-slate-800/70 text-[11px] space-y-3 text-slate-300">
-                  <div>
-                    <span className="text-slate-500 uppercase tracking-wider text-[10px]">SHA-256 Hash:</span>
-                    <div className="text-emerald-400 break-all mt-1 font-mono text-[10px]">{sha256Hash}</div>
+                <div className="lg:col-span-4 space-y-4">
+                  <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm space-y-3">
+                    <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wider flex items-center gap-2 border-b border-[#D9E1E8] pb-2">
+                      <span className="w-2 h-2 rounded-full bg-[#1565C0]" />
+                      Hardware Write-Blocker Status
+                    </h3>
+                    <div className="space-y-2 text-xs">
+                      <div className="bg-[#F8FAFC] p-2.5 rounded border border-[#D9E1E8] flex justify-between">
+                        <span className="text-[#607D8B]">Throughput:</span>
+                        <span className="font-bold text-[#1565C0]">{carveSpeed}</span>
+                      </div>
+                      <div className="bg-[#F8FAFC] p-2.5 rounded border border-[#D9E1E8] flex justify-between">
+                        <span className="text-[#607D8B]">NPU Accelerator:</span>
+                        <span className="font-bold text-[#2E7D32]">Hailo-8L (26 TOPS)</span>
+                      </div>
+                      <div className="bg-[#F8FAFC] p-2.5 rounded border border-[#D9E1E8] flex justify-between">
+                        <span className="text-[#607D8B]">Bus Protocol:</span>
+                        <span className="font-bold text-[#EF6C00]">READ-ONLY (LOCKED)</span>
+                      </div>
+                    </div>
                   </div>
-                  {[
-                    ['Investigator', officerSession?.officerName || 'Inspector Vikramaditya Rao', 'text-slate-200'],
-                    ['Badge ID',     officerSession?.officerId   || 'IN-DL-4412-SIT',            'text-cyan-400'],
-                    ['Jurisdiction', officerSession?.city        || 'New Delhi HQ',              'text-slate-300'],
-                    ['Integrity',    'SEALED & VERIFIED',                                        'text-emerald-400'],
-                  ].map(([lbl, val, cls]) => (
-                    <div key={lbl} className="flex justify-between gap-2">
-                      <span className="text-slate-500 uppercase tracking-wider text-[10px]">{lbl}:</span>
-                      <span className={`font-bold ${cls} text-right truncate max-w-[160px]`}>{val}</span>
-                    </div>
-                  ))}
                 </div>
-                <button
-                  onClick={() => alert(
-                    `NATIONAL CYBER CRIME INVESTIGATION REPORT\n` +
-                    `Session: ${sessionUuid}\nSHA-256: ${sha256Hash}\n` +
-                    `Authorized Officer: ${officerSession?.officerName || 'Inspector Vikramaditya Rao'} (${officerSession?.officerId || 'IN-DL-4412-SIT'})\n` +
-                    `Agency / Station: ${officerSession?.agency || 'I4C Central Command'} — ${officerSession?.city || 'New Delhi HQ'}\n` +
-                    `Division: ${officerSession?.branch || 'Special Investigation Team'}\n` +
-                    `Clearance: ${officerSession?.clearanceLevel || 'LEVEL-3 (SECRET)'}\n` +
-                    `Statutory: Admissible under BNS 2023 Sec 63 & Bharatiya Sakshya Adhiniyam Sec 65B\n` +
-                    `Evidence Status: Encrypted & Sealed in Judicial Evidence Vault`
-                  )}
-                  className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-bold rounded-xl border border-slate-700 transition-all font-mono tracking-wider"
-                >
-                  EXPORT COURT EVIDENCE REPORT
-                </button>
               </div>
-            </div>
-          </div>
-        )}
-      </main>
+            )}
 
-      {/* Footer */}
-      <footer className="w-full border-t border-slate-800 bg-[#040a12] mt-8">
-        <div className="max-w-screen-2xl mx-auto px-6 py-2 flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-slate-600">
-          <span>NCIS-TACTICAL &nbsp;|&nbsp; I4C / MHA &nbsp;|&nbsp; CLASSIFIED — RESTRICTED LAW ENFORCEMENT USE ONLY</span>
-          <span>Build: PROD-2026.09 &nbsp;|&nbsp; Platform: CCTNS / ICJS / NATGRID Integrated</span>
+            {activeNav === 'reports' && (
+              <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-6 shadow-sm space-y-5">
+                <div className="flex justify-between items-start border-b border-[#D9E1E8] pb-4">
+                  <div>
+                    <h2 className="text-base font-bold text-[#123B63] uppercase tracking-wide">
+                      JUDICIAL CERTIFICATE OF ADMISSIBILITY &amp; FORENSIC AUDIT
+                    </h2>
+                    <p className="text-xs text-[#607D8B] mt-0.5">
+                      Statutory electronic record certificate under Section 65B Bharatiya Sakshya Adhiniyam (BSA) and Section 63 Bharatiya Nyaya Sanhita (BNS 2023).
+                    </p>
+                  </div>
+                  <span className="bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] px-3 py-1 rounded text-xs font-bold uppercase">
+                    SEALED &amp; VERIFIED
+                  </span>
+                </div>
+
+                <div className="bg-[#F8FAFC] border border-[#D9E1E8] rounded-xl p-4 space-y-3 text-xs">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                      <span className="text-[11px] font-bold text-[#607D8B] uppercase block">Investigation Session</span>
+                      <span className="font-bold text-[#123B63] font-mono mt-0.5 inline-block">{sessionUuid}</span>
+                    </div>
+                    <div>
+                      <span className="text-[11px] font-bold text-[#607D8B] uppercase block">Certifying Officer</span>
+                      <span className="font-bold text-[#263238] mt-0.5 inline-block">{officerSession?.officerName || 'Inspector Vikramaditya Rao'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[11px] font-bold text-[#607D8B] uppercase block">Designation / Station</span>
+                      <span className="font-medium text-[#607D8B] mt-0.5 inline-block">{officerSession?.branch || 'SIT Mule Ring Desk'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[11px] font-bold text-[#607D8B] uppercase block">Digital Vault Hash</span>
+                      <span className="font-bold text-[#2E7D32] font-mono text-[11px] mt-0.5 inline-block truncate max-w-[140px]">{sha256Hash}</span>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-[#D9E1E8] pt-3">
+                    <span className="text-[11px] font-bold text-[#607D8B] uppercase block mb-1">Cryptographic Bitstream SHA-256 Digest</span>
+                    <div className="bg-[#FFFFFF] p-2.5 rounded border border-[#D9E1E8] font-mono text-xs text-[#1565C0] break-all select-all">
+                      {sha256Hash}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => alert(
+                      `GOVERNMENT OF INDIA — MHA / I4C\n` +
+                      `CERTIFICATE OF ELECTRONIC EVIDENCE UNDER BSA SEC 65B\n\n` +
+                      `Case Session: ${sessionUuid}\n` +
+                      `Sealing Hash (SHA-256): ${sha256Hash}\n` +
+                      `Authorized Inspector: ${officerSession?.officerName || 'Inspector Vikramaditya Rao'} (${officerSession?.officerId || 'IN-DL-4412-SIT'})\n` +
+                      `Agency: ${officerSession?.agency || 'I4C Central Command'} — New Delhi HQ\n` +
+                      `Status: Admissible in all Courts of Law under BNS 2023 Sec 63.\n` +
+                      `Report exported to secure evidence vault.`
+                    )}
+                    className="py-2.5 px-5 bg-[#1565C0] hover:bg-[#0D47A1] text-white font-semibold rounded-lg text-xs transition-colors shadow-sm"
+                  >
+                    EXPORT PRINTABLE SEC 65B CERTIFICATE (PDF)
+                  </button>
+                  <button
+                    onClick={() => setActiveNav('pratibimb')}
+                    className="py-2.5 px-5 bg-[#FFFFFF] hover:bg-[#F4F6F8] text-[#1565C0] border border-[#1565C0] font-semibold rounded-lg text-xs transition-colors"
+                  >
+                    VIEW IN PRATIBIMB MAP &rarr;
+                  </button>
+                </div>
+              </div>
+            )}
+          </ModuleErrorBoundary>
+        </main>
+
+      </div>
+
+      {/* ── FOOTER BAR ── */}
+      <footer className="w-full bg-[#FFFFFF] border-t border-[#D9E1E8] py-2 px-6 flex-shrink-0 text-xs text-[#607D8B]">
+        <div className="max-w-screen-2xl mx-auto flex flex-wrap justify-between items-center gap-2">
+          <span>
+            AAROHAN-X &nbsp;|&nbsp; Ministry of Home Affairs &nbsp;•&nbsp; I4C &nbsp;•&nbsp; BPR&amp;D &nbsp;|&nbsp; RESTRICTED LAW ENFORCEMENT USE ONLY
+          </span>
+          <span>
+            System: Pratibimb Cartographic &amp; Evidence Suite &nbsp;|&nbsp; Standards: CCTNS / ICJS / AIS-140 Compliant
+          </span>
         </div>
       </footer>
+
     </div>
   );
 }
