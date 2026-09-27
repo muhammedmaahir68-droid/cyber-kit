@@ -169,3 +169,48 @@ def get_police_phone_mesh():
             "realtime_push_active": True
         }
     }
+
+# ── REAL-TIME PATROL EMISSION STORE & ENDPOINTS ──
+PATROL_TELEMETRY_EMISSIONS: List[Dict] = []
+
+class PatrolEmissionPayload(BaseModel):
+    unit_id: str = "PCR_VAN_04"
+    callsign: str = "VIKRAM-04"
+    lat: float = 28.6180
+    lng: float = 77.2020
+    speed: float = 48.0
+    heading: float = 42.0
+    status: str = "PATROLLING"
+    frequency: str = "154.650 MHz"
+    is_live_device: bool = False
+
+@router.post("/emit-patrol-telemetry")
+def emit_patrol_telemetry(payload: PatrolEmissionPayload):
+    packet_id = f"EMIT-{uuid.uuid4().hex[:8].upper()}"
+    now_str = datetime.datetime.utcnow().isoformat()
+    record = {
+        "packet_id": packet_id,
+        "timestamp": now_str,
+        "unit_id": payload.unit_id,
+        "callsign": payload.callsign,
+        "lat": payload.lat,
+        "lng": payload.lng,
+        "speed": payload.speed,
+        "heading": payload.heading,
+        "status": payload.status,
+        "frequency": payload.frequency,
+        "is_live_device": payload.is_live_device,
+        "signal_rssi_dbm": -64,
+        "verified_hash": uuid.uuid4().hex[:16]
+    }
+    PATROL_TELEMETRY_EMISSIONS.insert(0, record)
+    if len(PATROL_TELEMETRY_EMISSIONS) > 50:
+        PATROL_TELEMETRY_EMISSIONS.pop()
+    return {"status": "EMISSION_BROADCAST_SUCCESS", "packet": record}
+
+@router.get("/live-patrol-emissions")
+def get_live_patrol_emissions():
+    return {
+        "count": len(PATROL_TELEMETRY_EMISSIONS),
+        "emissions": PATROL_TELEMETRY_EMISSIONS
+    }

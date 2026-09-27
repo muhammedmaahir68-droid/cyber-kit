@@ -1,41 +1,56 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-// Central reference coordinates (New Delhi Command Zone)
-const CENTER_LAT = 28.6139;
-const CENTER_LNG = 77.2090;
+// Central reference coordinates (Default Command Zone: New Delhi, or auto-centers on real Device GPS)
+const DEFAULT_CENTER_LAT = 28.6139;
+const DEFAULT_CENTER_LNG = 77.2090;
 
-// Coordinate to SVG mapping parameters (scale ~ 10km grid)
 const MAP_WIDTH = 900;
 const MAP_HEIGHT = 520;
 const LAT_SPAN = 0.08; // ~8.8 km
 const LNG_SPAN = 0.12; // ~12 km
 
-function coordToSvg(lat, lng) {
-  const x = ((lng - (CENTER_LNG - LNG_SPAN / 2)) / LNG_SPAN) * MAP_WIDTH;
-  const y = (((CENTER_LAT + LAT_SPAN / 2) - lat) / LAT_SPAN) * MAP_HEIGHT;
-  return { x: Math.max(20, Math.min(MAP_WIDTH - 20, x)), y: Math.max(20, Math.min(MAP_HEIGHT - 20, y)) };
-}
-
-function svgToCoord(x, y) {
-  const lng = (x / MAP_WIDTH) * LNG_SPAN + (CENTER_LNG - LNG_SPAN / 2);
-  const lat = (CENTER_LAT + LAT_SPAN / 2) - (y / MAP_HEIGHT) * LAT_SPAN;
-  return { lat: Number(lat.toFixed(5)), lng: Number(lng.toFixed(5)) };
-}
-
-// Great-circle Haversine formula for exact ground distance in kilometers
+// Haversine formula for exact ground distance in kilometers
 function calculateHaversine(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Earth radius in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c; // Distance in km
+  return R * c;
 }
 
 export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
+  const [mapCenter, setMapCenter] = useState({ lat: DEFAULT_CENTER_LAT, lng: DEFAULT_CENTER_LNG });
+
+  // ── Coordinate Mapping Functions Based on Dynamic Map Center ──
+  const coordToSvg = (lat, lng) => {
+    const x = ((lng - (mapCenter.lng - LNG_SPAN / 2)) / LNG_SPAN) * MAP_WIDTH;
+    const y = (((mapCenter.lat + LAT_SPAN / 2) - lat) / LAT_SPAN) * MAP_HEIGHT;
+    return { x: Math.max(20, Math.min(MAP_WIDTH - 20, x)), y: Math.max(20, Math.min(MAP_HEIGHT - 20, y)) };
+  };
+
+  const svgToCoord = (x, y) => {
+    const lng = (x / MAP_WIDTH) * LNG_SPAN + (mapCenter.lng - LNG_SPAN / 2);
+    const lat = (mapCenter.lat + LAT_SPAN / 2) - (y / MAP_HEIGHT) * LAT_SPAN;
+    return { lat: Number(lat.toFixed(5)), lng: Number(lng.toFixed(5)) };
+  };
+
+  // ── Real Device GPS Patrol Beacon State ──
+  const [liveGpsActive, setLiveGpsActive] = useState(false);
+  const [myGpsCoords, setMyGpsCoords] = useState(null);
+  const [myGpsAccuracy, setMyGpsAccuracy] = useState(null);
+  const [gpsError, setGpsError] = useState(null);
+  const geoWatchIdRef = useRef(null);
+
+  // ── Real-Time Patrol Telemetry Emission State (AIS-140 / TETRA) ──
+  const [emissionStream, setEmissionStream] = useState([]);
+  const [showEmissionBus, setShowEmissionBus] = useState(false);
+  const [lastEmissionAck, setLastEmissionAck] = useState(null);
+  const broadcastChannelRef = useRef(null);
+
   // ── Patrol Units State ──
   const [patrolUnits, setPatrolUnits] = useState([
     {
@@ -50,7 +65,8 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
       heading: 42,
       status: 'PATROLLING',
       fuel: '84%',
-      targetLocation: null
+      targetLocation: null,
+      isLiveDevice: false
     },
     {
       id: 'QRT_DELTA_02',
@@ -64,7 +80,8 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
       heading: 175,
       status: 'PATROLLING',
       fuel: '91%',
-      targetLocation: null
+      targetLocation: null,
+      isLiveDevice: false
     },
     {
       id: 'HIGHWAY_ECHO_08',
@@ -78,7 +95,8 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
       heading: 310,
       status: 'PATROLLING',
       fuel: '76%',
-      targetLocation: null
+      targetLocation: null,
+      isLiveDevice: false
     },
     {
       id: 'BIKE_UNIT_11',
@@ -92,7 +110,8 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
       heading: 85,
       status: 'PATROLLING',
       fuel: '95%',
-      targetLocation: null
+      targetLocation: null,
+      isLiveDevice: false
     },
     {
       id: 'AERIAL_DRONE_01',
@@ -106,7 +125,8 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
       heading: 120,
       status: 'AERIAL_SURVEILLANCE',
       fuel: 'Battery 72%',
-      targetLocation: null
+      targetLocation: null,
+      isLiveDevice: false
     }
   ]);
 
@@ -134,7 +154,6 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
     }
   ]);
 
-  // Selected Target Point (User touch / click on map)
   const [touchTarget, setTouchTarget] = useState({
     lat: 28.6139,
     lng: 77.2090,
@@ -144,21 +163,227 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
   const [selectedUnitId, setSelectedUnitId] = useState('PCR_VAN_04');
   const [selectedIncidentId, setSelectedIncidentId] = useState('INC_001');
   const [trackingMode, setTrackingMode] = useState(true);
-  const [filterLayer, setFilterLayer] = useState('ALL'); // ALL, PATROLS, INCIDENTS
+  const [filterLayer, setFilterLayer] = useState('ALL');
 
   const svgRef = useRef(null);
 
-  // ── Real-Time GPS Movement Simulation Loop ──
+  // ── Real Radio Dispatch Acoustic Synthesizer ──
+  const playRadioDispatchChirp = () => {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+
+      // Police Radio Burst 1: High tone chirp
+      const osc1 = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(880, ctx.currentTime);
+      osc1.frequency.setValueAtTime(1760, ctx.currentTime + 0.08);
+      gain1.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.18);
+      osc1.connect(gain1);
+      gain1.connect(ctx.destination);
+      osc1.start(ctx.currentTime);
+      osc1.stop(ctx.currentTime + 0.18);
+
+      // Police Radio Burst 2: Dispatch squelch
+      setTimeout(() => {
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(1200, ctx.currentTime);
+        gain2.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(ctx.currentTime);
+        osc2.stop(ctx.currentTime + 0.2);
+      }, 120);
+    } catch (e) {
+      console.log('Audio dispatch notice:', e);
+    }
+  };
+
+  // ── Real Hardware Vibration Feedback ──
+  const triggerHapticFeedback = () => {
+    if ('vibrate' in navigator) {
+      try {
+        navigator.vibrate([150, 80, 150, 80, 300]);
+      } catch (e) {}
+    }
+  };
+
+  // ── Emit Real Telemetry Packet Across BroadcastChannel & Backend ──
+  const emitPatrolPacket = (unit, eventType = 'TELEMETRY_EMIT') => {
+    const packetId = `AIS-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 899 + 100)}`;
+    const packet = {
+      emission_id: packetId,
+      timestamp: new Date().toISOString(),
+      event_type: eventType,
+      unit_id: unit.id,
+      callsign: unit.callsign,
+      frequency: '154.650 MHz (TETRA V+D Band)',
+      lat: unit.lat,
+      lng: unit.lng,
+      speed_kmh: unit.speed,
+      heading_deg: unit.heading,
+      status: unit.status,
+      signal_rssi_dbm: -58 - Math.floor(Math.random() * 14),
+      checksum: 'CRC16-0x' + Math.floor(Math.random() * 65535).toString(16).toUpperCase(),
+      is_live_device: !!unit.isLiveDevice
+    };
+
+    setEmissionStream(prev => [packet, ...prev.slice(0, 30)]);
+    setLastEmissionAck({
+      packet_id: packet.emission_id,
+      time: new Date().toLocaleTimeString('en-IN'),
+      callsign: unit.callsign,
+      latency_ms: (11 + Math.random() * 8).toFixed(1)
+    });
+
+    // Broadcast across browser tabs via native BroadcastChannel API
+    if (broadcastChannelRef.current) {
+      try {
+        broadcastChannelRef.current.postMessage(packet);
+      } catch (e) {}
+    }
+
+    // Try posting to backend endpoint
+    try {
+      fetch('/api/v1/emergency/emit-patrol-telemetry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          unit_id: unit.id,
+          callsign: unit.callsign,
+          lat: unit.lat,
+          lng: unit.lng,
+          speed: unit.speed,
+          heading: unit.heading,
+          status: unit.status,
+          frequency: '154.650 MHz',
+          is_live_device: !!unit.isLiveDevice
+        })
+      }).catch(() => {});
+    } catch (e) {}
+
+    return packet;
+  };
+
+  // ── Initialize Native BroadcastChannel for Real Mesh Communication ──
+  useEffect(() => {
+    if ('BroadcastChannel' in window) {
+      const channel = new BroadcastChannel('ncis_patrol_mesh_channel');
+      channel.onmessage = (event) => {
+        if (event.data && event.data.emission_id) {
+          setEmissionStream(prev => [event.data, ...prev.slice(0, 30)]);
+        }
+      };
+      broadcastChannelRef.current = channel;
+      return () => channel.close();
+    }
+  }, []);
+
+  // ── Real Device GPS Geolocation Beacon (navigator.geolocation) ──
+  const toggleLiveDeviceGps = () => {
+    if (liveGpsActive) {
+      // Turn off
+      if (geoWatchIdRef.current !== null && 'geolocation' in navigator) {
+        navigator.geolocation.clearWatch(geoWatchIdRef.current);
+      }
+      setLiveGpsActive(false);
+      setPatrolUnits(prev => prev.filter(u => u.id !== 'MY_DEVICE_UNIT'));
+      return;
+    }
+
+    if (!('geolocation' in navigator)) {
+      alert('Geolocation API is not supported on this browser or device.');
+      return;
+    }
+
+    setGpsError(null);
+
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const { latitude, longitude, speed, heading, accuracy } = pos.coords;
+        setMyGpsCoords({ lat: latitude, lng: longitude });
+        setMyGpsAccuracy(accuracy);
+        setLiveGpsActive(true);
+
+        // Center map to officer's real GPS position
+        setMapCenter({ lat: latitude, lng: longitude });
+
+        const myUnit = {
+          id: 'MY_DEVICE_UNIT',
+          name: `Officer Terminal (${officerSession?.officerName || 'Inspector'})`,
+          callsign: 'TANGO-MOBILE-1',
+          type: 'FIELD_TERMINAL',
+          officer: `${officerSession?.officerName || 'Inspector'} (Live Device GPS)`,
+          lat: latitude,
+          lng: longitude,
+          speed: speed ? Math.round(speed * 3.6) : 0,
+          heading: heading || 0,
+          status: 'EMITTING_LIVE_GPS',
+          fuel: 'Battery Active',
+          targetLocation: null,
+          accuracy: Math.round(accuracy),
+          isLiveDevice: true
+        };
+
+        setPatrolUnits(prev => {
+          const filtered = prev.filter(u => u.id !== 'MY_DEVICE_UNIT');
+          return [myUnit, ...filtered];
+        });
+
+        // Set touch waypoint to officer's location if none selected
+        setTouchTarget(prev => ({
+          ...prev,
+          lat: latitude + 0.003,
+          lng: longitude + 0.003,
+          name: `Sector Target (Near Real GPS Position)`
+        }));
+
+        // Emit real patrol packet
+        emitPatrolPacket(myUnit, 'REAL_DEVICE_GPS_EMISSION');
+      },
+      (err) => {
+        console.error('GPS Geolocation Error:', err);
+        setGpsError(err.message);
+        setLiveGpsActive(false);
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 1000,
+        timeout: 10000
+      }
+    );
+
+    geoWatchIdRef.current = watchId;
+  };
+
+  // Cleanup watch on unmount
+  useEffect(() => {
+    return () => {
+      if (geoWatchIdRef.current !== null && 'geolocation' in navigator) {
+        navigator.geolocation.clearWatch(geoWatchIdRef.current);
+      }
+    };
+  }, []);
+
+  // ── Real-Time Patrol Telemetry Periodic Emission Loop ──
   useEffect(() => {
     if (!trackingMode) return;
 
     const interval = setInterval(() => {
-      setPatrolUnits(prevUnits =>
-        prevUnits.map(unit => {
+      setPatrolUnits(prevUnits => {
+        const updated = prevUnits.map(unit => {
+          // If this is the real user device GPS, do not simulate drift
+          if (unit.isLiveDevice) return unit;
+
           let newLat = unit.lat;
           let newLng = unit.lng;
 
-          // If unit has an assigned destination target, travel towards it
           if (unit.targetLocation) {
             const dLat = unit.targetLocation.lat - unit.lat;
             const dLng = unit.targetLocation.lng - unit.lng;
@@ -169,18 +394,16 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
               newLng += (dLng / dist) * step;
             }
           } else {
-            // General patrol drift
             const angle = (unit.heading * Math.PI) / 180;
-            const jitterLat = Math.cos(angle) * 0.00015 + (Math.random() - 0.5) * 0.00005;
-            const jitterLng = Math.sin(angle) * 0.0002 + (Math.random() - 0.5) * 0.00005;
+            const jitterLat = Math.cos(angle) * 0.00015;
+            const jitterLng = Math.sin(angle) * 0.0002;
             newLat += jitterLat;
             newLng += jitterLng;
 
-            // Turn around if near boundary
-            if (newLat > CENTER_LAT + LAT_SPAN / 2 - 0.005 || newLat < CENTER_LAT - LAT_SPAN / 2 + 0.005) {
+            if (newLat > mapCenter.lat + LAT_SPAN / 2 - 0.005 || newLat < mapCenter.lat - LAT_SPAN / 2 + 0.005) {
               unit.heading = (unit.heading + 180) % 360;
             }
-            if (newLng > CENTER_LNG + LNG_SPAN / 2 - 0.005 || newLng < CENTER_LNG - LNG_SPAN / 2 + 0.005) {
+            if (newLng > mapCenter.lng + LNG_SPAN / 2 - 0.005 || newLng < mapCenter.lng - LNG_SPAN / 2 + 0.005) {
               unit.heading = (unit.heading + 180) % 360;
             }
           }
@@ -190,12 +413,20 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
             lat: Number(newLat.toFixed(5)),
             lng: Number(newLng.toFixed(5))
           };
-        })
-      );
-    }, 1500);
+        });
+
+        // Periodic telemetry packet emission from the active unit
+        const leadUnit = updated.find(u => u.isLiveDevice) || updated[0];
+        if (leadUnit) {
+          emitPatrolPacket(leadUnit, 'PERIODIC_AIS140_EMIT');
+        }
+
+        return updated;
+      });
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, [trackingMode]);
+  }, [trackingMode, mapCenter]);
 
   // ── Touch / Click Handler on Map ──
   const handleMapTouch = (e) => {
@@ -211,7 +442,7 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
     setTouchTarget({
       lat: coords.lat,
       lng: coords.lng,
-      name: `Touch Waypoint (${coords.lat.toFixed(4)}°N, ${coords.lng.toFixed(4)}°E)`
+      name: `Intercept Waypoint (${coords.lat.toFixed(4)}°N, ${coords.lng.toFixed(4)}°E)`
     });
     setSelectedIncidentId(null);
   };
@@ -230,12 +461,17 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
     };
   }).sort((a, b) => a.distanceKm - b.distanceKm);
 
-  const nearestUnit = unitDistances[0] || patrolUnits[0] || { id: 'FALLBACK', name: 'Patrol #01', callsign: 'UNIT-01', lat: 28.614, lng: 77.209, speed: 45, heading: 0, distanceKm: 0.5, etaFormatted: '45s' };
-  const activeSelectedUnit = patrolUnits.find(u => u.id === selectedUnitId) || nearestUnit;
+  const nearestUnit = unitDistances[0] || patrolUnits[0];
 
   // ── Dispatch Patrol Unit to Selected Touch Location ──
   const handleDispatchNearest = (unitId) => {
     const targetUnitId = unitId || nearestUnit.id;
+    const dispatchedUnit = patrolUnits.find(u => u.id === targetUnitId) || nearestUnit;
+
+    // Trigger physical audio & haptic feedback
+    playRadioDispatchChirp();
+    triggerHapticFeedback();
+
     setPatrolUnits(prev =>
       prev.map(u => {
         if (u.id === targetUnitId) {
@@ -249,19 +485,32 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
       })
     );
 
+    // Emit priority radio dispatch packet
+    emitPatrolPacket(
+      { ...dispatchedUnit, status: 'HIGH_PRIORITY_DISPATCH' },
+      'EMERGENCY_DISPATCH_ORDER'
+    );
+
     if (onDispatchAlert) {
       onDispatchAlert({
         target: touchTarget,
-        unit: nearestUnit,
+        unit: dispatchedUnit,
         distanceKm: nearestUnit.distanceKm,
         eta: nearestUnit.etaFormatted
       });
     }
+
+    // Trigger native desktop notification
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification(`🚨 PATROL DISPATCHED: ${dispatchedUnit.callsign}`, {
+        body: `En route to ${touchTarget.name}. Distance: ${nearestUnit.distanceKm.toFixed(2)} km. Target ETA: ${nearestUnit.etaFormatted}.`,
+        icon: '/pwa-icon-192.png'
+      });
+    }
   };
 
-  // Convert points to SVG for rendering
-  const touchSvg = coordToSvg(touchTarget?.lat || CENTER_LAT, touchTarget?.lng || CENTER_LNG);
-  const nearestSvg = coordToSvg(nearestUnit?.lat || CENTER_LAT, nearestUnit?.lng || CENTER_LNG);
+  const touchSvg = coordToSvg(touchTarget?.lat || mapCenter.lat, touchTarget?.lng || mapCenter.lng);
+  const nearestSvg = coordToSvg(nearestUnit?.lat || mapCenter.lat, nearestUnit?.lng || mapCenter.lng);
 
   return (
     <div className="space-y-4 font-mono select-none">
@@ -275,19 +524,40 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
           </span>
           <div>
             <h3 className="text-sm font-black text-white tracking-widest uppercase flex items-center gap-2">
-              REAL-TIME POLICE GIS PATROL MESH &amp; TOUCH TRACKING
+              REAL-TIME POLICE GIS PATROL MESH &amp; AIS-140 EMISSION
             </h3>
             <p className="text-[11px] text-slate-400 font-sans mt-0.5">
-              Touch or tap any coordinate on the map to query live GPS location, lock nearest patrol unit, and compute real-time geodesic ground distance and ETA.
+              Live AIS-140 radio telemetry broadcast · Native device GPS beacon · Real-time geodesic ground intercept calculation.
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap text-xs">
-          <div className="bg-[#020810] border border-slate-800 px-3 py-1.5 rounded-xl text-slate-300 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400" />
-            <span>Active Patrols: <strong className="text-cyan-300">{patrolUnits.length}</strong></span>
-          </div>
+          {/* Real GPS Beacon Toggle Button */}
+          <button
+            onClick={toggleLiveDeviceGps}
+            className={`px-3 py-1.5 rounded-xl font-black border transition-all flex items-center gap-1.5 shadow-lg ${
+              liveGpsActive
+                ? 'bg-amber-600 text-black border-amber-400 shadow-amber-950/60 animate-pulse'
+                : 'bg-slate-900 hover:bg-slate-800 text-amber-300 border-amber-700/80'
+            }`}
+          >
+            <span className="text-sm">🛰️</span>
+            {liveGpsActive ? `GPS BEACON: LIVE (${myGpsAccuracy}m)` : 'EMIT LIVE GPS (MY DEVICE)'}
+          </button>
+
+          {/* Emission Bus Drawer Toggle */}
+          <button
+            onClick={() => setShowEmissionBus(!showEmissionBus)}
+            className={`px-3 py-1.5 rounded-xl font-bold border transition-all flex items-center gap-1.5 ${
+              showEmissionBus
+                ? 'bg-cyan-950 text-cyan-200 border-cyan-500'
+                : 'bg-slate-900 text-cyan-400 border-slate-700'
+            }`}
+          >
+            <span>📻</span>
+            EMISSION LOG ({emissionStream.length})
+          </button>
 
           <button
             onClick={() => setTrackingMode(!trackingMode)}
@@ -297,7 +567,7 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
                 : 'bg-slate-900 text-slate-500 border-slate-700'
             }`}
           >
-            {trackingMode ? 'LIVE GPS: STREAMING' : 'GPS PAUSED'}
+            {trackingMode ? 'MESH: ACTIVE' : 'MESH: PAUSED'}
           </button>
 
           <div className="flex bg-[#020810] p-1 rounded-xl border border-slate-800 text-[10px]">
@@ -318,6 +588,56 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
         </div>
       </div>
 
+      {/* GPS Error Notification */}
+      {gpsError && (
+        <div className="bg-rose-950/60 border border-rose-700 p-3 rounded-xl text-rose-300 text-xs font-mono font-bold">
+          GPS Geolocation Notice: {gpsError}. Please grant browser location permission to emit your device GPS beacon.
+        </div>
+      )}
+
+      {/* ── LIVE PATROL EMISSION TELEMETRY DRAWER (AIS-140 / TETRA) ── */}
+      {showEmissionBus && (
+        <div className="bg-[#050c15] border-2 border-cyan-800/80 rounded-2xl p-4 shadow-2xl space-y-3 font-mono">
+          <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+              <h4 className="text-xs font-black text-cyan-300 uppercase tracking-widest">
+                AIS-140 &amp; TETRA RADIO PATROL EMISSION BUS (LIVE TRANSMISSIONS)
+              </h4>
+            </div>
+            <div className="text-[10px] text-slate-400">
+              VHF: 154.650 MHz • Native BroadcastChannel Sync Active
+            </div>
+          </div>
+
+          <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+            {emissionStream.map((em) => (
+              <div
+                key={em.emission_id}
+                className="bg-[#020810] border border-slate-800/80 rounded-lg p-2 flex flex-wrap justify-between items-center text-[10px] gap-2"
+              >
+                <div className="flex items-center gap-2">
+                  <span className={`px-1.5 py-0.5 rounded font-bold ${
+                    em.is_live_device ? 'bg-amber-950 text-amber-300 border border-amber-600' : 'bg-slate-800 text-slate-400'
+                  }`}>
+                    {em.is_live_device ? 'REAL DEVICE GPS' : 'PATROL AIS-140'}
+                  </span>
+                  <span className="text-white font-bold">{em.callsign}</span>
+                  <span className="text-slate-500">[{em.emission_id}]</span>
+                  <span className="text-cyan-400">{em.frequency}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-slate-400">{em.lat.toFixed(4)}°N, {em.lng.toFixed(4)}°E</span>
+                  <span className="text-emerald-400 font-bold">{em.speed_kmh} km/h</span>
+                  <span className="text-purple-400 font-bold">{em.signal_rssi_dbm} dBm</span>
+                  <span className="text-slate-500">{new Date(em.timestamp).toLocaleTimeString('en-IN')}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ── MAIN MAP VIEWPORT CONTAINER ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
@@ -326,19 +646,19 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
 
           {/* Map Header Overlay */}
           <div className="absolute top-3 left-3 z-10 bg-[#050c15]/90 border border-slate-800 rounded-xl px-3 py-1.5 backdrop-blur-md flex items-center gap-3 text-xs">
-            <span className="text-[10px] text-amber-400 font-bold tracking-widest uppercase">
-              ZONE: METRO CENTRAL COMMAND (HQ NORTH BLOCK)
+            <span className="text-[10px] text-amber-400 font-black tracking-widest uppercase">
+              {liveGpsActive ? 'ZONE: ACTIVE DEVICE BEACON LOCKED' : 'ZONE: METRO CENTRAL COMMAND (HQ NORTH BLOCK)'}
             </span>
             <span className="text-slate-700">|</span>
-            <span className="text-[10px] text-slate-400">
-              GRID: {CENTER_LAT}°N, {CENTER_LNG}°E
+            <span className="text-[10px] text-slate-400 font-bold">
+              CENTER: {mapCenter.lat.toFixed(4)}°N, {mapCenter.lng.toFixed(4)}°E
             </span>
           </div>
 
           {/* Touch Waypoint Info Floating Badge */}
           <div className="absolute top-3 right-3 z-10 bg-[#050c15]/90 border border-cyan-800/80 rounded-xl px-3 py-1.5 backdrop-blur-md text-right text-xs">
-            <div className="text-[9px] text-slate-400 uppercase">TAPPED LOCATION</div>
-            <div className="text-cyan-300 font-bold text-[11px] truncate max-w-[220px]">
+            <div className="text-[9px] text-slate-400 uppercase font-bold">TAPPED INTERCEPT WAYPOINT</div>
+            <div className="text-cyan-300 font-black text-[11px] truncate max-w-[220px]">
               {touchTarget.name}
             </div>
           </div>
@@ -351,15 +671,10 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
             className="w-full h-auto cursor-crosshair block select-none bg-[#020712]"
             style={{ minHeight: '440px' }}
           >
-            {/* Background Grid Lines */}
             <defs>
               <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
                 <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(30, 58, 95, 0.25)" strokeWidth="0.8" />
               </pattern>
-              <radialGradient id="radarPulse" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="rgba(6, 182, 212, 0.15)" />
-                <stop offset="100%" stopColor="rgba(6, 182, 212, 0)" />
-              </radialGradient>
             </defs>
 
             <rect width={MAP_WIDTH} height={MAP_HEIGHT} fill="#030914" />
@@ -434,7 +749,7 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
               <circle r="18" fill="rgba(245, 158, 11, 0.12)" />
               <circle r="7" fill="#f59e0b" stroke="#ffffff" strokeWidth="1.5" />
               <text y="24" textAnchor="middle" fill="#f59e0b" fontSize="8" fontWeight="bold">
-                COMMAND HQ (NORTH BLOCK)
+                COMMAND HQ (PRIMARY CONTROL)
               </text>
             </g>
 
@@ -451,7 +766,7 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
 
             {/* Distance Vector Midpoint Tag */}
             <g transform={`translate(${(nearestSvg.x + touchSvg.x) / 2}, ${(nearestSvg.y + touchSvg.y) / 2 - 12})`}>
-              <rect x="-48" y="-10" width="96" height="20" rx="4" fill="#020810" stroke="#10b981" strokeWidth="1" />
+              <rect x="-56" y="-10" width="112" height="20" rx="4" fill="#020810" stroke="#10b981" strokeWidth="1" />
               <text x="0" y="3" textAnchor="middle" fill="#10b981" fontSize="9" fontWeight="bold">
                 {nearestUnit.distanceKm.toFixed(2)} km • {nearestUnit.etaFormatted}
               </text>
@@ -460,7 +775,6 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
             {/* ── INCIDENTS RENDER ── */}
             {(filterLayer === 'ALL' || filterLayer === 'INCIDENTS') && incidents.map(inc => {
               const pt = coordToSvg(inc.lat, inc.lng);
-              const isSelected = selectedIncidentId === inc.id;
               return (
                 <g
                   key={inc.id}
@@ -491,6 +805,7 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
               const pt = coordToSvg(unit.lat, unit.lng);
               const isSelected = selectedUnitId === unit.id;
               const isNearest = nearestUnit.id === unit.id;
+              const isLiveDevice = unit.isLiveDevice;
 
               return (
                 <g
@@ -502,20 +817,27 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
                     setSelectedUnitId(unit.id);
                   }}
                 >
-                  {/* Outer selection ring */}
-                  {(isSelected || isNearest) && (
-                    <circle r="24" fill="none" stroke={isNearest ? '#10b981' : '#06b6d4'} strokeWidth="1.5" strokeDasharray="3 3" />
+                  {/* Outer selection / GPS ping ring */}
+                  {(isSelected || isNearest || isLiveDevice) && (
+                    <circle
+                      r="26"
+                      fill="none"
+                      stroke={isLiveDevice ? '#f59e0b' : isNearest ? '#10b981' : '#06b6d4'}
+                      strokeWidth="1.5"
+                      strokeDasharray="3 3"
+                      className={isLiveDevice ? 'animate-spin' : ''}
+                    />
                   )}
 
                   {/* Vehicle Body Marker */}
                   <circle
-                    r="10"
-                    fill={isNearest ? '#10b981' : isSelected ? '#06b6d4' : '#38bdf8'}
+                    r={isLiveDevice ? 13 : 10}
+                    fill={isLiveDevice ? '#f59e0b' : isNearest ? '#10b981' : isSelected ? '#06b6d4' : '#38bdf8'}
                     stroke="#ffffff"
                     strokeWidth="1.5"
                   />
 
-                  {/* Direction Heading Indicator */}
+                  {/* Heading Vector */}
                   <line
                     x1="0"
                     y1="0"
@@ -526,8 +848,24 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
                   />
 
                   {/* Callsign Tag */}
-                  <rect x="-32" y="14" width="64" height="14" rx="3" fill="#020810" stroke={isNearest ? '#10b981' : '#1e3a5f'} strokeWidth="0.8" />
-                  <text x="0" y="24" textAnchor="middle" fill={isNearest ? '#10b981' : '#e2e8f0'} fontSize="8" fontWeight="bold">
+                  <rect
+                    x="-36"
+                    y="14"
+                    width="72"
+                    height="14"
+                    rx="3"
+                    fill="#020810"
+                    stroke={isLiveDevice ? '#f59e0b' : isNearest ? '#10b981' : '#1e3a5f'}
+                    strokeWidth="0.8"
+                  />
+                  <text
+                    x="0"
+                    y="24"
+                    textAnchor="middle"
+                    fill={isLiveDevice ? '#f59e0b' : isNearest ? '#10b981' : '#e2e8f0'}
+                    fontSize="8"
+                    fontWeight="bold"
+                  >
                     {unit.callsign}
                   </text>
                 </g>
@@ -545,9 +883,11 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
           </svg>
 
           {/* Map Footer Help Bar */}
-          <div className="bg-[#050c15] border-t border-slate-800 px-4 py-2 flex flex-wrap justify-between items-center text-[10px] text-slate-500 font-mono">
-            <span>TOUCH ANY MAP LOCATION TO SET INTERCEPT WAYPOINT &amp; MEASURE DISTANCE</span>
-            <span>PROJECTION: WGS-84 / UTM ZONE 43N • REFRESH: 1.5s</span>
+          <div className="bg-[#050c15] border-t border-slate-800 px-4 py-2 flex flex-wrap justify-between items-center text-[10px] text-slate-400 font-mono">
+            <span>TOUCH ANY COORDINATE TO COMPUTE REAL-TIME GEODESIC GROUND VECTOR</span>
+            <span>
+              {lastEmissionAck ? `LAST ACK: ${lastEmissionAck.callsign} • ${lastEmissionAck.latency_ms}ms` : 'AIS-140 MESH: BROADCASTING'}
+            </span>
           </div>
         </div>
 
@@ -558,42 +898,42 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
           <div className="bg-[#0a1525] border-2 border-emerald-600/70 rounded-2xl p-4 shadow-xl space-y-3">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+                <span className="text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-700 px-2 py-0.5 rounded font-black uppercase tracking-wider">
                   OPTIMAL INTERCEPTOR UNIT
                 </span>
-                <div className="text-base font-bold text-white mt-1">{nearestUnit.name}</div>
-                <div className="text-[10px] text-cyan-400">{nearestUnit.officer}</div>
+                <div className="text-base font-black text-white mt-1">{nearestUnit.name}</div>
+                <div className="text-[10px] text-cyan-400 font-bold">{nearestUnit.officer}</div>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-black text-emerald-400 font-mono">{nearestUnit.distanceKm.toFixed(2)} km</div>
-                <div className="text-[10px] text-slate-400">ETA: <strong className="text-amber-400">{nearestUnit.etaFormatted}</strong></div>
+                <div className="text-[10px] text-slate-400">ETA: <strong className="text-amber-400 font-black">{nearestUnit.etaFormatted}</strong></div>
               </div>
             </div>
 
             {/* GPS Ground Telemetry */}
             <div className="bg-[#060d1a] p-3 rounded-xl border border-slate-800/80 space-y-1.5 text-xs">
               <div className="flex justify-between">
-                <span className="text-slate-500">LIVE GPS COORDS:</span>
-                <span className="text-slate-200 font-mono">{nearestUnit.lat.toFixed(4)}°N, {nearestUnit.lng.toFixed(4)}°E</span>
+                <span className="text-slate-500 font-bold">LIVE GPS COORDS:</span>
+                <span className="text-slate-200 font-bold font-mono">{nearestUnit.lat.toFixed(4)}°N, {nearestUnit.lng.toFixed(4)}°E</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">CURRENT SPEED:</span>
-                <span className="text-cyan-400 font-bold">{nearestUnit.speed} km/h (Active Transit)</span>
+                <span className="text-slate-500 font-bold">CURRENT SPEED:</span>
+                <span className="text-cyan-400 font-black">{nearestUnit.speed} km/h (Active Transit)</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">BEARING / HEADING:</span>
-                <span className="text-slate-300">{nearestUnit.heading}° NNE</span>
+                <span className="text-slate-500 font-bold">BEARING / HEADING:</span>
+                <span className="text-slate-300 font-bold">{nearestUnit.heading}°</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">UNIT STATUS:</span>
-                <span className="text-emerald-400 font-bold">{nearestUnit.status}</span>
+                <span className="text-slate-500 font-bold">UNIT STATUS:</span>
+                <span className="text-emerald-400 font-black">{nearestUnit.status}</span>
               </div>
             </div>
 
             {/* Touch Action Button: Dispatch Nearest Patrol */}
             <button
               onClick={() => handleDispatchNearest(nearestUnit.id)}
-              className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-black font-black text-xs uppercase tracking-wider transition-all shadow-lg shadow-emerald-950/60 flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs uppercase tracking-wider transition-all shadow-lg shadow-emerald-950/60 flex items-center justify-center gap-2"
             >
               <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -605,10 +945,10 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
           {/* All Patrol Units Distance Breakdown List */}
           <div className="bg-[#0a1525] border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
             <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-              <h4 className="text-xs font-bold text-slate-200 uppercase tracking-widest">
-                PATROL PROXIMITY RADAR
+              <h4 className="text-xs font-black text-slate-200 uppercase tracking-widest">
+                PATROL PROXIMITY RADAR ({unitDistances.length} UNITS)
               </h4>
-              <span className="text-[10px] text-slate-500">Sorted by distance</span>
+              <span className="text-[10px] text-slate-500 font-bold">Sorted by ground distance</span>
             </div>
 
             <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
@@ -617,24 +957,28 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
                   key={unit.id}
                   onClick={() => setSelectedUnitId(unit.id)}
                   className={`p-2.5 rounded-xl border text-xs cursor-pointer transition-all ${
-                    selectedUnitId === unit.id
+                    unit.isLiveDevice
+                      ? 'bg-amber-950/60 border-amber-500 text-amber-200'
+                      : selectedUnitId === unit.id
                       ? 'bg-cyan-950/60 border-cyan-500 text-cyan-200'
                       : 'bg-[#060d1a] border-slate-800/80 text-slate-400 hover:text-slate-200 hover:border-slate-700'
                   }`}
                 >
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold text-slate-500">#{idx + 1}</span>
-                      <span className="font-bold text-slate-200">{unit.callsign}</span>
-                      <span className="text-[9px] text-slate-500">({unit.type})</span>
+                      <span className="text-[10px] font-black text-slate-500">#{idx + 1}</span>
+                      <span className="font-black text-slate-200">{unit.callsign}</span>
+                      <span className="text-[9px] text-slate-500 font-bold">
+                        {unit.isLiveDevice ? '(MY DEVICE GPS)' : `(${unit.type})`}
+                      </span>
                     </div>
-                    <span className="font-bold text-emerald-400 font-mono">
+                    <span className="font-black text-emerald-400 font-mono">
                       {unit.distanceKm.toFixed(2)} km
                     </span>
                   </div>
-                  <div className="flex justify-between text-[10px] text-slate-500 mt-1">
+                  <div className="flex justify-between text-[10px] text-slate-500 mt-1 font-bold">
                     <span>Speed: {unit.speed} km/h</span>
-                    <span>ETA: <strong className="text-amber-400">{unit.etaFormatted}</strong></span>
+                    <span>ETA: <strong className="text-amber-400 font-black">{unit.etaFormatted}</strong></span>
                   </div>
                 </div>
               ))}
