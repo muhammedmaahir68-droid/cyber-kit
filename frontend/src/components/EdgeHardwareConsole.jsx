@@ -420,66 +420,74 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
   };
 
   return (
-    <div className="space-y-6 font-mono select-none">
+    <div className="space-y-4 font-sans text-[#263238] select-none">
 
       {/* ── TOP HARDWARE BANNER ── */}
-      <div className="bg-[#050c15] border border-slate-800 rounded-2xl p-5 shadow-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <span className="w-3 h-3 rounded-full bg-cyan-400 animate-pulse" />
-            <h2 className="text-base font-black text-white tracking-widest uppercase">
-              MOD-05: TACTICAL FORENSIC HARDWARE TERMINAL
-            </h2>
-            <span className="text-[10px] px-2.5 py-0.5 rounded border border-cyan-800 bg-cyan-950/80 text-cyan-300 font-bold">
-              100% REAL HARDWARE &amp; BITSTREAM ACQUISITION
-            </span>
+            <div className="w-9 h-9 rounded-lg bg-[#123B63] flex items-center justify-center text-white shadow-sm flex-shrink-0">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+              </svg>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-bold text-[#123B63] uppercase tracking-wide">
+                  TACTICAL FORENSIC HARDWARE TERMINAL
+                </h2>
+                <span className="text-[10px] px-2 py-0.5 rounded border border-[#90CAF9] bg-[#E3F2FD] text-[#1565C0] font-semibold">
+                  BITSTREAM ACQUISITION &amp; CARVING
+                </span>
+              </div>
+              <p className="text-xs text-[#607D8B] mt-0.5">
+                Direct physical hardware interface. Ingest actual seized storage files with verified <strong>SHA-256 Web Crypto</strong> sealing, or connect physical devices via <strong>WebUSB</strong> / <strong>Web Serial</strong>.
+              </p>
+            </div>
           </div>
-          <p className="text-xs text-slate-400 mt-1 font-sans">
-            Direct physical hardware interface. Connect real USB devices via <strong>WebUSB</strong>, real serial COM ports via <strong>Web Serial</strong>, or ingest actual seized storage files with verified <strong>SHA-256 Web Crypto</strong> sealing.
-          </p>
         </div>
 
         {/* Top Status LED Panel */}
-        <div className="flex items-center gap-3 bg-[#020810] border border-slate-800 px-4 py-2.5 rounded-xl">
+        <div className="flex items-center gap-3 bg-[#F8FAFC] border border-[#D9E1E8] px-3.5 py-2 rounded-lg text-xs font-semibold">
           <div className="flex items-center gap-1.5">
-            <span className={`w-2.5 h-2.5 rounded-full ${powerOn ? 'bg-emerald-400 shadow-md shadow-emerald-500/50' : 'bg-slate-700'}`} />
-            <span className="text-[10px] text-slate-400 font-bold">PWR</span>
+            <span className={`w-2 h-2 rounded-full ${powerOn ? 'bg-[#2E7D32]' : 'bg-[#CFD8DC]'}`} />
+            <span className="text-[10px] text-[#607D8B] font-bold">PWR</span>
           </div>
-          <div className="w-px h-4 bg-slate-800" />
+          <div className="w-px h-3.5 bg-[#D9E1E8]" />
           <div className="flex items-center gap-1.5">
-            <span className={`w-2.5 h-2.5 rounded-full ${writeBlockerEngaged ? 'bg-amber-400 shadow-md shadow-amber-500/50' : 'bg-rose-500 shadow-md shadow-rose-500/50'}`} />
-            <span className="text-[10px] text-slate-400 font-bold">W-BLOCK</span>
+            <span className={`w-2 h-2 rounded-full ${writeBlockerEngaged ? 'bg-[#1565C0]' : 'bg-[#C62828]'}`} />
+            <span className="text-[10px] text-[#607D8B] font-bold">W-BLOCK</span>
           </div>
-          <div className="w-px h-4 bg-slate-800" />
+          <div className="w-px h-3.5 bg-[#D9E1E8]" />
           <div className="flex items-center gap-1.5">
-            <span className={`w-2.5 h-2.5 rounded-full ${deviceConnected ? 'bg-cyan-400 shadow-md shadow-cyan-500/50' : 'bg-slate-700'}`} />
-            <span className="text-[10px] text-slate-400 font-bold">LINK</span>
+            <span className={`w-2 h-2 rounded-full ${deviceConnected ? 'bg-[#2E7D32]' : 'bg-[#CFD8DC]'}`} />
+            <span className="text-[10px] text-[#607D8B] font-bold">LINK</span>
           </div>
-          <div className="w-px h-4 bg-slate-800" />
+          <div className="w-px h-3.5 bg-[#D9E1E8]" />
           <div className="flex items-center gap-1.5">
-            <span className={`w-2.5 h-2.5 rounded-full ${isRetrieving ? 'bg-purple-400 animate-ping' : 'bg-slate-700'}`} />
-            <span className="text-[10px] text-slate-400 font-bold">RX/TX</span>
+            <span className={`w-2 h-2 rounded-full ${isRetrieving ? 'bg-[#EF6C00] animate-ping' : 'bg-[#CFD8DC]'}`} />
+            <span className="text-[10px] text-[#607D8B] font-bold">RX/TX</span>
           </div>
         </div>
       </div>
 
       {/* ── JURY PROOF: REAL PHYSICAL HARDWARE & FILE SELECTOR BAR ── */}
-      <div className="bg-[#0a1525] border-2 border-amber-600/70 rounded-2xl p-4 shadow-xl space-y-3">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2">
+      <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm space-y-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#D9E1E8] pb-2.5">
           <div className="flex items-center gap-2">
-            <svg className="w-5 h-5 text-amber-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-[#1565C0] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
             <div>
-              <div className="text-xs font-black text-amber-300 uppercase tracking-wider">
+              <div className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
                 PHYSICAL EVIDENCE MEDIA INGESTION — ZERO SIMULATION GUARANTEE
               </div>
-              <div className="text-[10px] text-slate-400 font-sans">
-                Plug in ANY real USB flash drive, choose a raw bitstream image (.dd, .raw, .img, .bin, .pdf), or connect physical USB hardware directly.
+              <div className="text-xs text-[#607D8B]">
+                Select any real seized file (.dd, .raw, .img, .bin, .pdf, .jpg) or scan physical USB hardware directly.
               </div>
             </div>
           </div>
-          <span className="text-[10px] px-2 py-0.5 rounded font-black uppercase tracking-wider bg-amber-950 text-amber-400 border border-amber-700">
+          <span className="text-[10px] px-2.5 py-1 rounded font-semibold uppercase tracking-wider bg-[#F4F6F8] text-[#123B63] border border-[#D9E1E8]">
             {hardwareSourceType === 'REAL_FILE' ? 'REAL PHYSICAL FILE LOADED' :
              hardwareSourceType === 'WEB_USB' ? 'PHYSICAL WebUSB HARDWARE CONNECTED' :
              hardwareSourceType === 'WEB_SERIAL' ? 'PHYSICAL SERIAL PORT CONNECTED' : 'BPR&D BENCHMARK IMAGE'}
@@ -497,15 +505,15 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="w-full py-2.5 px-3 bg-amber-950/60 hover:bg-amber-900/80 border-2 border-amber-600/80 rounded-xl text-xs font-black text-amber-200 transition-all flex items-center justify-center gap-2 shadow-lg"
+              className="w-full py-2.5 px-3 bg-[#FFFFFF] hover:bg-[#F4F6F8] border-2 border-[#1565C0] rounded-lg text-xs font-bold text-[#1565C0] transition-all flex items-center justify-center gap-2 shadow-xs"
             >
-              <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-[#1565C0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
-              {loadedFile ? `INGESTED: ${loadedFile.name.slice(0, 18)}...` : 'SELECT SEIZED FILE / DISK DUMP'}
+              {loadedFile ? `INGESTED: ${loadedFile.name.slice(0, 20)}...` : 'SELECT SEIZED FILE / DISK DUMP'}
             </button>
-            <div className="text-[9px] text-slate-500 mt-1 text-center">
-              Reads real binary bytes • Computes actual SHA-256
+            <div className="text-[10px] text-[#607D8B] mt-1 text-center font-medium">
+              Reads real binary bytes &bull; Computes cryptographic SHA-256
             </div>
           </div>
 
@@ -513,14 +521,14 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
           <div>
             <button
               onClick={handleConnectWebUsb}
-              className="w-full py-2.5 px-3 bg-cyan-950/60 hover:bg-cyan-900/80 border border-cyan-600/80 rounded-xl text-xs font-black text-cyan-200 transition-all flex items-center justify-center gap-2 shadow-lg"
+              className="w-full py-2.5 px-3 bg-[#FFFFFF] hover:bg-[#F4F6F8] border border-[#D9E1E8] rounded-lg text-xs font-semibold text-[#123B63] transition-all flex items-center justify-center gap-2 shadow-xs"
             >
-              <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-[#1565C0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
               </svg>
               SCAN PHYSICAL USB (WebUSB)
             </button>
-            <div className="text-[9px] text-slate-500 mt-1 text-center">
+            <div className="text-[10px] text-[#607D8B] mt-1 text-center font-medium">
               Native browser hardware USB device picker
             </div>
           </div>
@@ -529,14 +537,14 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
           <div>
             <button
               onClick={handleConnectWebSerial}
-              className="w-full py-2.5 px-3 bg-purple-950/60 hover:bg-purple-900/80 border border-purple-600/80 rounded-xl text-xs font-black text-purple-200 transition-all flex items-center justify-center gap-2 shadow-lg"
+              className="w-full py-2.5 px-3 bg-[#FFFFFF] hover:bg-[#F4F6F8] border border-[#D9E1E8] rounded-lg text-xs font-semibold text-[#123B63] transition-all flex items-center justify-center gap-2 shadow-xs"
             >
-              <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-[#1565C0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               SCAN COM / UART (Web Serial)
             </button>
-            <div className="text-[9px] text-slate-500 mt-1 text-center">
+            <div className="text-[10px] text-[#607D8B] mt-1 text-center font-medium">
               Direct physical write-blocker RS-232 bridge
             </div>
           </div>
@@ -547,33 +555,33 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 
         {/* SWITCH 1: Hardware Write-Blocker */}
-        <div className="bg-[#0a1525] border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-          <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-2 font-bold">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm flex flex-col justify-between">
+          <div className="text-[11px] text-[#607D8B] uppercase tracking-wider mb-2 font-bold">
             1. Write-Blocker Bus Lock
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <div className={`text-xs font-black ${writeBlockerEngaged ? 'text-amber-400' : 'text-rose-400'}`}>
+              <div className={`text-xs font-bold ${writeBlockerEngaged ? 'text-[#1565C0]' : 'text-[#C62828]'}`}>
                 {writeBlockerEngaged ? 'READ-ONLY (LOCKED)' : 'WRITE BYPASS (DANGER)'}
               </div>
-              <div className="text-[9px] text-slate-500 mt-0.5">
+              <div className="text-[11px] text-[#607D8B] mt-0.5">
                 {writeBlockerEngaged ? 'Protects original physical media' : 'Evidentiary write contamination'}
               </div>
             </div>
             <button
               onClick={() => setWriteBlockerEngaged(!writeBlockerEngaged)}
-              className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-                writeBlockerEngaged ? 'bg-amber-600 justify-end' : 'bg-rose-800 justify-start'
+              className={`w-11 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
+                writeBlockerEngaged ? 'bg-[#1565C0] justify-end' : 'bg-[#C62828] justify-start'
               }`}
             >
-              <div className="bg-white w-4 h-4 rounded-full shadow-md transform transition-transform" />
+              <div className="bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform" />
             </button>
           </div>
         </div>
 
         {/* SWITCH 2: Hardware Bus Selector */}
-        <div className="bg-[#0a1525] border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-          <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-2 font-bold">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm flex flex-col justify-between">
+          <div className="text-[11px] text-[#607D8B] uppercase tracking-wider mb-2 font-bold">
             2. Seized Media Bus Protocol
           </div>
           <select
@@ -583,7 +591,7 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
               setDeviceConnected(false);
               setRetrievalComplete(false);
             }}
-            className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs font-bold focus:outline-none focus:border-cyan-600"
+            className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-2.5 py-2 text-[#263238] text-xs font-medium focus:outline-none focus:border-[#1565C0]"
           >
             <option value="PHYSICAL_SEIZED_MEDIA">SEIZED STORAGE / RAW DUMP (.dd / .raw)</option>
             <option value="WEB_USB">WebUSB HARDWARE BUS (PHYSICAL DONGLE)</option>
@@ -593,8 +601,8 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
         </div>
 
         {/* SWITCH 3: Physical Port */}
-        <div className="bg-[#0a1525] border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-          <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-2 font-bold">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm flex flex-col justify-between">
+          <div className="text-[11px] text-[#607D8B] uppercase tracking-wider mb-2 font-bold">
             3. Physical Connector Port
           </div>
           <div className="flex gap-2">
@@ -604,8 +612,8 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
                 onClick={() => setSelectedPort(p)}
                 className={`flex-1 py-1.5 rounded-lg text-xs font-bold border transition-all ${
                   selectedPort === p
-                    ? 'bg-cyan-950 text-cyan-300 border-cyan-600'
-                    : 'bg-[#060d1a] text-slate-500 border-slate-800 hover:text-slate-300'
+                    ? 'bg-[#1565C0] text-white border-[#1565C0] shadow-xs'
+                    : 'bg-[#FFFFFF] text-[#607D8B] border-[#D9E1E8] hover:bg-[#F4F6F8]'
                 }`}
               >
                 {p}
@@ -615,26 +623,26 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
         </div>
 
         {/* SWITCH 4: Co-Processor */}
-        <div className="bg-[#0a1525] border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
-          <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-2 font-bold">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm flex flex-col justify-between">
+          <div className="text-[11px] text-[#607D8B] uppercase tracking-wider mb-2 font-bold">
             4. Local NPU Co-Processor
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-xs font-black text-purple-400">
+              <div className="text-xs font-bold text-[#123B63]">
                 HAILO-8L (26 TOPS)
               </div>
-              <div className="text-[9px] text-slate-500 mt-0.5">
+              <div className="text-[11px] text-[#607D8B] mt-0.5">
                 On-the-fly signature carving
               </div>
             </div>
             <button
               onClick={() => setNpuCoProcessor(!npuCoProcessor)}
-              className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-                npuCoProcessor ? 'bg-purple-600 justify-end' : 'bg-slate-700 justify-start'
+              className={`w-11 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
+                npuCoProcessor ? 'bg-[#1565C0] justify-end' : 'bg-[#CFD8DC] justify-start'
               }`}
             >
-              <div className="bg-white w-4 h-4 rounded-full shadow-md transform transition-transform" />
+              <div className="bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform" />
             </button>
           </div>
         </div>
@@ -642,54 +650,54 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
       </div>
 
       {/* ── LOWER SPLIT: DEVICE TELEMETRY (LEFT) + ACQUISITION ENGINE (RIGHT) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
         {/* ── LEFT: Seized Media Profile & Link Action (5 cols) ── */}
         <div className="lg:col-span-5 space-y-4">
 
-          <div className="bg-[#0a1525] border border-slate-800 rounded-xl p-5 space-y-4 shadow-xl">
-            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+          <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 space-y-4 shadow-sm">
+            <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-3">
               <div>
-                <h3 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
+                <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wider flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#1565C0]" />
                   EVIDENCE DRIVE HARDWARE TELEMETRY
                 </h3>
-                <p className="text-[10px] text-slate-500 mt-0.5">{activeDevice.name}</p>
+                <p className="text-[11px] text-[#607D8B] mt-0.5">{activeDevice.name}</p>
               </div>
-              <span className={`text-[10px] font-black px-2.5 py-1 rounded border uppercase ${
+              <span className={`text-[10px] font-bold px-2.5 py-1 rounded border uppercase ${
                 deviceConnected
-                  ? 'bg-emerald-950 text-emerald-300 border-emerald-700'
-                  : 'bg-slate-900 text-slate-500 border-slate-700'
+                  ? 'bg-[#E8F5E9] text-[#2E7D32] border-[#C8E6C9]'
+                  : 'bg-[#F4F6F8] text-[#607D8B] border-[#D9E1E8]'
               }`}>
                 {deviceConnected ? 'HARDWARE LOCKED' : 'DISCONNECTED'}
               </span>
             </div>
 
             {/* Hardware Parameters */}
-            <div className="bg-[#060d1a] rounded-xl p-3.5 border border-slate-800/80 space-y-2 text-xs">
+            <div className="bg-[#F8FAFC] rounded-lg p-3.5 border border-[#D9E1E8] space-y-2 text-xs">
               <div className="flex justify-between">
-                <span className="text-slate-500 font-bold">SOURCE ID:</span>
-                <span className="text-slate-200 font-bold truncate max-w-[200px]">{activeDevice.serial}</span>
+                <span className="text-[#607D8B] font-medium">SOURCE ID:</span>
+                <span className="text-[#123B63] font-bold truncate max-w-[200px] font-mono">{activeDevice.serial}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 font-bold">RAW CAPACITY:</span>
-                <span className="text-cyan-400 font-black">{activeDevice.capacity}</span>
+                <span className="text-[#607D8B] font-medium">RAW CAPACITY:</span>
+                <span className="text-[#1565C0] font-bold">{activeDevice.capacity}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 font-bold">TOTAL SECTORS:</span>
-                <span className="text-slate-300 font-bold">{activeDevice.sectors}</span>
+                <span className="text-[#607D8B] font-medium">TOTAL SECTORS:</span>
+                <span className="text-[#263238] font-bold font-mono">{activeDevice.sectors}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 font-bold">BUS CONTROLLER:</span>
-                <span className="text-slate-300 text-[11px] truncate max-w-[200px]">{activeDevice.controller}</span>
+                <span className="text-[#607D8B] font-medium">BUS CONTROLLER:</span>
+                <span className="text-[#263238] font-medium truncate max-w-[200px]">{activeDevice.controller}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 font-bold">HARDWARE STATE:</span>
-                <span className="text-emerald-400 font-black">{activeDevice.smartHealth}</span>
+                <span className="text-[#607D8B] font-medium">HARDWARE STATE:</span>
+                <span className="text-[#2E7D32] font-bold">{activeDevice.smartHealth}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 font-bold">PROTOCOL:</span>
-                <span className="text-slate-400 font-bold">{activeDevice.firmware}</span>
+                <span className="text-[#607D8B] font-medium">PROTOCOL:</span>
+                <span className="text-[#607D8B] font-medium">{activeDevice.firmware}</span>
               </div>
             </div>
 
@@ -697,15 +705,15 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
             <button
               onClick={handleConnectToggle}
               disabled={isConnecting || isRetrieving}
-              className={`w-full py-3.5 rounded-xl font-black tracking-widest text-xs uppercase transition-all shadow-xl flex items-center justify-center gap-2 ${
+              className={`w-full py-3 rounded-lg font-semibold tracking-wide text-xs uppercase transition-all shadow-sm flex items-center justify-center gap-2 ${
                 deviceConnected
-                  ? 'bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-700 shadow-rose-950/40'
-                  : 'bg-cyan-600 hover:bg-cyan-500 text-black border border-cyan-400 shadow-cyan-950/50'
+                  ? 'bg-[#FFEBEE] hover:bg-[#FFCDD2] text-[#C62828] border border-[#EF9A9A]'
+                  : 'bg-[#1565C0] hover:bg-[#0D47A1] text-white'
               }`}
             >
               {isConnecting ? (
                 <>
-                  <svg className="w-4 h-4 animate-spin text-black" fill="none" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
@@ -732,15 +740,15 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
             <button
               onClick={handleStartRetrieval}
               disabled={!deviceConnected || isRetrieving}
-              className={`w-full py-4 rounded-xl font-black tracking-widest text-sm uppercase transition-all shadow-2xl flex items-center justify-center gap-2.5 ${
+              className={`w-full py-3.5 rounded-lg font-bold tracking-wide text-xs uppercase transition-all shadow-sm flex items-center justify-center gap-2 ${
                 !deviceConnected
-                  ? 'bg-slate-900 border border-slate-800 text-slate-600 cursor-not-allowed'
+                  ? 'bg-[#ECEFF1] text-[#90A4AE] cursor-not-allowed border border-[#CFD8DC]'
                   : isRetrieving
-                  ? 'bg-amber-600/70 border border-amber-500 text-white animate-pulse'
-                  : 'bg-emerald-500 hover:bg-emerald-400 text-black border border-emerald-400 shadow-emerald-950/60'
+                  ? 'bg-[#EF6C00] text-white animate-pulse'
+                  : 'bg-[#2E7D32] hover:bg-[#1B5E20] text-white'
               }`}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
               {isRetrieving ? 'STREAMING REAL RAW BITSTREAM...' : 'ACQUIRE & CARVE PHYSICAL MEDIA'}
@@ -749,7 +757,7 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
             {isRetrieving && (
               <button
                 onClick={handleAbort}
-                className="w-full py-2 bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 rounded-lg text-xs font-bold transition-all uppercase tracking-wider"
+                className="w-full py-2 bg-[#FFEBEE] hover:bg-[#FFCDD2] text-[#C62828] border border-[#EF9A9A] rounded-lg text-xs font-semibold transition-all uppercase tracking-wider"
               >
                 ABORT / EMERGENCY STOP BUS
               </button>
@@ -757,14 +765,14 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
           </div>
 
           {/* Forensic Protocol Card */}
-          <div className="bg-[#0a1525] border border-slate-800 rounded-xl p-4 text-[11px] text-slate-400 space-y-1.5 font-mono">
-            <div className="flex items-center gap-2 text-emerald-400 font-black">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 text-xs text-[#607D8B] space-y-1.5 shadow-sm">
+            <div className="flex items-center gap-2 text-[#2E7D32] font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]" />
               JUDICIAL EVIDENCE INTEGRITY PROTOCOL
             </div>
-            <div>• Bit-for-bit physical block capture with cryptographic verification.</div>
-            <div>• Hardware write-blocker ensures zero modification to target media.</div>
-            <div>• Admissible under BNS 2023 Sec 63 &amp; BSA Sec 65B.</div>
+            <div>&bull; Bit-for-bit physical block capture with cryptographic verification.</div>
+            <div>&bull; Hardware write-blocker ensures zero modification to target media.</div>
+            <div>&bull; Admissible under BNS 2023 Sec 63 &amp; BSA Sec 65B.</div>
           </div>
         </div>
 
@@ -772,16 +780,16 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
         <div className="lg:col-span-7 space-y-4">
 
           {/* Acquisition Progress & Gauges */}
-          <div className="bg-[#0a1525] border border-slate-800 rounded-xl p-5 space-y-4 shadow-xl">
-            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+          <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 space-y-4 shadow-sm">
+            <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-3">
               <div>
-                <h3 className="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${isRetrieving ? 'bg-emerald-400 animate-ping' : 'bg-cyan-400'}`} />
+                <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wider flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${isRetrieving ? 'bg-[#2E7D32] animate-ping' : 'bg-[#1565C0]'}`} />
                   PHYSICAL DATA ACQUISITION &amp; CARVING ENGINE
                 </h3>
-                <p className="text-[10px] text-slate-500 mt-0.5">Real raw sector bitstream dump with real-time SHA-256 Web Crypto hashing</p>
+                <p className="text-[11px] text-[#607D8B] mt-0.5">Real raw sector bitstream dump with real-time SHA-256 Web Crypto hashing</p>
               </div>
-              <span className="text-xs font-black font-mono text-cyan-400 bg-cyan-950/80 px-2.5 py-1 rounded border border-cyan-800">
+              <span className="text-xs font-bold font-mono text-[#1565C0] bg-[#E3F2FD] px-2.5 py-1 rounded border border-[#90CAF9]">
                 {readSpeed}
               </span>
             </div>
@@ -789,16 +797,16 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
             {/* Progress Bar */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
-                <span className="text-slate-400 font-bold">Acquisition Progress:</span>
-                <span className="text-emerald-400 font-black">{retrievalProgress}%</span>
+                <span className="text-[#607D8B] font-medium">Acquisition Progress:</span>
+                <span className="text-[#2E7D32] font-bold">{retrievalProgress}%</span>
               </div>
-              <div className="w-full bg-[#020810] h-3 rounded-full overflow-hidden border border-slate-800">
+              <div className="w-full bg-[#ECEFF1] h-2.5 rounded-full overflow-hidden border border-[#D9E1E8]">
                 <div
-                  className="bg-gradient-to-r from-cyan-500 via-emerald-500 to-amber-400 h-full transition-all duration-200"
+                  className="bg-[#1565C0] h-full transition-all duration-200"
                   style={{ width: `${retrievalProgress}%` }}
                 />
               </div>
-              <div className="flex justify-between text-[10px] text-slate-500 font-bold">
+              <div className="flex justify-between text-[11px] text-[#607D8B]">
                 <span>{(bytesRetrieved / 1024).toFixed(1)} KB Acquired</span>
                 <span>Bad Sectors: {badSectors} (Zero Faults)</span>
               </div>
@@ -806,17 +814,17 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
 
             {/* 3 Metric Mini-Tiles */}
             <div className="grid grid-cols-3 gap-3">
-              <div className="bg-[#060d1a] p-2.5 rounded-lg border border-slate-800">
-                <div className="text-[9px] text-slate-500 uppercase font-bold">Throughput</div>
-                <div className="text-sm font-black text-cyan-400 mt-0.5">{readSpeed}</div>
+              <div className="bg-[#F8FAFC] p-2.5 rounded-lg border border-[#D9E1E8]">
+                <div className="text-[10px] text-[#607D8B] uppercase font-bold">Throughput</div>
+                <div className="text-sm font-bold text-[#1565C0] mt-0.5">{readSpeed}</div>
               </div>
-              <div className="bg-[#060d1a] p-2.5 rounded-lg border border-slate-800">
-                <div className="text-[9px] text-slate-500 uppercase font-bold">Hash Standard</div>
-                <div className="text-sm font-black text-purple-400 mt-0.5">SHA-256 (WebCrypto)</div>
+              <div className="bg-[#F8FAFC] p-2.5 rounded-lg border border-[#D9E1E8]">
+                <div className="text-[10px] text-[#607D8B] uppercase font-bold">Hash Standard</div>
+                <div className="text-sm font-bold text-[#123B63] mt-0.5">SHA-256 (WebCrypto)</div>
               </div>
-              <div className="bg-[#060d1a] p-2.5 rounded-lg border border-slate-800">
-                <div className="text-[9px] text-slate-500 uppercase font-bold">Evidence State</div>
-                <div className="text-sm font-black text-emerald-400 mt-0.5">
+              <div className="bg-[#F8FAFC] p-2.5 rounded-lg border border-[#D9E1E8]">
+                <div className="text-[10px] text-[#607D8B] uppercase font-bold">Evidence State</div>
+                <div className="text-sm font-bold text-[#2E7D32] mt-0.5">
                   {retrievalComplete ? 'SEALED 100%' : isRetrieving ? 'ACQUIRING' : 'IDLE'}
                 </div>
               </div>
@@ -824,15 +832,15 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
 
             {/* Live Raw Hex Stream Display */}
             <div className="space-y-1.5">
-              <div className="text-[10px] text-slate-400 uppercase tracking-widest flex justify-between font-bold">
+              <div className="text-[11px] text-[#607D8B] uppercase tracking-wider flex justify-between font-bold">
                 <span>RAW PHYSICAL SECTOR STREAM (DIRECT DISK HEX)</span>
-                <span className="text-cyan-400">
+                <span className="text-[#1565C0] font-mono">
                   {loadedFile ? `FILE: ${loadedFile.name}` : 'OFFSETS: 0x00000000 -> 0x0000FFFF'}
                 </span>
               </div>
-              <div className="bg-[#020810] border border-slate-800/90 rounded-lg p-3 font-mono text-[10px] text-emerald-400/90 h-36 overflow-hidden leading-relaxed select-text">
+              <div className="bg-[#F8FAFC] border border-[#D9E1E8] rounded-lg p-3 font-mono text-[11px] text-[#123B63] h-36 overflow-hidden leading-relaxed select-text">
                 {hexLines.length === 0 ? (
-                  <div className="h-full flex items-center justify-center text-slate-600 font-bold">
+                  <div className="h-full flex items-center justify-center text-[#90A4AE] font-medium text-xs">
                     SELECT EVIDENCE FILE OR CLICK CONNECT BUS TO STREAM RAW BYTES...
                   </div>
                 ) : (
@@ -845,13 +853,13 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
 
             {/* Real-time Carved Artifacts Found */}
             <div className="space-y-2">
-              <div className="text-[10px] text-slate-400 uppercase tracking-widest flex justify-between font-bold">
+              <div className="text-[11px] text-[#607D8B] uppercase tracking-wider flex justify-between font-bold">
                 <span>CARVED EVIDENCE ARTIFACTS ISOLATED IN REAL-TIME</span>
-                <span className="text-purple-400 font-black">{carvedArtifacts.length} FOUND</span>
+                <span className="text-[#1565C0] font-bold">{carvedArtifacts.length} FOUND</span>
               </div>
 
               {carvedArtifacts.length === 0 ? (
-                <div className="bg-[#060d1a] border border-slate-800 rounded-lg p-4 text-center text-slate-600 text-xs font-bold">
+                <div className="bg-[#F8FAFC] border border-[#D9E1E8] rounded-lg p-4 text-center text-[#90A4AE] text-xs">
                   Evidence artifacts (SQLite databases, JPEG headers, documents) will appear as raw binary signatures are scanned.
                 </div>
               ) : (
@@ -859,13 +867,13 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
                   {carvedArtifacts.map((art, idx) => (
                     <div
                       key={idx}
-                      className="bg-[#060d1a] border border-slate-800/90 p-2.5 rounded-lg flex justify-between items-center text-xs"
+                      className="bg-[#F8FAFC] border border-[#D9E1E8] p-2.5 rounded-lg flex justify-between items-center text-xs"
                     >
                       <div>
-                        <div className="text-cyan-300 font-black">{art.name}</div>
-                        <div className="text-[10px] text-slate-500">Offset: {art.offset} • {art.size}</div>
+                        <div className="text-[#123B63] font-bold">{art.name}</div>
+                        <div className="text-[10px] text-[#607D8B]">Offset: {art.offset} &bull; {art.size}</div>
                       </div>
-                      <span className="text-[10px] font-black text-emerald-400 bg-emerald-950/70 border border-emerald-800 px-2 py-0.5 rounded">
+                      <span className="text-[10px] font-bold text-[#2E7D32] bg-[#E8F5E9] border border-[#C8E6C9] px-2 py-0.5 rounded">
                         {art.integrity}
                       </span>
                     </div>
@@ -877,12 +885,12 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
             {/* Real Extracted Strings Preview */}
             {extractedStrings.length > 0 && (
               <div className="space-y-1.5">
-                <div className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">
+                <div className="text-[11px] text-[#123B63] font-bold uppercase tracking-wider">
                   REAL STRINGS CARVED FROM BINARY STREAM:
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {extractedStrings.map((s, i) => (
-                    <span key={i} className="text-[10px] font-mono bg-slate-900 border border-slate-700 px-2 py-0.5 rounded text-amber-300">
+                    <span key={i} className="text-[11px] font-mono bg-[#F4F6F8] border border-[#D9E1E8] px-2 py-0.5 rounded text-[#1565C0] font-medium">
                       "{s}"
                     </span>
                   ))}
@@ -892,22 +900,22 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
 
             {/* Retrieval Complete Summary & Forwarding */}
             {retrievalComplete && (
-              <div className="p-3.5 bg-emerald-950/40 border-2 border-emerald-700/80 rounded-xl space-y-2">
-                <div className="flex items-center gap-2 text-xs font-black text-emerald-300 uppercase">
-                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  PHYSICAL DATA RETRIEVAL COMPLETE • BITSTREAM SEALED
-                </div>
-                <div className="text-[10px] text-slate-300 break-all font-bold">
-                  <span className="text-slate-500">COURT HASH (SHA-256): </span>
-                  <span className="text-emerald-400 font-mono">{retrievedHash}</span>
-                </div>
-                <div className="text-[9px] text-slate-400 font-sans border-t border-emerald-800/60 pt-1.5 flex items-center gap-1.5">
-                  <svg className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="p-3.5 bg-[#E8F5E9] border border-[#A5D6A7] rounded-xl space-y-2">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#2E7D32] uppercase">
+                  <svg className="w-4 h-4 text-[#2E7D32]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>Verified with <code>crypto.subtle.digest</code>. Test with any local file on your machine — the SHA-256 hash matches PowerShell <code>Get-FileHash</code> bit-for-bit.</span>
+                  PHYSICAL DATA RETRIEVAL COMPLETE &bull; BITSTREAM SEALED
+                </div>
+                <div className="text-xs text-[#263238] break-all font-mono">
+                  <span className="text-[#607D8B]">COURT HASH (SHA-256): </span>
+                  <span className="text-[#2E7D32] font-bold">{retrievedHash}</span>
+                </div>
+                <div className="text-[11px] text-[#2E7D32] border-t border-[#C8E6C9] pt-1.5 flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5 text-[#2E7D32] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Verified with <code>crypto.subtle.digest</code>. Matches bit-for-bit with PowerShell <code>Get-FileHash</code>.</span>
                 </div>
               </div>
             )}

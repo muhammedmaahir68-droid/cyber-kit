@@ -513,21 +513,27 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
   const nearestSvg = coordToSvg(nearestUnit?.lat || mapCenter.lat, nearestUnit?.lng || mapCenter.lng);
 
   return (
-    <div className="space-y-4 font-mono select-none">
+    <div className="space-y-4 font-sans text-[#263238] select-none">
 
       {/* ── TOP GIS STATUS & CONTROLS STRIP ── */}
-      <div className="bg-[#050c15] border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 shadow-xl">
+      <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 shadow-sm">
         <div className="flex items-center gap-3">
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
-          </span>
+          <div className="w-9 h-9 rounded-lg bg-[#123B63] flex items-center justify-center text-white shadow-sm flex-shrink-0">
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            </svg>
+          </div>
           <div>
-            <h3 className="text-sm font-black text-white tracking-widest uppercase flex items-center gap-2">
-              REAL-TIME POLICE GIS PATROL MESH &amp; AIS-140 EMISSION
-            </h3>
-            <p className="text-[11px] text-slate-400 font-sans mt-0.5">
-              Live AIS-140 radio telemetry broadcast · Native device GPS beacon · Real-time geodesic ground intercept calculation.
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-bold text-[#123B63] uppercase tracking-wide">
+                POLICE GIS PATROL MESH &amp; AIS-140 TELEMETRY
+              </h3>
+              <span className="text-[10px] bg-[#E8F5E9] text-[#2E7D32] font-semibold px-2 py-0.5 rounded border border-[#C8E6C9]">
+                LIVE GPS
+              </span>
+            </div>
+            <p className="text-xs text-[#607D8B] mt-0.5">
+              Live AIS-140 radio telemetry broadcast &bull; Native device GPS beacon &bull; Real-time geodesic ground intercept calculation.
             </p>
           </div>
         </div>
@@ -536,10 +542,10 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
           {/* Real GPS Beacon Toggle Button */}
           <button
             onClick={toggleLiveDeviceGps}
-            className={`px-3 py-1.5 rounded-xl font-black border transition-all flex items-center gap-1.5 shadow-lg ${
+            className={`px-3 py-1.5 rounded-lg font-semibold border transition-all flex items-center gap-1.5 shadow-xs ${
               liveGpsActive
-                ? 'bg-amber-600 text-black border-amber-400 shadow-amber-950/60 animate-pulse'
-                : 'bg-slate-900 hover:bg-slate-800 text-amber-300 border-amber-700/80'
+                ? 'bg-[#E65100] text-white border-[#E65100] animate-pulse'
+                : 'bg-[#FFFFFF] hover:bg-[#F4F6F8] text-[#123B63] border-[#D9E1E8]'
             }`}
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -551,10 +557,10 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
           {/* Emission Bus Drawer Toggle */}
           <button
             onClick={() => setShowEmissionBus(!showEmissionBus)}
-            className={`px-3 py-1.5 rounded-xl font-bold border transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg font-semibold border transition-all flex items-center gap-1.5 shadow-xs ${
               showEmissionBus
-                ? 'bg-cyan-950 text-cyan-200 border-cyan-500'
-                : 'bg-slate-900 text-cyan-400 border-slate-700'
+                ? 'bg-[#1565C0] text-white border-[#1565C0]'
+                : 'bg-[#FFFFFF] hover:bg-[#F4F6F8] text-[#1565C0] border-[#D9E1E8]'
             }`}
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -565,24 +571,24 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
 
           <button
             onClick={() => setTrackingMode(!trackingMode)}
-            className={`px-3 py-1.5 rounded-xl font-bold border transition-all ${
+            className={`px-3 py-1.5 rounded-lg font-semibold border transition-all shadow-xs ${
               trackingMode
-                ? 'bg-emerald-950/80 text-emerald-300 border-emerald-700'
-                : 'bg-slate-900 text-slate-500 border-slate-700'
+                ? 'bg-[#E8F5E9] text-[#2E7D32] border-[#C8E6C9]'
+                : 'bg-[#FFFFFF] text-[#90A4AE] border-[#D9E1E8]'
             }`}
           >
             {trackingMode ? 'MESH: ACTIVE' : 'MESH: PAUSED'}
           </button>
 
-          <div className="flex bg-[#020810] p-1 rounded-xl border border-slate-800 text-[10px]">
+          <div className="flex bg-[#F4F6F8] p-1 rounded-lg border border-[#D9E1E8] text-xs">
             {['ALL', 'PATROLS', 'INCIDENTS'].map(layer => (
               <button
                 key={layer}
                 onClick={() => setFilterLayer(layer)}
-                className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                className={`px-2.5 py-1 rounded-md font-semibold transition-all ${
                   filterLayer === layer
-                    ? 'bg-cyan-950 text-cyan-300 border border-cyan-800'
-                    : 'text-slate-500 hover:text-slate-300'
+                    ? 'bg-[#1565C0] text-white shadow-xs'
+                    : 'text-[#607D8B] hover:text-[#123B63]'
                 }`}
               >
                 {layer}
@@ -594,23 +600,23 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
 
       {/* GPS Error Notification */}
       {gpsError && (
-        <div className="bg-rose-950/60 border border-rose-700 p-3 rounded-xl text-rose-300 text-xs font-mono font-bold">
+        <div className="bg-[#FFEBEE] border border-[#EF9A9A] p-3 rounded-xl text-[#C62828] text-xs font-semibold">
           GPS Geolocation Notice: {gpsError}. Please grant browser location permission to emit your device GPS beacon.
         </div>
       )}
 
       {/* ── LIVE PATROL EMISSION TELEMETRY DRAWER (AIS-140 / TETRA) ── */}
       {showEmissionBus && (
-        <div className="bg-[#050c15] border-2 border-cyan-800/80 rounded-2xl p-4 shadow-2xl space-y-3 font-mono">
-          <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm space-y-3 font-sans">
+          <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-2">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-              <h4 className="text-xs font-black text-cyan-300 uppercase tracking-widest">
+              <span className="w-2 h-2 rounded-full bg-[#1565C0] animate-ping" />
+              <h4 className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
                 AIS-140 &amp; TETRA RADIO PATROL EMISSION BUS (LIVE TRANSMISSIONS)
               </h4>
             </div>
-            <div className="text-[10px] text-slate-400">
-              VHF: 154.650 MHz • Native BroadcastChannel Sync Active
+            <div className="text-xs text-[#607D8B]">
+              VHF: 154.650 MHz &bull; Native BroadcastChannel Sync Active
             </div>
           </div>
 
@@ -618,23 +624,23 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
             {emissionStream.map((em) => (
               <div
                 key={em.emission_id}
-                className="bg-[#020810] border border-slate-800/80 rounded-lg p-2 flex flex-wrap justify-between items-center text-[10px] gap-2"
+                className="bg-[#F8FAFC] border border-[#D9E1E8] rounded-lg p-2.5 flex flex-wrap justify-between items-center text-xs gap-2"
               >
                 <div className="flex items-center gap-2">
-                  <span className={`px-1.5 py-0.5 rounded font-bold ${
-                    em.is_live_device ? 'bg-amber-950 text-amber-300 border border-amber-600' : 'bg-slate-800 text-slate-400'
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                    em.is_live_device ? 'bg-[#FFF3E0] text-[#E65100] border border-[#FFE0B2]' : 'bg-[#E3F2FD] text-[#1565C0] border border-[#90CAF9]'
                   }`}>
                     {em.is_live_device ? 'REAL DEVICE GPS' : 'PATROL AIS-140'}
                   </span>
-                  <span className="text-white font-bold">{em.callsign}</span>
-                  <span className="text-slate-500">[{em.emission_id}]</span>
-                  <span className="text-cyan-400">{em.frequency}</span>
+                  <span className="text-[#123B63] font-bold">{em.callsign}</span>
+                  <span className="text-[#607D8B] font-mono text-[11px]">[{em.emission_id}]</span>
+                  <span className="text-[#1565C0] font-semibold">{em.frequency}</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-slate-400">{em.lat.toFixed(4)}°N, {em.lng.toFixed(4)}°E</span>
-                  <span className="text-emerald-400 font-bold">{em.speed_kmh} km/h</span>
-                  <span className="text-purple-400 font-bold">{em.signal_rssi_dbm} dBm</span>
-                  <span className="text-slate-500">{new Date(em.timestamp).toLocaleTimeString('en-IN')}</span>
+                <div className="flex items-center gap-3 text-xs">
+                  <span className="text-[#607D8B] font-mono">{em.lat.toFixed(4)}°N, {em.lng.toFixed(4)}°E</span>
+                  <span className="text-[#2E7D32] font-semibold">{em.speed_kmh} km/h</span>
+                  <span className="text-[#123B63] font-mono">{em.signal_rssi_dbm} dBm</span>
+                  <span className="text-[#90A4AE]">{new Date(em.timestamp).toLocaleTimeString('en-IN')}</span>
                 </div>
               </div>
             ))}
@@ -646,23 +652,23 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
         {/* ── LEFT: INTERACTIVE TACTICAL GIS MAP (8 Cols) ── */}
-        <div className="lg:col-span-8 bg-[#020810] border border-slate-800 rounded-2xl overflow-hidden shadow-2xl relative">
+        <div className="lg:col-span-8 bg-[#F4F6F8] border border-[#D9E1E8] rounded-xl overflow-hidden shadow-sm relative">
 
           {/* Map Header Overlay */}
-          <div className="absolute top-3 left-3 z-10 bg-[#050c15]/90 border border-slate-800 rounded-xl px-3 py-1.5 backdrop-blur-md flex items-center gap-3 text-xs">
-            <span className="text-[10px] text-amber-400 font-black tracking-widest uppercase">
+          <div className="absolute top-3 left-3 z-10 bg-[#FFFFFF]/95 border border-[#D9E1E8] rounded-lg px-3 py-1.5 shadow-xs flex items-center gap-3 text-xs">
+            <span className="text-xs text-[#123B63] font-bold tracking-wide uppercase">
               {liveGpsActive ? 'ZONE: ACTIVE DEVICE BEACON LOCKED' : 'ZONE: METRO CENTRAL COMMAND (HQ NORTH BLOCK)'}
             </span>
-            <span className="text-slate-700">|</span>
-            <span className="text-[10px] text-slate-400 font-bold">
+            <span className="text-[#D9E1E8]">|</span>
+            <span className="text-[11px] text-[#607D8B] font-mono">
               CENTER: {mapCenter.lat.toFixed(4)}°N, {mapCenter.lng.toFixed(4)}°E
             </span>
           </div>
 
           {/* Touch Waypoint Info Floating Badge */}
-          <div className="absolute top-3 right-3 z-10 bg-[#050c15]/90 border border-cyan-800/80 rounded-xl px-3 py-1.5 backdrop-blur-md text-right text-xs">
-            <div className="text-[9px] text-slate-400 uppercase font-bold">TAPPED INTERCEPT WAYPOINT</div>
-            <div className="text-cyan-300 font-black text-[11px] truncate max-w-[220px]">
+          <div className="absolute top-3 right-3 z-10 bg-[#FFFFFF]/95 border border-[#1565C0] rounded-lg px-3 py-1.5 shadow-xs text-right text-xs">
+            <div className="text-[10px] text-[#607D8B] uppercase font-bold">TAPPED INTERCEPT WAYPOINT</div>
+            <div className="text-[#1565C0] font-bold text-xs truncate max-w-[220px]">
               {touchTarget.name}
             </div>
           </div>
@@ -672,16 +678,16 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
             ref={svgRef}
             viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
             onClick={handleMapTouch}
-            className="w-full h-auto cursor-crosshair block select-none bg-[#020712]"
+            className="w-full h-auto cursor-crosshair block select-none bg-[#F4F6F8]"
             style={{ minHeight: '440px' }}
           >
             <defs>
               <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(30, 58, 95, 0.25)" strokeWidth="0.8" />
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(21, 101, 192, 0.08)" strokeWidth="0.8" />
               </pattern>
             </defs>
 
-            <rect width={MAP_WIDTH} height={MAP_HEIGHT} fill="#030914" />
+            <rect width={MAP_WIDTH} height={MAP_HEIGHT} fill="#F4F6F8" />
             <rect width={MAP_WIDTH} height={MAP_HEIGHT} fill="url(#grid)" />
 
             {/* Concentric Sector Rings around Command HQ */}
@@ -692,7 +698,7 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
                 cy={MAP_HEIGHT / 2}
                 r={r}
                 fill="none"
-                stroke="rgba(14, 116, 144, 0.18)"
+                stroke="rgba(21, 101, 192, 0.16)"
                 strokeWidth="1"
                 strokeDasharray="4 6"
               />
@@ -702,13 +708,13 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
             <path
               d="M 50 180 Q 300 240 450 260 T 850 320"
               fill="none"
-              stroke="#0f2238"
+              stroke="#E2E8F0"
               strokeWidth="12"
             />
             <path
               d="M 50 180 Q 300 240 450 260 T 850 320"
               fill="none"
-              stroke="#1e3a5f"
+              stroke="#90CAF9"
               strokeWidth="2"
               strokeDasharray="8 4"
             />
@@ -716,13 +722,13 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
             <path
               d="M 280 40 Q 340 260 450 380 T 620 480"
               fill="none"
-              stroke="#0f2238"
+              stroke="#E2E8F0"
               strokeWidth="10"
             />
             <path
               d="M 280 40 Q 340 260 450 380 T 620 480"
               fill="none"
-              stroke="#1e3a5f"
+              stroke="#90CAF9"
               strokeWidth="2"
             />
 
@@ -738,11 +744,11 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
                 key={idx}
                 x={s.x}
                 y={s.y}
-                fill="#1e3852"
+                fill="#78909C"
                 fontSize="9"
-                fontFamily="monospace"
+                fontFamily="sans-serif"
                 fontWeight="bold"
-                letterSpacing="1.5"
+                letterSpacing="1.2"
               >
                 {s.label}
               </text>
@@ -750,9 +756,9 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
 
             {/* Command Center Central Hub */}
             <g transform={`translate(${MAP_WIDTH / 2}, ${MAP_HEIGHT / 2})`}>
-              <circle r="18" fill="rgba(245, 158, 11, 0.12)" />
-              <circle r="7" fill="#f59e0b" stroke="#ffffff" strokeWidth="1.5" />
-              <text y="24" textAnchor="middle" fill="#f59e0b" fontSize="8" fontWeight="bold">
+              <circle r="18" fill="rgba(21, 101, 192, 0.12)" />
+              <circle r="7" fill="#123B63" stroke="#ffffff" strokeWidth="1.5" />
+              <text y="24" textAnchor="middle" fill="#123B63" fontSize="8" fontWeight="bold">
                 COMMAND HQ (PRIMARY CONTROL)
               </text>
             </g>
@@ -763,16 +769,16 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
               y1={nearestSvg.y}
               x2={touchSvg.x}
               y2={touchSvg.y}
-              stroke="#10b981"
+              stroke="#2E7D32"
               strokeWidth="2.5"
               strokeDasharray="6 4"
             />
 
             {/* Distance Vector Midpoint Tag */}
             <g transform={`translate(${(nearestSvg.x + touchSvg.x) / 2}, ${(nearestSvg.y + touchSvg.y) / 2 - 12})`}>
-              <rect x="-56" y="-10" width="112" height="20" rx="4" fill="#020810" stroke="#10b981" strokeWidth="1" />
-              <text x="0" y="3" textAnchor="middle" fill="#10b981" fontSize="9" fontWeight="bold">
-                {nearestUnit.distanceKm.toFixed(2)} km • {nearestUnit.etaFormatted}
+              <rect x="-56" y="-10" width="112" height="20" rx="4" fill="#FFFFFF" stroke="#2E7D32" strokeWidth="1" />
+              <text x="0" y="3" textAnchor="middle" fill="#2E7D32" fontSize="9" fontWeight="bold">
+                {nearestUnit.distanceKm.toFixed(2)} km &bull; {nearestUnit.etaFormatted}
               </text>
             </g>
 
@@ -794,10 +800,10 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
                     });
                   }}
                 >
-                  <circle r="22" fill="rgba(239, 68, 68, 0.2)" className="animate-ping" />
-                  <circle r="12" fill="#ef4444" stroke="#ffffff" strokeWidth="2" />
+                  <circle r="22" fill="rgba(198, 40, 40, 0.2)" className="animate-ping" />
+                  <circle r="12" fill="#C62828" stroke="#ffffff" strokeWidth="2" />
                   <text y="4" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="bold">!</text>
-                  <text y="24" textAnchor="middle" fill="#fca5a5" fontSize="8" fontWeight="bold">
+                  <text y="24" textAnchor="middle" fill="#C62828" fontSize="8" fontWeight="bold">
                     {inc.category}
                   </text>
                 </g>
@@ -826,7 +832,7 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
                     <circle
                       r="26"
                       fill="none"
-                      stroke={isLiveDevice ? '#f59e0b' : isNearest ? '#10b981' : '#06b6d4'}
+                      stroke={isLiveDevice ? '#E65100' : isNearest ? '#2E7D32' : '#1565C0'}
                       strokeWidth="1.5"
                       strokeDasharray="3 3"
                       className={isLiveDevice ? 'animate-spin' : ''}
@@ -836,7 +842,7 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
                   {/* Vehicle Body Marker */}
                   <circle
                     r={isLiveDevice ? 13 : 10}
-                    fill={isLiveDevice ? '#f59e0b' : isNearest ? '#10b981' : isSelected ? '#06b6d4' : '#38bdf8'}
+                    fill={isLiveDevice ? '#E65100' : isNearest ? '#2E7D32' : isSelected ? '#1565C0' : '#1976D2'}
                     stroke="#ffffff"
                     strokeWidth="1.5"
                   />
@@ -858,15 +864,15 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
                     width="72"
                     height="14"
                     rx="3"
-                    fill="#020810"
-                    stroke={isLiveDevice ? '#f59e0b' : isNearest ? '#10b981' : '#1e3a5f'}
+                    fill="#FFFFFF"
+                    stroke={isLiveDevice ? '#E65100' : isNearest ? '#2E7D32' : '#90CAF9'}
                     strokeWidth="0.8"
                   />
                   <text
                     x="0"
                     y="24"
                     textAnchor="middle"
-                    fill={isLiveDevice ? '#f59e0b' : isNearest ? '#10b981' : '#e2e8f0'}
+                    fill={isLiveDevice ? '#E65100' : isNearest ? '#2E7D32' : '#123B63'}
                     fontSize="8"
                     fontWeight="bold"
                   >
@@ -878,16 +884,16 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
 
             {/* ── TOUCH TARGET PIN (USER TAPPED POINT) ── */}
             <g transform={`translate(${touchSvg.x}, ${touchSvg.y})`} pointerEvents="none">
-              <circle r="18" fill="none" stroke="#06b6d4" strokeWidth="1.5" className="animate-ping" />
-              <line x1="-12" y1="0" x2="12" y2="0" stroke="#06b6d4" strokeWidth="2" />
-              <line x1="0" y1="-12" x2="0" y2="12" stroke="#06b6d4" strokeWidth="2" />
-              <circle r="4" fill="#06b6d4" stroke="#ffffff" strokeWidth="1" />
+              <circle r="18" fill="none" stroke="#1565C0" strokeWidth="1.5" className="animate-ping" />
+              <line x1="-12" y1="0" x2="12" y2="0" stroke="#1565C0" strokeWidth="2" />
+              <line x1="0" y1="-12" x2="0" y2="12" stroke="#1565C0" strokeWidth="2" />
+              <circle r="4" fill="#1565C0" stroke="#ffffff" strokeWidth="1" />
             </g>
 
           </svg>
 
           {/* Map Footer Help Bar */}
-          <div className="bg-[#050c15] border-t border-slate-800 px-4 py-2 flex flex-wrap justify-between items-center text-[10px] text-slate-400 font-mono">
+          <div className="bg-[#FFFFFF] border-t border-[#D9E1E8] px-4 py-2 flex flex-wrap justify-between items-center text-xs text-[#607D8B]">
             <span>TOUCH ANY COORDINATE TO COMPUTE REAL-TIME GEODESIC GROUND VECTOR</span>
             <span>
               {lastEmissionAck ? `LAST ACK: ${lastEmissionAck.callsign} • ${lastEmissionAck.latency_ms}ms` : 'AIS-140 MESH: BROADCASTING'}
@@ -899,47 +905,47 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
         <div className="lg:col-span-4 space-y-4">
 
           {/* Nearest Interceptor Card */}
-          <div className="bg-[#0a1525] border-2 border-emerald-600/70 rounded-2xl p-4 shadow-xl space-y-3">
+          <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm space-y-3">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-700 px-2 py-0.5 rounded font-black uppercase tracking-wider">
+                <span className="text-[10px] bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] px-2 py-0.5 rounded font-bold uppercase tracking-wider">
                   OPTIMAL INTERCEPTOR UNIT
                 </span>
-                <div className="text-base font-black text-white mt-1">{nearestUnit.name}</div>
-                <div className="text-[10px] text-cyan-400 font-bold">{nearestUnit.officer}</div>
+                <div className="text-base font-bold text-[#123B63] mt-1">{nearestUnit.name}</div>
+                <div className="text-xs text-[#1565C0] font-semibold">{nearestUnit.officer}</div>
               </div>
               <div className="text-right">
-                <div className="text-2xl font-black text-emerald-400 font-mono">{nearestUnit.distanceKm.toFixed(2)} km</div>
-                <div className="text-[10px] text-slate-400">ETA: <strong className="text-amber-400 font-black">{nearestUnit.etaFormatted}</strong></div>
+                <div className="text-2xl font-bold text-[#2E7D32] font-mono">{nearestUnit.distanceKm.toFixed(2)} km</div>
+                <div className="text-xs text-[#607D8B]">ETA: <strong className="text-[#E65100] font-bold">{nearestUnit.etaFormatted}</strong></div>
               </div>
             </div>
 
             {/* GPS Ground Telemetry */}
-            <div className="bg-[#060d1a] p-3 rounded-xl border border-slate-800/80 space-y-1.5 text-xs">
+            <div className="bg-[#F8FAFC] p-3 rounded-lg border border-[#D9E1E8] space-y-1.5 text-xs">
               <div className="flex justify-between">
-                <span className="text-slate-500 font-bold">LIVE GPS COORDS:</span>
-                <span className="text-slate-200 font-bold font-mono">{nearestUnit.lat.toFixed(4)}°N, {nearestUnit.lng.toFixed(4)}°E</span>
+                <span className="text-[#607D8B] font-medium">LIVE GPS COORDS:</span>
+                <span className="text-[#123B63] font-bold font-mono">{nearestUnit.lat.toFixed(4)}°N, {nearestUnit.lng.toFixed(4)}°E</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 font-bold">CURRENT SPEED:</span>
-                <span className="text-cyan-400 font-black">{nearestUnit.speed} km/h (Active Transit)</span>
+                <span className="text-[#607D8B] font-medium">CURRENT SPEED:</span>
+                <span className="text-[#1565C0] font-bold">{nearestUnit.speed} km/h (Active Transit)</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 font-bold">BEARING / HEADING:</span>
-                <span className="text-slate-300 font-bold">{nearestUnit.heading}°</span>
+                <span className="text-[#607D8B] font-medium">BEARING / HEADING:</span>
+                <span className="text-[#263238] font-bold">{nearestUnit.heading}°</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 font-bold">UNIT STATUS:</span>
-                <span className="text-emerald-400 font-black">{nearestUnit.status}</span>
+                <span className="text-[#607D8B] font-medium">UNIT STATUS:</span>
+                <span className="text-[#2E7D32] font-bold">{nearestUnit.status}</span>
               </div>
             </div>
 
             {/* Touch Action Button: Dispatch Nearest Patrol */}
             <button
               onClick={() => handleDispatchNearest(nearestUnit.id)}
-              className="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs uppercase tracking-wider transition-all shadow-lg shadow-emerald-950/60 flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-lg bg-[#1565C0] hover:bg-[#0D47A1] text-white font-semibold text-xs uppercase tracking-wide transition-colors shadow-sm flex items-center justify-center gap-2"
             >
-              <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
               DISPATCH {nearestUnit.callsign} TO WAYPOINT
@@ -947,12 +953,12 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
           </div>
 
           {/* All Patrol Units Distance Breakdown List */}
-          <div className="bg-[#0a1525] border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
-            <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-              <h4 className="text-xs font-black text-slate-200 uppercase tracking-widest">
+          <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm space-y-3">
+            <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-2">
+              <h4 className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
                 PATROL PROXIMITY RADAR ({unitDistances.length} UNITS)
               </h4>
-              <span className="text-[10px] text-slate-500 font-bold">Sorted by ground distance</span>
+              <span className="text-[11px] text-[#607D8B]">Sorted by distance</span>
             </div>
 
             <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
@@ -960,29 +966,29 @@ export default function TacticalPatrolMap({ onDispatchAlert, officerSession }) {
                 <div
                   key={unit.id}
                   onClick={() => setSelectedUnitId(unit.id)}
-                  className={`p-2.5 rounded-xl border text-xs cursor-pointer transition-all ${
+                  className={`p-2.5 rounded-lg border text-xs cursor-pointer transition-all ${
                     unit.isLiveDevice
-                      ? 'bg-amber-950/60 border-amber-500 text-amber-200'
+                      ? 'bg-[#FFF3E0] border-[#FFE0B2] text-[#E65100]'
                       : selectedUnitId === unit.id
-                      ? 'bg-cyan-950/60 border-cyan-500 text-cyan-200'
-                      : 'bg-[#060d1a] border-slate-800/80 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                      ? 'bg-[#E3F2FD] border-[#1565C0] text-[#123B63]'
+                      : 'bg-[#F8FAFC] border-[#D9E1E8] text-[#263238] hover:bg-[#F0F4F8]'
                   }`}
                 >
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-black text-slate-500">#{idx + 1}</span>
-                      <span className="font-black text-slate-200">{unit.callsign}</span>
-                      <span className="text-[9px] text-slate-500 font-bold">
+                      <span className="text-[10px] font-bold text-[#607D8B]">#{idx + 1}</span>
+                      <span className="font-bold text-[#123B63]">{unit.callsign}</span>
+                      <span className="text-[10px] text-[#607D8B]">
                         {unit.isLiveDevice ? '(MY DEVICE GPS)' : `(${unit.type})`}
                       </span>
                     </div>
-                    <span className="font-black text-emerald-400 font-mono">
+                    <span className="font-bold text-[#2E7D32] font-mono">
                       {unit.distanceKm.toFixed(2)} km
                     </span>
                   </div>
-                  <div className="flex justify-between text-[10px] text-slate-500 mt-1 font-bold">
+                  <div className="flex justify-between text-[11px] text-[#607D8B] mt-1 font-medium">
                     <span>Speed: {unit.speed} km/h</span>
-                    <span>ETA: <strong className="text-amber-400 font-black">{unit.etaFormatted}</strong></span>
+                    <span>ETA: <strong className="text-[#E65100]">{unit.etaFormatted}</strong></span>
                   </div>
                 </div>
               ))}

@@ -20,59 +20,69 @@ export default function FieldConsole({ isScanning, progress, carveSpeed, session
     : allFiles;
 
   return (
-    <div className="space-y-5 font-sans">
+    <div className="space-y-4 font-sans text-[#263238]">
       {/* Device Connection & Write-Blocker Status Bar */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-xl font-mono">
+      <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-600/60 flex items-center justify-center text-emerald-400 text-sm font-bold">
+          <div className="w-10 h-10 rounded-lg bg-[#123B63] text-white flex items-center justify-center font-bold text-xs shadow-sm">
             HW
           </div>
           <div>
-            <div className="text-xs font-bold text-slate-200 flex items-center gap-2">
-              SUSPECT DEVICE CONNECTED <span className="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800 font-mono">READ-ONLY BUS</span>
+            <div className="text-xs font-bold text-[#123B63] flex items-center gap-2">
+              SUSPECT DEVICE CONNECTED <span className="text-[10px] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded border border-[#C8E6C9] font-semibold">READ-ONLY BUS</span>
             </div>
-            <div className="text-[11px] text-slate-400">SAMSUNG-SM-S901B (512GB) via USB-C Write-Blocker IC</div>
+            <div className="text-xs text-[#607D8B]">SAMSUNG-SM-S901B (512GB) via USB-C Write-Blocker IC</div>
           </div>
         </div>
 
         <div className="flex items-center gap-2 text-xs">
-          <span className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-purple-300 font-bold flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-purple-400"></span>
+          <span className="px-3 py-1.5 rounded-lg bg-[#F8FAFC] border border-[#D9E1E8] text-[#123B63] font-semibold flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#1565C0]"></span>
             OFFICER #4412 (Cyber Cell)
           </span>
         </div>
       </div>
 
       {/* Main Scan Control & Sector Telemetry */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 font-mono">
+      <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <div className="text-[11px] text-slate-400 uppercase tracking-wider">SESSION IDENTIFIER</div>
-            <div className="text-sm font-bold text-cyan-400">{sessionUuid}</div>
+            <div className="text-[11px] text-[#607D8B] font-bold uppercase tracking-wider">SESSION IDENTIFIER</div>
+            <div className="text-sm font-bold text-[#1565C0] font-mono mt-0.5">{sessionUuid}</div>
           </div>
 
           <button
             onClick={onStartScan}
             disabled={isScanning}
-            className={`px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-lg flex items-center gap-2 ${
+            className={`px-5 py-2.5 rounded-lg font-semibold text-xs uppercase tracking-wide transition-all shadow-sm flex items-center gap-2 ${
               isScanning
-                ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                : 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-cyan-950/50 border border-cyan-400'
+                ? 'bg-[#ECEFF1] text-[#90A4AE] cursor-not-allowed border border-[#CFD8DC]'
+                : 'bg-[#1565C0] hover:bg-[#0D47A1] text-white'
             }`}
           >
-            {isScanning ? 'CARVING STORAGE SECTORS...' : 'START ON-SCENE FIELD TRIAGE'}
+            {isScanning ? (
+              <>
+                <svg className="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                <span>CARVING STORAGE SECTORS...</span>
+              </>
+            ) : (
+              <span>START ON-SCENE FIELD TRIAGE</span>
+            )}
           </button>
         </div>
 
         {/* Storage Carving Progress Bar */}
         <div className="space-y-1.5">
-          <div className="flex justify-between text-xs text-slate-400">
+          <div className="flex justify-between text-xs text-[#607D8B] font-medium">
             <span>UNALLOCATED SECTOR CARVING</span>
             <span>{progress}% ({Math.floor((progress / 100) * 131072)} / 131,072 Sectors)</span>
           </div>
-          <div className="w-full bg-slate-950 rounded-full h-3 overflow-hidden p-0.5 border border-slate-800">
+          <div className="w-full bg-[#ECEFF1] rounded-full h-2.5 overflow-hidden border border-[#D9E1E8]">
             <div
-              className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 h-full rounded-full transition-all duration-200"
+              className="bg-[#1565C0] h-full rounded-full transition-all duration-200"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -80,26 +90,26 @@ export default function FieldConsole({ isScanning, progress, carveSpeed, session
       </div>
 
       {/* Triage Viewport & File List */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 font-mono">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3">
+      <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-[#D9E1E8] pb-3">
           <div>
-            <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider">RECOVERED STORAGE CARVE VIEWPORT</h3>
-            <p className="text-[11px] text-slate-400 font-sans">Switch between AI-Triage Filtered High-Risk Evidence and 100% Unfiltered Raw Storage Browser.</p>
+            <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wider">RECOVERED STORAGE CARVE VIEWPORT</h3>
+            <p className="text-xs text-[#607D8B] mt-0.5">Switch between AI-Triage Filtered High-Risk Evidence and 100% Unfiltered Raw Storage Browser.</p>
           </div>
 
-          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+          <div className="flex bg-[#F4F6F8] p-1 rounded-lg border border-[#D9E1E8] text-xs">
             <button
               onClick={() => setViewMode('ai_filtered')}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
-                viewMode === 'ai_filtered' ? 'bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold' : 'text-slate-400 hover:text-slate-200'
+              className={`px-3 py-1.5 rounded-md font-semibold transition-all ${
+                viewMode === 'ai_filtered' ? 'bg-[#1565C0] text-white shadow-xs' : 'text-[#607D8B] hover:text-[#123B63]'
               }`}
             >
               AI High-Risk Filter ({allFiles.filter(f => f.class !== 'CLEAN').length})
             </button>
             <button
               onClick={() => setViewMode('unfiltered_all')}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
-                viewMode === 'unfiltered_all' ? 'bg-slate-800 text-slate-200 font-bold' : 'text-slate-400 hover:text-slate-200'
+              className={`px-3 py-1.5 rounded-md font-semibold transition-all ${
+                viewMode === 'unfiltered_all' ? 'bg-[#1565C0] text-white shadow-xs' : 'text-[#607D8B] hover:text-[#123B63]'
               }`}
             >
               All Storage Files ({allFiles.length})
@@ -112,32 +122,32 @@ export default function FieldConsole({ isScanning, progress, carveSpeed, session
           {displayedFiles.map((file, idx) => (
             <div
               key={idx}
-              className={`p-3.5 rounded-xl border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 transition-all ${
+              className={`p-3.5 rounded-lg border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 transition-all ${
                 file.class === 'CONTRABAND'
-                  ? 'bg-red-950/30 border-red-900/60 text-red-200'
+                  ? 'bg-[#FFEBEE] border-[#EF9A9A] text-[#C62828]'
                   : file.class === 'SUSPICIOUS'
-                  ? 'bg-amber-950/30 border-amber-900/60 text-amber-200'
-                  : 'bg-slate-950 border-slate-800 text-slate-300'
+                  ? 'bg-[#FFF3E0] border-[#FFE0B2] text-[#E65100]'
+                  : 'bg-[#F8FAFC] border-[#D9E1E8] text-[#263238]'
               }`}
             >
               <div className="flex items-center gap-3">
-                <span className="text-xs px-2 py-1 rounded font-bold bg-slate-900 border border-slate-800 text-slate-400">
+                <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-[#FFFFFF] border border-[#D9E1E8] text-[#607D8B] font-mono">
                   {file.type}
                 </span>
                 <div>
-                  <div className="font-bold text-xs">{file.name}</div>
-                  <div className="text-[11px] text-slate-400">{file.detail}</div>
+                  <div className="font-bold text-xs text-[#123B63]">{file.name}</div>
+                  <div className="text-[11px] text-[#607D8B]">{file.detail}</div>
                 </div>
               </div>
 
               <div className="flex items-center gap-3 text-xs">
-                <span className="text-slate-400">{file.size}</span>
-                <span className={`px-2.5 py-0.5 rounded font-bold text-[10px] ${
+                <span className="text-[#607D8B] font-medium">{file.size}</span>
+                <span className={`px-2.5 py-0.5 rounded font-bold text-[10px] uppercase border ${
                   file.class === 'CONTRABAND'
-                    ? 'bg-red-950 text-red-400 border border-red-800'
+                    ? 'bg-[#FFCDD2] text-[#C62828] border-[#EF9A9A]'
                     : file.class === 'SUSPICIOUS'
-                    ? 'bg-amber-950 text-amber-400 border border-amber-800'
-                    : 'bg-emerald-950 text-emerald-400 border border-emerald-800'
+                    ? 'bg-[#FFE0B2] text-[#E65100] border-[#FFCC80]'
+                    : 'bg-[#E8F5E9] text-[#2E7D32] border-[#C8E6C9]'
                 }`}>
                   {file.class}
                 </span>

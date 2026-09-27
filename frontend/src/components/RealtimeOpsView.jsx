@@ -576,7 +576,7 @@ export default function RealtimeOpsView({ getApiBase, officerSession }) {
             </div>
 
             {/* Video Viewport Box */}
-            <div className="relative aspect-video bg-[#0F172A] flex items-center justify-center overflow-hidden">
+            <div className={`relative aspect-video flex items-center justify-center overflow-hidden transition-colors ${cameraActive || footageActive ? 'bg-black' : 'bg-[#F4F6F8]'}`}>
               {inputMode === 'camera' && (
                 <video ref={videoRef} className={`w-full h-full object-cover ${cameraActive ? 'block' : 'hidden'}`} playsInline muted />
               )}
@@ -586,18 +586,18 @@ export default function RealtimeOpsView({ getApiBase, officerSession }) {
 
               {/* Camera Standby Display */}
               {inputMode === 'camera' && !cameraActive && (
-                <div className="text-center p-6 space-y-2">
-                  <div className="w-12 h-12 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="text-center p-6 space-y-2.5">
+                  <div className="w-14 h-14 mx-auto rounded-full bg-[#E3F2FD] border border-[#90CAF9] flex items-center justify-center text-[#1565C0] shadow-xs">
+                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                     </svg>
                   </div>
-                  <div className="text-xs font-semibold text-slate-200 uppercase tracking-wider">CAMERA FEED STANDBY</div>
-                  <div className="text-[11px] text-slate-400 max-w-xs mx-auto">
-                    Click Activate Camera to ingest live video stream for automated facial detection.
+                  <div className="text-xs font-bold text-[#123B63] uppercase tracking-wider">SURVEILLANCE CAMERA STANDBY</div>
+                  <div className="text-xs text-[#607D8B] max-w-sm mx-auto leading-relaxed">
+                    Click <strong>Activate Camera</strong> to ingest real-time video stream for automated facial detection &amp; threat analysis.
                   </div>
                   {cameraError && (
-                    <div className="mt-2 p-2.5 bg-rose-950/80 border border-rose-700 rounded text-[11px] text-rose-200 max-w-xs mx-auto">
+                    <div className="mt-2 p-2.5 bg-[#FFEBEE] border border-[#EF9A9A] rounded-lg text-xs text-[#C62828] max-w-xs mx-auto">
                       {cameraError}
                     </div>
                   )}
@@ -606,17 +606,17 @@ export default function RealtimeOpsView({ getApiBase, officerSession }) {
 
               {/* Footage Standby Display */}
               {inputMode === 'footage' && !footageActive && !footageSummary && (
-                <div className="text-center p-6 space-y-2">
-                  <div className="w-12 h-12 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="text-center p-6 space-y-2.5">
+                  <div className="w-14 h-14 mx-auto rounded-full bg-[#E3F2FD] border border-[#90CAF9] flex items-center justify-center text-[#1565C0] shadow-xs">
+                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
                     </svg>
                   </div>
-                  <div className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
-                    {footageFile ? footageName : 'NO VIDEO FILE LOADED'}
+                  <div className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
+                    {footageFile ? footageName : 'NO CCTV FOOTAGE LOADED'}
                   </div>
-                  <div className="text-[11px] text-slate-400">
-                    {footageFile ? `${footageTotalFrames} frames ready. Click Analyze to start.` : 'Upload seized CCTV video footage (MP4 / AVI) to extract forensic frames.'}
+                  <div className="text-xs text-[#607D8B] max-w-sm mx-auto leading-relaxed">
+                    {footageFile ? `${footageTotalFrames} frames ready. Click Analyze to start forensic triage.` : 'Select external seized CCTV footage file (MP4, AVI, MOV) for automated frame-by-frame analysis.'}
                   </div>
                 </div>
               )}
@@ -624,11 +624,11 @@ export default function RealtimeOpsView({ getApiBase, officerSession }) {
               {/* Footage Analyzing Spinner */}
               {inputMode === 'footage' && footageActive && (
                 <div className="text-center p-6 space-y-3">
-                  <div className="w-10 h-10 mx-auto rounded-full border-3 border-amber-500/30 border-t-amber-400 animate-spin" />
-                  <div className="text-xs font-bold text-amber-300 uppercase">ANALYZING CCTV FOOTAGE</div>
-                  <div className="text-[11px] text-slate-300">{footageFrameCount} / {footageTotalFrames} frames processed</div>
-                  <div className="w-48 mx-auto h-2 bg-slate-800 rounded-full overflow-hidden">
-                    <div className="h-full bg-amber-500 rounded-full transition-all" style={{ width: `${footageProgress}%` }} />
+                  <div className="w-10 h-10 mx-auto rounded-full border-3 border-[#BBDEFB] border-t-[#1565C0] animate-spin" />
+                  <div className="text-xs font-bold text-[#123B63] uppercase tracking-wide">ANALYZING CCTV FOOTAGE FRAMES</div>
+                  <div className="text-xs text-[#607D8B]">{footageFrameCount} of {footageTotalFrames} frames processed</div>
+                  <div className="w-52 mx-auto h-2 bg-[#E0E0E0] rounded-full overflow-hidden">
+                    <div className="h-full bg-[#1565C0] rounded-full transition-all" style={{ width: `${footageProgress}%` }} />
                   </div>
                 </div>
               )}
