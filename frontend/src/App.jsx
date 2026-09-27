@@ -253,7 +253,7 @@ export default function App() {
                 </span>
               </div>
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white leading-tight uppercase">
-                AAROHAN-X &nbsp;|&nbsp;
+                NCIS &nbsp;|&nbsp;
                 <span className="text-sm sm:text-base font-medium text-[#E0E0E0] normal-case ml-1">
                   Cyber Intelligence &amp; Investigation Platform
                 </span>
@@ -533,7 +533,7 @@ export default function App() {
       <footer className="w-full bg-[#FFFFFF] border-t border-[#D9E1E8] py-2 px-6 flex-shrink-0 text-xs text-[#607D8B]">
         <div className="max-w-screen-2xl mx-auto flex flex-wrap justify-between items-center gap-2">
           <span>
-            AAROHAN-X &nbsp;|&nbsp; Ministry of Home Affairs &nbsp;•&nbsp; I4C &nbsp;•&nbsp; BPR&amp;D &nbsp;|&nbsp; RESTRICTED LAW ENFORCEMENT USE ONLY
+            NCIS &nbsp;|&nbsp; Ministry of Home Affairs &nbsp;•&nbsp; I4C &nbsp;•&nbsp; BPR&amp;D &nbsp;|&nbsp; RESTRICTED LAW ENFORCEMENT USE ONLY
           </span>
           <span>
             System: Pratibimb Cartographic &amp; Evidence Suite &nbsp;|&nbsp; Standards: CCTNS / ICJS / AIS-140 Compliant
