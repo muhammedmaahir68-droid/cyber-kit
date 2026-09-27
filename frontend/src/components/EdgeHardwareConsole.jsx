@@ -467,7 +467,9 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
       <div className="bg-[#0a1525] border-2 border-amber-600/70 rounded-2xl p-4 shadow-xl space-y-3">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2">
           <div className="flex items-center gap-2">
-            <span className="text-lg">⚡</span>
+            <svg className="w-5 h-5 text-amber-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
             <div>
               <div className="text-xs font-black text-amber-300 uppercase tracking-wider">
                 PHYSICAL EVIDENCE MEDIA INGESTION — ZERO SIMULATION GUARANTEE
@@ -500,7 +502,7 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
               <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
-              {loadedFile ? `INGESTED: ${loadedFile.name.slice(0, 18)}...` : '📂 SELECT SEIZED FILE / DISK DUMP'}
+              {loadedFile ? `INGESTED: ${loadedFile.name.slice(0, 18)}...` : 'SELECT SEIZED FILE / DISK DUMP'}
             </button>
             <div className="text-[9px] text-slate-500 mt-1 text-center">
               Reads real binary bytes • Computes actual SHA-256
@@ -901,8 +903,11 @@ export default function EdgeHardwareConsole({ officerSession, onDataRetrieved })
                   <span className="text-slate-500">COURT HASH (SHA-256): </span>
                   <span className="text-emerald-400 font-mono">{retrievedHash}</span>
                 </div>
-                <div className="text-[9px] text-slate-400 font-sans border-t border-emerald-800/60 pt-1.5">
-                  ✅ Verified with <code>crypto.subtle.digest</code>. Test with any local file on your machine — the SHA-256 hash matches PowerShell <code>Get-FileHash</code> bit-for-bit.
+                <div className="text-[9px] text-slate-400 font-sans border-t border-emerald-800/60 pt-1.5 flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Verified with <code>crypto.subtle.digest</code>. Test with any local file on your machine — the SHA-256 hash matches PowerShell <code>Get-FileHash</code> bit-for-bit.</span>
                 </div>
               </div>
             )}

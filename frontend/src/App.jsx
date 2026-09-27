@@ -130,17 +130,99 @@ export default function App() {
   if (appStage === 'intro') return <IntroSplash onDone={handleIntroDone} />;
   if (appStage === 'login') return <GovernmentAuthPortal onAuthenticate={handleAuthenticate} />;
 
-  // ── Official Government Navigation Sidebar Items ──
+  // ── Official Government Navigation Sidebar Items (Clean SVG Icons, Zero Emojis) ──
   const sidebarNavItems = [
-    { id: 'dashboard',    label: 'DASHBOARD',              icon: '📊', sub: 'Investigation Overview & KPIs' },
-    { id: 'pratibimb',    label: 'GEO MAP (PRATIBIMB)',    icon: '🗺️', sub: 'Criminal & Crime Infra Grid' },
-    { id: 'crossstation', label: 'CASES & REGISTRY',       icon: '📋', sub: 'Cross-Station Suspect Match' },
-    { id: 'network',      label: 'ENTITIES & NETWORK',     icon: '🕸️', sub: 'Syndicate GNN Associative Graph' },
-    { id: 'surveillance', label: 'SURVEILLANCE & CAMERA',  icon: '🎥', sub: 'Live Feed & CCTV Footage AI' },
-    { id: 'hardware',     label: 'TACTICAL HARDWARE',      icon: '🔌', sub: 'Bitstream Carving & WebUSB' },
-    { id: 'patrolmesh',   label: 'PATROL MESH (ERSS 112)', icon: '🚨', sub: 'AIS-140 Live Device GPS Beacon' },
-    { id: 'forensics',    label: 'DIGITAL FORENSICS',      icon: '💾', sub: 'Drive Carve & Artifact Vault' },
-    { id: 'reports',      label: 'JUDICIAL REPORTS',       icon: '📜', sub: 'BSA Sec 65B & BNS Sec 63' },
+    {
+      id: 'dashboard',
+      label: 'DASHBOARD',
+      sub: 'Investigation Overview & KPIs',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      )
+    },
+    {
+      id: 'pratibimb',
+      label: 'GEO MAP (PRATIBIMB)',
+      sub: 'Criminal & Crime Infra Grid',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        </svg>
+      )
+    },
+    {
+      id: 'crossstation',
+      label: 'CASES & REGISTRY',
+      sub: 'Cross-Station Suspect Match',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+        </svg>
+      )
+    },
+    {
+      id: 'network',
+      label: 'ENTITIES & NETWORK',
+      sub: 'Syndicate GNN Associative Graph',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      )
+    },
+    {
+      id: 'surveillance',
+      label: 'SURVEILLANCE & CAMERA',
+      sub: 'Live Feed & CCTV Footage AI',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+      )
+    },
+    {
+      id: 'hardware',
+      label: 'TACTICAL HARDWARE',
+      sub: 'Bitstream Carving & WebUSB',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+        </svg>
+      )
+    },
+    {
+      id: 'patrolmesh',
+      label: 'PATROL MESH (ERSS 112)',
+      sub: 'AIS-140 Live Device GPS Beacon',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      )
+    },
+    {
+      id: 'forensics',
+      label: 'DIGITAL FORENSICS',
+      sub: 'Drive Carve & Artifact Vault',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      )
+    },
+    {
+      id: 'reports',
+      label: 'JUDICIAL REPORTS',
+      sub: 'BSA Sec 65B & BNS Sec 63',
+      icon: (
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      )
+    },
   ];
 
   return (

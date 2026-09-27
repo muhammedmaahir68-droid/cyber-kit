@@ -39,7 +39,6 @@ const PRATIBIMB_ENTITIES = [
     linkedEntityIds: ['ENT_002', 'ENT_004', 'ENT_005'],
     firs: ['FIR #991/2025 PS Special Cell', 'FIR #412/2024 Crime Branch Mumbai'],
     description: 'Mastermind of multi-state extortion network. Operates virtual SIM hubs across border checkpoints.',
-    avatar: '👨‍💼',
     officerInCharge: 'Insp. Vikramaditya Rao (I4C SIT)'
   },
   {
@@ -66,7 +65,6 @@ const PRATIBIMB_ENTITIES = [
     linkedEntityIds: ['ENT_001', 'ENT_003', 'CLUSTER_MEWAT'],
     firs: ['FIR #188/2026 PS Cyber Nuh'],
     description: 'Multi-port GSM gateway spoofing local mobile towers for automated OTP bypass and phishing robocalls.',
-    avatar: '📡',
     officerInCharge: 'DSP Anil Yadav (STF Haryana)'
   },
   {
@@ -93,7 +91,6 @@ const PRATIBIMB_ENTITIES = [
     linkedEntityIds: ['ENT_002', 'ENT_006', 'CLUSTER_JAMTARA'],
     firs: ['FIR #312/2026 PS Jamtara Cyber'],
     description: 'Coordinates rapid cashouts through student Jan Dhan accounts immediately following phishing hits.',
-    avatar: '🏦',
     officerInCharge: 'Sub-Insp. Priya Soren (CID Jharkhand)'
   },
   {
@@ -120,7 +117,6 @@ const PRATIBIMB_ENTITIES = [
     linkedEntityIds: ['ENT_001'],
     firs: ['FIR #112/2024 Kotwali PS', 'FIR #88/2023 Excise PS'],
     description: 'Handles physical cash deliveries, contraband drop points, and cloned vehicle registration plates.',
-    avatar: '🛵',
     officerInCharge: 'ASI S. K. Meena (Delhi Police)'
   },
   {
@@ -147,7 +143,6 @@ const PRATIBIMB_ENTITIES = [
     linkedEntityIds: ['ENT_001', 'ENT_004'],
     firs: ['FIR #991/2025 PS Special Cell'],
     description: 'Mule corporate account used for layering cyber extortion funds prior to foreign Hawala conversion.',
-    avatar: '🏛️',
     officerInCharge: 'Insp. R. K. Joshi (Economic Offenses Wing)'
   },
   {
@@ -174,10 +169,56 @@ const PRATIBIMB_ENTITIES = [
     linkedEntityIds: ['ENT_001', 'ENT_003'],
     firs: ['FIR #412/2024 Crime Branch Unit 4 Mumbai'],
     description: 'P2P crypto-to-cash clearing office facilitating cross-border flight of syndicates proceeds.',
-    avatar: '💼',
     officerInCharge: 'PI Sandeep Patil (Mumbai Cyber Police)'
   }
 ];
+
+function getEntityCategoryIcon(category) {
+  switch (category) {
+    case 'SYNDICATE_HEAD':
+      return (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      );
+    case 'CRIME_INFRASTRUCTURE':
+      return (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+        </svg>
+      );
+    case 'MULE_RING':
+      return (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      );
+    case 'OPERATIVE':
+      return (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+        </svg>
+      );
+    case 'FINANCIAL_NODE':
+      return (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+        </svg>
+      );
+    case 'HAWALA_NODE':
+      return (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      );
+    default:
+      return (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      );
+  }
+}
 
 // Entity Cluster Markers for dense infrastructure hotspots
 const INFRASTRUCTURE_CLUSTERS = [
@@ -306,8 +347,10 @@ export default function PratibimbMap({ officerSession }) {
         {/* Title row */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-[#D9E1E8] pb-3">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#123B63] flex items-center justify-center text-white text-lg font-bold shadow-sm">
-              🗺️
+            <div className="w-9 h-9 rounded-lg bg-[#123B63] flex items-center justify-center text-white shadow-sm">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -462,7 +505,9 @@ export default function PratibimbMap({ officerSession }) {
       {actionAlert && (
         <div className="bg-[#E8F5E9] border border-[#A5D6A7] rounded-xl p-3 flex justify-between items-center text-xs text-[#2E7D32] shadow-sm animate-fadeIn">
           <div className="flex items-center gap-2">
-            <span className="text-base">✅</span>
+            <svg className="w-4 h-4 text-[#2E7D32] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+            </svg>
             <span>
               <strong>{actionAlert.title}</strong> executed successfully against <strong>{actionAlert.entity}</strong>. Dispatch Code: <code>{actionAlert.dispatchCode}</code>.
             </span>
@@ -712,7 +757,9 @@ export default function PratibimbMap({ officerSession }) {
                   {selectedEntity.alias}
                 </div>
               </div>
-              <span className="text-2xl">{selectedEntity.avatar}</span>
+              <div className="w-10 h-10 rounded-lg bg-[#0D2A4A] border border-[#1565C0] flex items-center justify-center text-[#90CAF9] flex-shrink-0">
+                {getEntityCategoryIcon(selectedEntity.category)}
+              </div>
             </div>
 
             {/* Severity & Status Badge Bar */}
@@ -816,21 +863,30 @@ export default function PratibimbMap({ officerSession }) {
               onClick={() => executeAction('RAID_DISPATCH', 'Field Raid Intercept Order')}
               className="w-full py-2.5 bg-[#1565C0] hover:bg-[#0D47A1] text-white font-semibold rounded-lg text-xs transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
-              <span>🚔</span> DISPATCH JURISDICTION FIELD UNIT
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span>DISPATCH JURISDICTION FIELD UNIT</span>
             </button>
 
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => executeAction('BNSS_FREEZE', 'Asset Freeze Order (BNSS 107)')}
-                className="py-2 bg-[#FFFFFF] hover:bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A] font-medium rounded-lg text-[11px] transition-colors"
+                className="py-2 bg-[#FFFFFF] hover:bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A] font-medium rounded-lg text-[11px] transition-colors flex items-center justify-center gap-1.5"
               >
-                🔒 FREEZE ACCOUNTS
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span>FREEZE ACCOUNTS</span>
               </button>
               <button
                 onClick={() => executeAction('SUBPOENA_CDR', 'Notice u/s 94 BNSS (CDR Dump)')}
-                className="py-2 bg-[#FFFFFF] hover:bg-[#E3F2FD] text-[#1565C0] border border-[#90CAF9] font-medium rounded-lg text-[11px] transition-colors"
+                className="py-2 bg-[#FFFFFF] hover:bg-[#E3F2FD] text-[#1565C0] border border-[#90CAF9] font-medium rounded-lg text-[11px] transition-colors flex items-center justify-center gap-1.5"
               >
-                📄 SUBPOENA CDR DUMP
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>SUBPOENA CDR DUMP</span>
               </button>
             </div>
           </div>

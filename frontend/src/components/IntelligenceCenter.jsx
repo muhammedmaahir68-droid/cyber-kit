@@ -711,8 +711,11 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
                     {approvalResult.warrant.sha256_seal}
                   </div>
 
-                  <div className="text-[10px] text-emerald-400 font-bold pt-1">
-                    ✔ {approvalResult.compliance}
+                  <div className="text-[10px] text-emerald-400 font-bold pt-1 flex items-center gap-1.5">
+                    <svg className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>{approvalResult.compliance}</span>
                   </div>
 
                   <div className="text-[10px] text-slate-400">
@@ -930,7 +933,11 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 font-mono text-xs shadow-2xl">
             <div className="flex justify-between items-center border-b border-slate-800 pb-2">
               <span className="font-bold text-white text-sm">ADD SUSPECT TO LIVE GRAPH</span>
-              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-white">✕</button>
+              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-800">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
 
             <form onSubmit={handleAddCustomSuspect} className="space-y-3">

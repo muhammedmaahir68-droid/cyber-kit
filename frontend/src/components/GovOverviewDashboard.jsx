@@ -24,7 +24,11 @@ export default function GovOverviewDashboard({ onNavigateToSection, officerSessi
       color: '#1565C0',
       badgeBg: '#E3F2FD',
       badgeColor: '#1565C0',
-      icon: '📂'
+      icon: (
+        <svg className="w-4 h-4 text-[#1565C0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+        </svg>
+      )
     },
     {
       id: 'pending',
@@ -34,7 +38,11 @@ export default function GovOverviewDashboard({ onNavigateToSection, officerSessi
       color: '#EF6C00',
       badgeBg: '#FFF3E0',
       badgeColor: '#E65100',
-      icon: '⏳'
+      icon: (
+        <svg className="w-4 h-4 text-[#EF6C00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      )
     },
     {
       id: 'linked',
@@ -44,7 +52,11 @@ export default function GovOverviewDashboard({ onNavigateToSection, officerSessi
       color: '#00897B',
       badgeBg: '#E0F2F1',
       badgeColor: '#00695C',
-      icon: '🔗'
+      icon: (
+        <svg className="w-4 h-4 text-[#00897B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
+      )
     },
     {
       id: 'alerts',
@@ -54,7 +66,11 @@ export default function GovOverviewDashboard({ onNavigateToSection, officerSessi
       color: '#C62828',
       badgeBg: '#FFEBEE',
       badgeColor: '#C62828',
-      icon: '🚨'
+      icon: (
+        <svg className="w-4 h-4 text-[#C62828]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      )
     }
   ];
 
@@ -133,7 +149,10 @@ export default function GovOverviewDashboard({ onNavigateToSection, officerSessi
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm">
         <div>
           <h2 className="text-base font-bold text-[#123B63] uppercase tracking-wide flex items-center gap-2">
-            <span>📊</span> INVESTIGATION OVERVIEW
+            <svg className="w-4 h-4 text-[#1565C0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            INVESTIGATION OVERVIEW
           </h2>
           <p className="text-xs text-[#607D8B] mt-0.5">
             Operational status across active FIRs, entity link graph, and inter-state jurisdictional alerts.
@@ -188,7 +207,10 @@ export default function GovOverviewDashboard({ onNavigateToSection, officerSessi
           <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-3 mb-3">
             <div>
               <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wider flex items-center gap-2">
-                <span>🕸️</span> CRIME / ENTITY LINK ANALYSIS
+                <svg className="w-4 h-4 text-[#1565C0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                CRIME / ENTITY LINK ANALYSIS
               </h3>
               <p className="text-[11px] text-[#607D8B] mt-0.5">
                 Multi-hop associative graph connecting Kingpins, SIM Boxes, Mule Accounts, and Cashout Points.
@@ -273,7 +295,11 @@ export default function GovOverviewDashboard({ onNavigateToSection, officerSessi
               <div className="absolute top-2 right-2 bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg p-2.5 shadow-sm text-xs max-w-[210px]">
                 <div className="flex justify-between items-center text-[10px] text-[#607D8B] font-bold uppercase">
                   <span>Selected Node</span>
-                  <button onClick={() => setSelectedNode(null)} className="text-[#90A4AE] hover:text-[#263238]">✕</button>
+                  <button onClick={() => setSelectedNode(null)} className="text-[#90A4AE] hover:text-[#263238] p-0.5 rounded hover:bg-[#F4F6F8]">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
                 </div>
                 <div className="font-bold text-[#123B63] mt-1">{selectedNode.name}</div>
                 <div className="text-[11px] text-[#607D8B]">{selectedNode.role}</div>
@@ -291,7 +317,10 @@ export default function GovOverviewDashboard({ onNavigateToSection, officerSessi
         <div className="lg:col-span-5 bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl shadow-sm p-4 space-y-3.5">
           <div className="border-b border-[#D9E1E8] pb-2.5">
             <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wider flex items-center gap-2">
-              <span>🏛️</span> LEGAL STATUTORY COMPLIANCE
+              <svg className="w-4 h-4 text-[#1565C0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              LEGAL STATUTORY COMPLIANCE
             </h3>
             <p className="text-[11px] text-[#607D8B] mt-0.5">
               Judicial mandates under Bharatiya Nagarik Suraksha Sanhita (BNSS 2023) and BSA Sec 65B.
@@ -335,7 +364,7 @@ export default function GovOverviewDashboard({ onNavigateToSection, officerSessi
               onClick={() => onNavigateToSection && onNavigateToSection('crossstation')}
               className="w-full py-2.5 bg-[#1565C0] hover:bg-[#0D47A1] text-white font-semibold rounded-lg text-xs transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
-              <span>📋</span> FILE NEW INTER-STATE CASE / RUN FACE SEARCH
+              FILE NEW INTER-STATE CASE / RUN FACE SEARCH
             </button>
           </div>
         </div>

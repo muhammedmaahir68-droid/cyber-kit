@@ -85,40 +85,34 @@ export default function EmergencyMesh({ officerSession }) {
     }
   };
 
-  // Subscribe to REAL Web Push Notifications (works in background even when phone is locked)
+  // Subscribe to REAL Web Push Notifications
   const subscribeToPush = async () => {
     const apiBase = getApiBase();
     try {
-      // 1. Request notification permission
       if ('Notification' in window && Notification.permission !== 'granted') {
         const perm = await Notification.requestPermission();
         if (perm !== 'granted') {
-          alert(' You must ALLOW notifications for real-time SOS alerts!');
+          alert('Notification permission required for real-time SOS alerts.');
           return;
         }
       }
 
-      // 2. Get service worker registration
       const registration = await navigator.serviceWorker.ready;
 
-      // 3. Get VAPID public key from backend
       let vapidPublicKey;
       try {
         const keyRes = await fetch(`${apiBase}/api/v1/push/vapid-public-key`);
         const keyData = await keyRes.json();
         vapidPublicKey = keyData.public_key;
       } catch (e) {
-        // Fallback to hardcoded key
         vapidPublicKey = 'BHeZKsSuj7QOtWGie-3bJOB4MZeWAYvt1q2b6n7Zq-G5qyommY82cxY_wZa6c2FYVq3-JXi7bf_1iWli_6gvg8E';
       }
 
-      // 4. Subscribe to push
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
       });
 
-      // 5. Send subscription to backend
       const subJson = subscription.toJSON();
       await fetch(`${apiBase}/api/v1/push/subscribe`, {
         method: 'POST',
@@ -130,19 +124,17 @@ export default function EmergencyMesh({ officerSession }) {
       });
 
       setPushSubscribed(true);
-      alert(' REAL-TIME PUSH NOTIFICATIONS ACTIVATED!\n\nYour phone will now receive SOS alerts even when the screen is OFF or the browser is CLOSED!');
+      alert('REAL-TIME PUSH NOTIFICATIONS ACTIVATED.\nYour device is now synchronized to the MHA / I4C Emergency Mesh.');
 
     } catch (e) {
       console.log('Push subscription error:', e);
-      // Fallback to basic notification permission
       if ('Notification' in window && Notification.permission !== 'granted') {
         Notification.requestPermission();
       }
-      alert(' Push subscription requires HTTPS or localhost. Using basic notifications instead.');
+      alert('Push subscription requires HTTPS or localhost. Falling back to local browser notifications.');
     }
   };
 
-  // Capture PWA install prompt
   useEffect(() => {
     const handleBeforeInstall = (e) => {
       e.preventDefault();
@@ -158,7 +150,7 @@ export default function EmergencyMesh({ officerSession }) {
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
   }, []);
 
-  // REAL-TIME INSTANT NTFY CLOUD SSE LISTENER (0.1s delay across all devices & phones worldwide)
+  // REAL-TIME INSTANT NTFY CLOUD SSE LISTENER
   useEffect(() => {
     let eventSource;
     try {
@@ -171,7 +163,7 @@ export default function EmergencyMesh({ officerSession }) {
             triggerMobileVibration();
             setEtaCountdown(85);
 
-            let alertTitle = rawData.title || ' REAL-TIME SOS ALERT';
+            let alertTitle = rawData.title || 'REAL-TIME SOS DISPATCH ALERT';
             let alertMsg = rawData.message || '';
 
             setPhoneNotification({
@@ -213,7 +205,7 @@ export default function EmergencyMesh({ officerSession }) {
     };
   }, []);
 
-  // REAL-TIME SYNC POLL LOOP (Runs every 2 seconds to check for new alerts triggered from any device)
+  // REAL-TIME SYNC POLL LOOP
   useEffect(() => {
     let syncInterval;
 
@@ -228,11 +220,8 @@ export default function EmergencyMesh({ officerSession }) {
             setAlertsList(data.alerts);
             const latest = data.alerts[0];
 
-            // If a brand new alert arrived that we haven't notified yet!
             if (latest && latest.alert_uuid !== lastAlertUuidRef.current) {
-              // Ignore initial load assignment
               if (lastAlertUuidRef.current !== null) {
-                // New alert detected from backend! Trigger real-time mobile feedback
                 triggerAudioSiren();
                 triggerMobileVibration();
                 setEtaCountdown(85);
@@ -248,7 +237,7 @@ export default function EmergencyMesh({ officerSession }) {
                 });
 
                 setPhoneNotification({
-                  title: ` REAL-TIME SOS ALERT: ${latest.crime_category}`,
+                  title: `REAL-TIME SOS ALERT: ${latest.crime_category}`,
                   phone: latest.victim_phone || '+91-9988776655',
                   location: latest.location || 'Sector 4 Market',
                   distance: '0.35 km away',
@@ -257,7 +246,7 @@ export default function EmergencyMesh({ officerSession }) {
                 });
 
                 if ('Notification' in window && Notification.permission === 'granted') {
-                  new Notification(` REAL-TIME SOS ALERT (${latest.crime_category})`, {
+                  new Notification(`REAL-TIME SOS ALERT (${latest.crime_category})`, {
                     body: `Location: ${latest.location}. Officer #4412 Dispatched! Target Arrival <85s.`,
                     icon: '/favicon.ico'
                   });
@@ -294,14 +283,13 @@ export default function EmergencyMesh({ officerSession }) {
     triggerMobileVibration();
     setEtaCountdown(85);
 
-    // Publish alert to ntfy cloud topic for instant 0.1s mobile sync worldwide
     try {
       fetch('https://ntfy.sh/cyberkit-police-command-dispatch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           topic: 'cyberkit-police-command-dispatch',
-          title: ` REAL-TIME SOS: ${type}`,
+          title: `REAL-TIME SOS: ${type}`,
           message: `Location: ${loc}. Victim Contact: ${phone}. Officer #4412 dispatched! Target ETA <85s.`,
           priority: 5,
           tags: ['warning', 'police_car', 'rotating_light']
@@ -354,7 +342,7 @@ export default function EmergencyMesh({ officerSession }) {
     setSosActive(alertData);
 
     setPhoneNotification({
-      title: type === 'WOMEN_SAFETY_SOS_CRITICAL' ? ' REAL-TIME SOS: WOMEN SAFETY / RAPE ATTEMPT DETECTED' : ' REAL-TIME SOS: VIOLENT CRIME IN-PROGRESS',
+      title: type === 'WOMEN_SAFETY_SOS_CRITICAL' ? 'REAL-TIME SOS: WOMEN SAFETY / RAPE ATTEMPT DETECTED' : 'REAL-TIME SOS: VIOLENT CRIME IN-PROGRESS',
       phone: phone,
       location: loc,
       distance: '0.35 km away',
@@ -363,7 +351,7 @@ export default function EmergencyMesh({ officerSession }) {
     });
 
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification(' DIAL 100/112 REAL-TIME SOS ALERT', {
+      new Notification('DIAL 100/112 REAL-TIME SOS ALERT', {
         body: `CRITICAL: ${type} at ${loc}. Officer #4412 dispatched! Arrival target <85s.`,
         icon: '/favicon.ico'
       });
@@ -424,49 +412,59 @@ export default function EmergencyMesh({ officerSession }) {
   };
 
   return (
-    <div className="space-y-5 font-sans">
-      
-      {/* MOBILE PAIRING INSTRUCTION MODAL / CALLOUT */}
+    <div className="space-y-4 font-sans text-[#263238]">
+
+      {/* MOBILE PAIRING INSTRUCTION MODAL */}
       {showPairModal && (
-        <div className="bg-slate-900 border-2 border-cyan-500 rounded-2xl p-5 shadow-2xl space-y-4 font-mono text-xs">
-          <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-            <h4 className="font-bold text-cyan-300 flex items-center gap-2 text-sm">
-              <span></span> REAL MOBILE PHONE PAIRING & LIVE PUSH SETUP
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-lg space-y-4">
+          <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-3">
+            <h4 className="font-bold text-[#123B63] flex items-center gap-2 text-sm uppercase tracking-wide">
+              <svg className="w-4 h-4 text-[#1565C0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              <span>REAL MOBILE PHONE PAIRING &amp; LIVE PUSH SETUP</span>
             </h4>
-            <button onClick={() => setShowPairModal(false)} className="text-slate-400 hover:text-white text-xs"> CLOSE</button>
+            <button
+              onClick={() => setShowPairModal(false)}
+              className="text-[#607D8B] hover:text-[#123B63] text-xs font-bold px-2 py-1 rounded hover:bg-[#F4F6F8]"
+            >
+              CLOSE &times;
+            </button>
           </div>
 
-          <div className="space-y-2 text-slate-200">
-            <div className="text-amber-400 font-bold">HOW TO SHOWCASE REAL NOTIFICATIONS ON YOUR ACTUAL PHONE:</div>
-            
-            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5 text-[11px]">
-              <div>1. <span className="text-cyan-400 font-bold">Open this URL on your mobile phone browser (Chrome/Safari):</span></div>
-              <div className="bg-slate-900 p-2 rounded text-emerald-400 font-bold break-all border border-slate-700">
+          <div className="space-y-3 text-xs text-[#263238]">
+            <div className="text-[#1565C0] font-bold uppercase tracking-wide">
+              HOW TO DEMONSTRATE REAL NOTIFICATIONS ON AN ACTUAL FIELD PHONE:
+            </div>
+
+            <div className="bg-[#F8FAFC] p-3 rounded-lg border border-[#D9E1E8] space-y-1">
+              <div className="font-medium text-[#607D8B]">1. Open this URL on your mobile phone browser (Chrome/Safari):</div>
+              <div className="bg-[#FFFFFF] p-2 rounded text-[#1565C0] font-mono font-bold break-all border border-[#D9E1E8]">
                 https://cyber-kit-police.vercel.app
               </div>
             </div>
 
-            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
-              <div>2. Tap <span className="text-emerald-400 font-bold">" INSTALL APP ON PHONE"</span> or Chrome menu → <span className="text-cyan-400 font-bold">"Add to Home Screen"</span>.</div>
-              <div className="text-slate-400">This installs **CyberKit Police** as a real standalone app on your phone home screen!</div>
+            <div className="bg-[#F8FAFC] p-3 rounded-lg border border-[#D9E1E8] space-y-1">
+              <div className="font-medium text-[#607D8B]">2. Tap <strong>"Install App"</strong> or browser menu &rarr; <strong>"Add to Home Screen"</strong>.</div>
+              <div className="text-[11px] text-[#607D8B]">Installs CyberKit Police as a standalone PWA application on your phone.</div>
             </div>
 
-            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-[11px]">
-              <div>3. Open the installed app & tap <span className="text-red-400 font-bold">" ACTIVATE REAL PUSH ALERTS"</span> → Tap <span className="text-emerald-400 font-bold">ALLOW</span>.</div>
+            <div className="bg-[#F8FAFC] p-3 rounded-lg border border-[#D9E1E8] space-y-1">
+              <div className="font-medium text-[#607D8B]">3. Open the app and tap <strong>"Activate Push Alerts"</strong> &rarr; Select <strong>Allow</strong>.</div>
             </div>
 
-            <div className="bg-slate-950 p-4 rounded-xl border border-amber-500/60 flex flex-col sm:flex-row items-center gap-4 text-[11px]">
+            <div className="bg-[#F8FAFC] p-4 rounded-lg border border-[#D9E1E8] flex flex-col sm:flex-row items-center gap-4 text-xs">
               <img
                 src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://ntfy.sh/cyberkit-police-command-dispatch"
                 alt="QR Code for Mobile Push"
-                className="w-28 h-28 rounded-lg border border-slate-700 bg-white p-1 shadow-md"
+                className="w-28 h-28 rounded-lg border border-[#D9E1E8] bg-white p-1 shadow-sm"
               />
-              <div className="space-y-1.5 flex-1 text-slate-200">
-                <div className="text-amber-300 font-bold text-xs"> FOR GUARANTEED LOCKSCREEN PUSH ALERTS WHEN PHONE IS SLEEPING:</div>
-                <div>1. Scan QR code or install free <span className="text-cyan-400 font-bold">ntfy app</span> from Play Store / App Store.</div>
-                <div>2. Subscribe to topic: <span className="text-cyan-400 font-bold">cyberkit-police-command-dispatch</span></div>
-                <div className="text-emerald-400 font-bold pt-1">
-                   Your phone will now VIBRATE and play POLICE SIREN even when screen is locked & sleeping!
+              <div className="space-y-1.5 flex-1">
+                <div className="text-[#123B63] font-bold text-xs uppercase">GUARANTEED LOCKSCREEN PUSH NOTIFICATIONS WHEN PHONE IS SLEEPING:</div>
+                <div className="text-[#455A64]">1. Scan QR code or install free <strong>ntfy app</strong> from Play Store / App Store.</div>
+                <div className="text-[#455A64]">2. Subscribe to topic: <strong className="font-mono text-[#1565C0]">cyberkit-police-command-dispatch</strong></div>
+                <div className="text-[#2E7D32] font-semibold pt-1">
+                  Your phone will vibrate and play official dispatch alerts even with locked screen.
                 </div>
               </div>
             </div>
@@ -476,73 +474,100 @@ export default function EmergencyMesh({ officerSession }) {
 
       {/* REAL-TIME OFFICER PHONE PUSH NOTIFICATION BANNER */}
       {phoneNotification && (
-        <div className="bg-gradient-to-r from-red-950 via-slate-900 to-red-950 border-2 border-red-500 rounded-2xl p-4 shadow-2xl animate-bounce space-y-2 font-mono">
+        <div className="bg-[#FFEBEE] border border-[#EF9A9A] rounded-xl p-4 shadow-sm space-y-2 text-xs">
           <div className="flex justify-between items-center">
-            <span className="bg-red-600 text-white text-[10px] px-2.5 py-1 rounded font-bold tracking-wider animate-pulse flex items-center gap-1.5">
-              <span></span> INSTANT PHONE PUSH ALERT RECEIVED
+            <span className="bg-[#C62828] text-white text-[10px] px-2.5 py-1 rounded font-bold tracking-wider uppercase flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+              INSTANT PHONE PUSH ALERT RECEIVED
             </span>
-            <button onClick={() => setPhoneNotification(null)} className="text-slate-400 hover:text-white text-xs"> DISMISS</button>
+            <button
+              onClick={() => setPhoneNotification(null)}
+              className="text-[#C62828] hover:underline text-xs font-bold"
+            >
+              DISMISS
+            </button>
           </div>
-          <div className="text-xs font-bold text-red-300">{phoneNotification.title}</div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] text-slate-300">
-            <div> Location: <span className="text-cyan-400 font-bold">{phoneNotification.location}</span></div>
-            <div> Victim Contact: <span className="text-amber-400 font-bold">{phoneNotification.phone}</span></div>
-            <div> Linked Mobile Unit: <span className="text-emerald-400 font-bold">{phoneNotification.officer}</span></div>
+          <div className="text-sm font-bold text-[#C62828]">{phoneNotification.title}</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-[#263238] bg-[#FFFFFF] p-2.5 rounded-lg border border-[#FFCDD2]">
+            <div>Location: <strong className="text-[#123B63]">{phoneNotification.location}</strong></div>
+            <div>Victim Contact: <strong className="text-[#123B63]">{phoneNotification.phone}</strong></div>
+            <div>Linked Mobile Unit: <strong className="text-[#1565C0]">{phoneNotification.officer}</strong></div>
           </div>
-          <div className="bg-red-900/40 p-2 rounded-lg border border-red-700 text-[10px] text-red-200 flex justify-between items-center">
-            <span> INVISIBLE MESH ROUTE: Intercept navigation pushed to officer mobile screen</span>
-            <span className="font-bold text-emerald-400">STATUS: EN ROUTE ({etaCountdown}s Target ETA)</span>
+          <div className="bg-[#FFFFFF] p-2 rounded-lg border border-[#FFCDD2] text-[11px] text-[#C62828] flex justify-between items-center font-medium">
+            <span>INVISIBLE MESH ROUTE: Intercept navigation pushed to officer mobile screen</span>
+            <span className="font-bold text-[#2E7D32]">STATUS: EN ROUTE ({etaCountdown}s Target ETA)</span>
           </div>
         </div>
       )}
 
       {/* Header Bar */}
-      <div className="bg-slate-900 border border-red-900/60 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-xl">
-        <div>
-          <h3 className="text-sm font-bold text-red-400 font-mono flex items-center gap-2">
-            <span className={`w-2.5 h-2.5 rounded-full ${sirenPlaying ? 'bg-red-500 animate-ping' : 'bg-red-500'}`}></span>
-            REAL-TIME DIAL 100 / 112 CRIME PREVENTION & PHONE MESH
-          </h3>
-          <p className="text-xs text-slate-400">Instant SOS distress alert dispatch, audio siren, and invisible officer phone push notification mesh.</p>
+      <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-[#123B63] flex items-center justify-center text-white shadow-sm flex-shrink-0">
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-bold text-[#123B63] uppercase tracking-wide">
+                DIAL 100 / 112 CRIME PREVENTION &amp; PHONE MESH
+              </h3>
+              <span className="text-[10px] bg-[#FFEBEE] text-[#C62828] font-semibold px-2 py-0.5 rounded border border-[#EF9A9A]">
+                ERSS DISPATCH
+              </span>
+            </div>
+            <p className="text-xs text-[#607D8B] mt-0.5">
+              Instant SOS distress alert dispatch, audio siren, and invisible officer phone push notification mesh.
+            </p>
+          </div>
         </div>
 
-        <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono flex-wrap gap-1">
+        <div className="flex bg-[#F4F6F8] p-1 rounded-lg border border-[#D9E1E8] text-xs flex-wrap gap-1">
           <button
             onClick={() => setSubTab('patrol_map')}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              subTab === 'patrol_map' ? 'bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold' : 'text-slate-400 hover:text-slate-200'
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all ${
+              subTab === 'patrol_map'
+                ? 'bg-[#1565C0] text-white shadow-sm'
+                : 'text-[#607D8B] hover:text-[#123B63]'
             }`}
           >
-            Live GIS Patrol Map & Tracking
+            Live GIS Patrol Map
           </button>
           <button
             onClick={() => setSubTab('erss_alerts')}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              subTab === 'erss_alerts' ? 'bg-red-950 text-red-300 border border-red-800 font-bold' : 'text-slate-400 hover:text-slate-200'
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all ${
+              subTab === 'erss_alerts'
+                ? 'bg-[#1565C0] text-white shadow-sm'
+                : 'text-[#607D8B] hover:text-[#123B63]'
             }`}
           >
-            Dial 100/112 Real-Time SOS
+            Dial 100/112 SOS
           </button>
           <button
             onClick={() => setSubTab('suspect_scanner')}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              subTab === 'suspect_scanner' ? 'bg-purple-950 text-purple-300 border border-purple-800 font-bold' : 'text-slate-400 hover:text-slate-200'
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all ${
+              subTab === 'suspect_scanner'
+                ? 'bg-[#1565C0] text-white shadow-sm'
+                : 'text-[#607D8B] hover:text-[#123B63]'
             }`}
           >
-            NCRB Suspect Photo Scan
+            NCRB Photo Scan
           </button>
           <button
             onClick={() => setSubTab('national_hub')}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
-              subTab === 'national_hub' ? 'bg-red-950 text-red-300 border border-red-800 font-bold' : 'text-slate-400 hover:text-slate-200'
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all ${
+              subTab === 'national_hub'
+                ? 'bg-[#1565C0] text-white shadow-sm'
+                : 'text-[#607D8B] hover:text-[#123B63]'
             }`}
           >
-            CCTNS/NATGRID Control Room
+            Control Room &amp; SP Sign-off
           </button>
         </div>
       </div>
 
-            {/* Subtab 0: Live GIS Patrol Map & Touch Tracking */}
+      {/* Subtab 0: Live GIS Patrol Map */}
       {subTab === 'patrol_map' && (
         <TacticalPatrolMap
           officerSession={officerSession}
@@ -560,33 +585,34 @@ export default function EmergencyMesh({ officerSession }) {
 
       {/* Subtab 1: ERSS Real-Time SOS Alerts */}
       {subTab === 'erss_alerts' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 font-mono">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4">
           
           {/* Real-time Phone Mesh Connectivity Bar */}
-          <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center text-xs space-y-2 md:space-y-0">
-            <div className="flex flex-col gap-1 text-slate-300">
+          <div className="bg-[#F8FAFC] p-3.5 rounded-lg border border-[#D9E1E8] flex flex-col md:flex-row justify-between items-start md:items-center text-xs gap-3">
+            <div className="flex flex-col gap-0.5 text-[#263238]">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Invisible Mobile Mesh: <span className="text-emerald-400 font-bold">Officer Phone Sync Active (2s Loop)</span></span>
+                <span className="w-2 h-2 rounded-full bg-[#2E7D32]" />
+                <span className="font-semibold">
+                  Invisible Mobile Mesh: <strong className="text-[#2E7D32]">Officer Phone Sync Active (2s Loop)</strong>
+                </span>
               </div>
-              <div className="text-[10px] text-cyan-400">
-                 Connected Backend Target: <span className="font-bold underline">{getApiBase()}</span>
+              <div className="text-[11px] text-[#607D8B]">
+                Connected Backend Target: <span className="font-mono font-medium text-[#1565C0]">{getApiBase()}</span>
               </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2 text-[11px]">
-              {/* TEST SOUND & PERMISSION BUTTON */}
+
+            <div className="flex flex-wrap items-center gap-2 text-xs">
               <button
                 onClick={() => {
                   triggerAudioSiren();
                   triggerMobileVibration();
                   subscribeToPush();
                 }}
-                className="bg-amber-950 text-amber-300 border border-amber-600 px-3 py-1.5 rounded-lg font-bold hover:bg-amber-900 transition-all flex items-center gap-1"
+                className="bg-[#FFFFFF] text-[#123B63] border border-[#D9E1E8] px-3 py-1.5 rounded-lg font-semibold hover:bg-[#F4F6F8] transition-all shadow-sm"
               >
-                TEST AUDIO & ALERTS
+                TEST AUDIO &amp; ALERTS
               </button>
 
-              {/* INSTALL APP BUTTON */}
               {deferredInstallPrompt && !appInstalled && (
                 <button
                   onClick={async () => {
@@ -595,24 +621,24 @@ export default function EmergencyMesh({ officerSession }) {
                     if (outcome === 'accepted') setAppInstalled(true);
                     setDeferredInstallPrompt(null);
                   }}
-                  className="bg-emerald-950 text-emerald-300 border border-emerald-600 px-3 py-1.5 rounded-lg font-bold hover:bg-emerald-900 transition-all flex items-center gap-1"
+                  className="bg-[#1565C0] text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-[#0D47A1] transition-all shadow-sm"
                 >
                   INSTALL PWA APP
                 </button>
               )}
+
               {appInstalled && (
-                <span className="bg-emerald-950 text-emerald-300 border border-emerald-700 px-3 py-1 rounded font-bold">
+                <span className="bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] px-3 py-1 rounded-lg font-semibold text-xs">
                   APP INSTALLED
                 </span>
               )}
 
-              {/* SUBSCRIBE TO REAL PUSH */}
               <button
                 onClick={subscribeToPush}
-                className={`px-3 py-1 rounded font-bold transition-all flex items-center gap-1 ${
+                className={`px-3 py-1.5 rounded-lg font-semibold transition-all shadow-sm ${
                   pushSubscribed
-                    ? 'bg-emerald-950 text-emerald-300 border border-emerald-700'
-                    : 'bg-red-950 text-red-300 border border-red-600 hover:bg-red-900'
+                    ? 'bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9]'
+                    : 'bg-[#1565C0] text-white hover:bg-[#0D47A1]'
                 }`}
               >
                 {pushSubscribed ? 'PUSH ACTIVE (Background)' : 'ACTIVATE PUSH ALERTS'}
@@ -620,7 +646,7 @@ export default function EmergencyMesh({ officerSession }) {
 
               <button
                 onClick={() => setShowPairModal(true)}
-                className="bg-cyan-950 text-cyan-300 border border-cyan-700 px-3 py-1 rounded font-bold hover:bg-cyan-900 transition-all flex items-center gap-1"
+                className="bg-[#FFFFFF] text-[#1565C0] border border-[#1565C0] px-3 py-1.5 rounded-lg font-semibold hover:bg-[#E3F2FD] transition-all shadow-sm"
               >
                 PAIR OFFICER PHONE
               </button>
@@ -628,24 +654,26 @@ export default function EmergencyMesh({ officerSession }) {
           </div>
 
           {/* SOS Trigger Action Bar */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-950 p-4 rounded-xl border border-red-950">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-[#F8FAFC] p-4 rounded-xl border border-[#D9E1E8]">
             <div>
-              <div className="text-xs font-bold text-red-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <div className="text-xs font-bold text-[#C62828] uppercase tracking-wider">
                 REAL-TIME DIAL 100/112 EMERGENCY SOS TRIGGER
               </div>
-              <div className="text-[11px] text-slate-400 font-sans">Click to simulate citizen distress call & instant push alert to officer phone.</div>
+              <div className="text-xs text-[#607D8B] mt-0.5">
+                Simulate citizen distress call &amp; instant push alert to nearest jurisdictional officer phone.
+              </div>
             </div>
 
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => handleTriggerSOS('WOMEN_SAFETY_SOS_CRITICAL', '+91-9988776655', 'Sector 4 Market (0.35 km away)', 28.6139, 77.2090)}
-                className="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-600/30 flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-lg bg-[#C62828] hover:bg-[#B71C1C] text-white text-xs font-semibold shadow-sm transition-colors"
               >
                 Women Safety SOS
               </button>
               <button
                 onClick={() => handleTriggerSOS('ATTEMPTED_ARMED_ROBBERY', '+91-9811223344', 'Main Highway Junction (0.85 km away)', 28.6210, 77.2150)}
-                className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow-lg shadow-amber-600/30 flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-lg bg-[#E65100] hover:bg-[#BF360C] text-white text-xs font-semibold shadow-sm transition-colors"
               >
                 Armed Robbery SOS
               </button>
@@ -654,57 +682,57 @@ export default function EmergencyMesh({ officerSession }) {
 
           {/* Active Real-Time Dispatch Card */}
           {sosActive && (
-            <div className="bg-red-950 p-4 rounded-xl border-2 border-red-600 text-xs text-white space-y-3 shadow-2xl">
-              <div className="flex justify-between items-center border-b border-red-800 pb-2">
-                <div className="font-bold text-red-300 text-sm flex items-center gap-2 uppercase tracking-wider">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-400 animate-ping"></span>
+            <div className="bg-[#FFEBEE] p-4 rounded-xl border border-[#EF9A9A] text-xs text-[#263238] space-y-3 shadow-sm">
+              <div className="flex justify-between items-center border-b border-[#FFCDD2] pb-2">
+                <div className="font-bold text-[#C62828] text-sm flex items-center gap-2 uppercase tracking-wide">
+                  <span className="w-2 h-2 rounded-full bg-[#C62828] animate-ping" />
                   CRITICAL DISPATCH ACTIVE: {sosActive.crime_category}
                 </div>
-                <div className="bg-red-900 border border-red-500 text-white px-3 py-1 rounded font-bold text-xs">
+                <div className="bg-[#FFFFFF] border border-[#EF9A9A] text-[#C62828] px-3 py-1 rounded font-bold text-xs">
                   TARGET ETA: {etaCountdown} SECONDS
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px]">
-                <div className="bg-slate-900/90 p-2.5 rounded-lg border border-red-900 space-y-1">
-                  <div className="text-slate-400 uppercase text-[10px]">VICTIM DETAILS</div>
-                  <div className="text-white font-bold">{sosActive.victim_phone}</div>
-                  <div className="text-cyan-400 font-sans">Location: {sosActive.victim_location.name}</div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#FFCDD2] space-y-1">
+                  <div className="text-[#607D8B] uppercase text-[10px] font-bold">VICTIM DETAILS</div>
+                  <div className="font-bold text-[#123B63]">{sosActive.victim_phone}</div>
+                  <div className="text-[#607D8B]">Location: {sosActive.victim_location.name}</div>
                 </div>
 
-                <div className="bg-slate-900/90 p-2.5 rounded-lg border border-red-900 space-y-1">
-                  <div className="text-slate-400 uppercase text-[10px]">ASSIGNED PATROL UNIT</div>
-                  <div className="text-emerald-400 font-bold">{sosActive.assigned_patrol_unit}</div>
-                  <div className="text-slate-300">Distance: {sosActive.nearest_patrol_distance_km} km away</div>
+                <div className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#FFCDD2] space-y-1">
+                  <div className="text-[#607D8B] uppercase text-[10px] font-bold">ASSIGNED PATROL UNIT</div>
+                  <div className="font-bold text-[#1565C0]">{sosActive.assigned_patrol_unit}</div>
+                  <div className="text-[#607D8B]">Distance: {sosActive.nearest_patrol_distance_km} km away</div>
                 </div>
 
-                <div className="bg-slate-900/90 p-2.5 rounded-lg border border-red-900 space-y-1">
-                  <div className="text-slate-400 uppercase text-[10px]">DUAL MOBILE MESH ALERT</div>
-                  <div className="text-amber-400 font-bold">OFFICER PHONE ALERTED</div>
-                  <div className="text-emerald-300">Overrides DND / Silent / Sleep Mode</div>
+                <div className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#FFCDD2] space-y-1">
+                  <div className="text-[#607D8B] uppercase text-[10px] font-bold">DUAL MOBILE MESH ALERT</div>
+                  <div className="font-bold text-[#2E7D32]">OFFICER PHONE ALERTED</div>
+                  <div className="text-[#607D8B]">Overrides DND / Silent / Sleep Mode</div>
                 </div>
               </div>
 
-              <div className="bg-red-900/60 p-2 rounded-lg text-center text-[10px] font-bold text-red-200 uppercase tracking-wider">
-                DUAL DISPATCH: Patrol Van auto-routed + High-priority DND override alert pushed to nearest officer personal phone (wakes officer if sleeping).
+              <div className="bg-[#FFFFFF] p-2 rounded-lg text-center text-xs font-semibold text-[#C62828] border border-[#FFCDD2]">
+                DUAL DISPATCH: Patrol Van auto-routed + High-priority DND override alert pushed to nearest officer personal phone.
               </div>
             </div>
           )}
 
-          {/* Incident Feed List (Live Synced with Backend) */}
+          {/* Incident Feed List */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {alertsList.map((alert, idx) => (
-              <div key={idx} className="bg-slate-950 p-4 rounded-xl border border-red-800 space-y-2">
+              <div key={idx} className="bg-[#FFFFFF] p-4 rounded-xl border border-[#D9E1E8] space-y-2 shadow-sm">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-red-400">{alert.crime_category}</span>
-                  <span className="text-[10px] bg-red-950 text-white px-2 py-0.5 rounded border border-red-800 font-bold">
+                  <span className="font-bold text-[#C62828]">{alert.crime_category}</span>
+                  <span className="text-[10px] bg-[#FFEBEE] text-[#C62828] px-2 py-0.5 rounded border border-[#EF9A9A] font-bold">
                     ARRIVAL: {alert.arrival_time_target || '85s'}
                   </span>
                 </div>
-                <div className="text-xs text-slate-200"> Location: {alert.location}</div>
-                <div className="text-xs text-cyan-400"> Assigned Unit: {alert.assigned_unit}</div>
-                <div className="text-[11px] text-amber-300 bg-slate-900 p-2 rounded border border-slate-800">
-                   Audio AI: {alert.audio_ai_analysis}
+                <div className="text-xs text-[#263238]">Location: <strong className="text-[#123B63]">{alert.location}</strong></div>
+                <div className="text-xs text-[#607D8B]">Assigned Unit: <strong className="text-[#1565C0]">{alert.assigned_unit}</strong></div>
+                <div className="text-xs text-[#455A64] bg-[#F8FAFC] p-2 rounded border border-[#D9E1E8]">
+                  Audio AI Analysis: {alert.audio_ai_analysis}
                 </div>
               </div>
             ))}
@@ -714,43 +742,64 @@ export default function EmergencyMesh({ officerSession }) {
 
       {/* Subtab 2: NCRB Suspect Scanner */}
       {subTab === 'suspect_scanner' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 font-mono">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4">
           <div className="flex justify-between items-center">
             <div>
-              <div className="text-xs font-bold text-purple-400">ALL-INDIA SUSPECT PHOTO SCANNER & NCRB MATCHING</div>
-              <div className="text-[11px] text-slate-400">Scan suspect face in field to query All-India Criminal Records (NCRB / CCTNS).</div>
+              <div className="text-xs font-bold text-[#123B63] uppercase tracking-wide">
+                ALL-INDIA SUSPECT PHOTO SCANNER &amp; NCRB MATCHING
+              </div>
+              <div className="text-xs text-[#607D8B] mt-0.5">
+                Scan suspect face in field to query All-India Criminal Records (NCRB / CCTNS).
+              </div>
             </div>
 
             <button
               onClick={handlePhotoScan}
               disabled={isPhotoScanning}
-              className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-lg shadow-purple-600/30 flex items-center gap-2"
+              className="px-4 py-2 rounded-lg bg-[#1565C0] hover:bg-[#0D47A1] text-white text-xs font-semibold shadow-sm transition-colors flex items-center gap-2"
             >
-              {isPhotoScanning ? 'EXTRACTING 128D VECTOR...' : ' SCAN SUSPECT PHOTO & QUERY NCRB'}
+              {isPhotoScanning ? (
+                <>
+                  <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                  </svg>
+                  <span>EXTRACTING 128D VECTOR...</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <span>SCAN SUSPECT PHOTO &amp; QUERY NCRB</span>
+                </>
+              )}
             </button>
           </div>
 
           {photoMatch && (
-            <div className="bg-slate-950 p-4 rounded-xl border border-red-800 space-y-3">
+            <div className="bg-[#FFEBEE] p-4 rounded-xl border border-[#EF9A9A] space-y-3">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-red-400 text-sm"> ALL-INDIA CRIMINAL RECORD MATCH FOUND</span>
-                <span className="bg-red-950 text-red-300 px-2.5 py-0.5 rounded border border-red-800 font-bold">
+                <span className="font-bold text-[#C62828] text-sm uppercase">
+                  ALL-INDIA CRIMINAL RECORD MATCH FOUND
+                </span>
+                <span className="bg-[#FFFFFF] text-[#C62828] px-2.5 py-0.5 rounded border border-[#EF9A9A] font-bold">
                   {(photoMatch.facial_match_confidence * 100).toFixed(1)}% SIMILARITY
                 </span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1">
-                  <div className="text-cyan-400 font-bold">Suspect: {photoMatch.suspect_name}</div>
-                  <div className="text-slate-400">NCRB ID: {photoMatch.ncrb_record_id}</div>
-                  <div className="text-amber-400 font-bold mt-1">Status: {photoMatch.warrant_status}</div>
+                <div className="bg-[#FFFFFF] p-3 rounded-lg border border-[#FFCDD2] space-y-1">
+                  <div className="text-[#123B63] font-bold">Suspect: {photoMatch.suspect_name}</div>
+                  <div className="text-[#607D8B]">NCRB ID: {photoMatch.ncrb_record_id}</div>
+                  <div className="text-[#E65100] font-bold mt-1">Status: {photoMatch.warrant_status}</div>
                 </div>
 
-                <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1">
-                  <div className="text-red-400 font-bold">ALL-INDIA FIR HISTORY</div>
+                <div className="bg-[#FFFFFF] p-3 rounded-lg border border-[#FFCDD2] space-y-1">
+                  <div className="text-[#C62828] font-bold uppercase tracking-wider text-[11px]">ALL-INDIA FIR HISTORY</div>
                   {photoMatch.fir_history.map((fir, idx) => (
-                    <div key={idx} className="text-[11px] text-slate-300">
-                      <span className="text-cyan-400 font-bold">{fir.fir_no}</span> — {fir.offense}
+                    <div key={idx} className="text-xs text-[#263238]">
+                      <strong className="text-[#1565C0]">{fir.fir_no}</strong> &bull; {fir.offense}
                     </div>
                   ))}
                 </div>
@@ -762,26 +811,30 @@ export default function EmergencyMesh({ officerSession }) {
 
       {/* Subtab 3: Control Room & Approvals */}
       {subTab === 'national_hub' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 font-mono">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4">
           <div className="flex justify-between items-center">
             <div>
-              <div className="text-xs font-bold text-red-400">CCTNS / NATGRID CONTROL ROOM LINK</div>
-              <div className="text-[11px] text-slate-400">Encrypted gRPC telemetry link & SP digital sign-off approval engine.</div>
+              <div className="text-xs font-bold text-[#123B63] uppercase tracking-wide">
+                CCTNS / NATGRID CONTROL ROOM LINK
+              </div>
+              <div className="text-xs text-[#607D8B] mt-0.5">
+                Encrypted gRPC telemetry link &amp; SP digital sign-off approval engine.
+              </div>
             </div>
 
             <button
               onClick={requestApproval}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 text-xs font-bold"
+              className="px-4 py-2 rounded-lg bg-[#1565C0] hover:bg-[#0D47A1] text-white text-xs font-semibold shadow-sm transition-colors"
             >
               REQUEST SP APPROVAL
             </button>
           </div>
 
           {approvalStatus && (
-            <div className="bg-slate-950 p-3 rounded-xl border border-emerald-800 text-xs space-y-1">
-              <div className="text-emerald-400 font-bold"> DIGITAL APPROVAL GRANTED</div>
-              <div className="text-slate-300">Approving Authority: {approvalStatus.approving_authority}</div>
-              <div className="text-slate-500 text-[10px] break-all">Hash: {approvalStatus.digital_signature_hash}</div>
+            <div className="bg-[#E8F5E9] p-3 rounded-lg border border-[#C8E6C9] text-xs space-y-1">
+              <div className="text-[#2E7D32] font-bold uppercase tracking-wider">DIGITAL APPROVAL GRANTED</div>
+              <div className="text-[#263238]">Approving Authority: <strong>{approvalStatus.approving_authority}</strong></div>
+              <div className="text-[#607D8B] text-[11px] font-mono break-all">Hash: {approvalStatus.digital_signature_hash}</div>
             </div>
           )}
         </div>

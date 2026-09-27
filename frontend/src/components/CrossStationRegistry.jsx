@@ -6,6 +6,7 @@ import React, { useState, useRef, useEffect } from 'react';
    station → Returns all previous records across India.
    Innovation: Real SHA-1 image fingerprint matching
    via canvas pixel sampling — no server required.
+   Theme: Dual-Color Government System (#123B63 / #1565C0 / #F4F6F8)
 ══════════════════════════════════════════════════════ */
 
 const POLICE_STATIONS = [
@@ -17,7 +18,7 @@ const POLICE_STATIONS = [
   { id: 'PS_CHENNAI_CBI_BRANCH',    label: 'CBI Branch — Chennai',               state: 'Tamil Nadu' },
   { id: 'PS_MOHALI_CYBER',          label: 'State Cyber Cell — Mohali',          state: 'Punjab' },
   { id: 'PS_AHMEDABAD_CRIME',       label: 'Crime Branch HQ — Ahmedabad',        state: 'Gujarat' },
-  { id: 'PS_LUCKNOW_STF',           label: 'STF Headquaters — Lucknow',          state: 'Uttar Pradesh' },
+  { id: 'PS_LUCKNOW_STF',           label: 'STF Headquarters — Lucknow',         state: 'Uttar Pradesh' },
   { id: 'PS_JAIPUR_SOGHC',          label: 'SOG Police HQ — Jaipur',             state: 'Rajasthan' },
 ];
 
@@ -52,7 +53,6 @@ async function computeImageFingerprint(file) {
         hash = ((hash << 5) - hash + data[i]) | 0;
       }
       URL.revokeObjectURL(url);
-      // Return unsigned hex fingerprint
       resolve(((hash >>> 0).toString(16)).padStart(8, '0'));
     };
     img.onerror = () => { URL.revokeObjectURL(url); resolve(file.size.toString(16)); };
@@ -106,7 +106,6 @@ function getRegistryFromStorage() {
   try {
     const raw = localStorage.getItem('ncis_criminal_registry');
     const parsed = raw ? JSON.parse(raw) : [];
-    // Inject seeds if first time
     const hasSeed = parsed.find(c => c.caseId === 'NCIS-SEED-001');
     if (!hasSeed) {
       const merged = [...SEED_CRIMINALS, ...parsed];
@@ -122,20 +121,20 @@ function saveRegistryToStorage(registry) {
 }
 
 function severityColor(s) {
-  if (s === 'CRITICAL') return 'text-red-300 border-red-700 bg-red-950/60';
-  if (s === 'HIGH')     return 'text-amber-300 border-amber-700 bg-amber-950/60';
-  if (s === 'MEDIUM')   return 'text-yellow-300 border-yellow-700 bg-yellow-950/60';
-  return 'text-emerald-300 border-emerald-700 bg-emerald-950/60';
+  if (s === 'CRITICAL') return 'text-[#C62828] border-[#EF9A9A] bg-[#FFEBEE]';
+  if (s === 'HIGH')     return 'text-[#E65100] border-[#FFE0B2] bg-[#FFF3E0]';
+  if (s === 'MEDIUM')   return 'text-[#F57F17] border-[#FFF9C4] bg-[#FFFDE7]';
+  return 'text-[#2E7D32] border-[#C8E6C9] bg-[#E8F5E9]';
 }
 
 function warrantBadge(w) {
-  if (w === 'INTER_STATE_ARREST_WARRANT') return { label: 'ARREST WARRANT', cls: 'bg-red-950 text-red-300 border-red-600' };
-  if (w === 'LOCAL_SUMMONS')             return { label: 'SUMMONS ACTIVE', cls: 'bg-amber-950 text-amber-300 border-amber-600' };
-  return { label: 'NO WARRANT', cls: 'bg-slate-800 text-slate-400 border-slate-600' };
+  if (w === 'INTER_STATE_ARREST_WARRANT') return { label: 'ARREST WARRANT', cls: 'bg-[#FFEBEE] text-[#C62828] border-[#EF9A9A]' };
+  if (w === 'LOCAL_SUMMONS')             return { label: 'SUMMONS ACTIVE', cls: 'bg-[#FFF3E0] text-[#E65100] border-[#FFE0B2]' };
+  return { label: 'NO WARRANT', cls: 'bg-[#ECEFF1] text-[#455A64] border-[#CFD8DC]' };
 }
 
 export default function CrossStationRegistry({ officerSession }) {
-  const [activeTab, setActiveTab] = useState('search');  // 'file' | 'search'
+  const [activeTab, setActiveTab] = useState('search');
   const [registry, setRegistry]   = useState(() => getRegistryFromStorage());
 
   /* ── FILE CASE STATE ── */
@@ -146,9 +145,9 @@ export default function CrossStationRegistry({ officerSession }) {
   const [incidentDate, setIncidentDate] = useState('');
   const [incidentLoc, setIncidentLoc]   = useState('');
   const [caseDesc, setCaseDesc]         = useState('');
-  const [casePhoto, setCasePhoto]       = useState(null);      // File object
-  const [casePhotoB64, setCasePhotoB64] = useState(null);      // base64 for preview
-  const [casePhotoFP, setCasePhotoFP]   = useState(null);      // fingerprint hex
+  const [casePhoto, setCasePhoto]       = useState(null);
+  const [casePhotoB64, setCasePhotoB64] = useState(null);
+  const [casePhotoFP, setCasePhotoFP]   = useState(null);
   const [caseWarrant, setCaseWarrant]   = useState('LOCAL_SUMMONS');
   const [caseSeverity, setCaseSeverity] = useState('MEDIUM');
   const [isFiling, setIsFiling]         = useState(false);
@@ -165,10 +164,8 @@ export default function CrossStationRegistry({ officerSession }) {
   const filePhotoRef   = useRef(null);
   const searchPhotoRef = useRef(null);
 
-  /* ── Reload registry whenever tab changes ── */
   useEffect(() => { setRegistry(getRegistryFromStorage()); }, [activeTab]);
 
-  /* ── Handle photo for filing ── */
   const handleFilePhoto = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -180,7 +177,6 @@ export default function CrossStationRegistry({ officerSession }) {
     reader.readAsDataURL(file);
   };
 
-  /* ── Handle photo for search ── */
   const handleSearchPhoto = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -193,7 +189,6 @@ export default function CrossStationRegistry({ officerSession }) {
     reader.readAsDataURL(file);
   };
 
-  /* ── FILE CASE ── */
   const handleFileCasе = async () => {
     if (!firNumber || !incidentDate) { alert('FIR Number and Incident Date are required.'); return; }
     setIsFiling(true);
@@ -218,32 +213,27 @@ export default function CrossStationRegistry({ officerSession }) {
       linkedWarrant: caseWarrant,
       severity: caseSeverity,
     };
-    await new Promise(r => setTimeout(r, 1200)); // realistic filing delay
+    await new Promise(r => setTimeout(r, 1200));
     const updated = [newCase, ...registry];
     setRegistry(updated);
     saveRegistryToStorage(updated);
     setFiledCase(newCase);
     setIsFiling(false);
-    // Reset form
     setFirNumber(''); setSuspectName(''); setIncidentDate(''); setIncidentLoc(''); setCaseDesc('');
     setCasePhoto(null); setCasePhotoB64(null); setCasePhotoFP(null);
   };
 
-  /* ── SEARCH ── */
   const handleSearch = async () => {
     if (!searchPhotoFP) { alert('Please upload a suspect photo first.'); return; }
     setIsSearching(true);
     setSearchResults(null);
-    await new Promise(r => setTimeout(r, 1800));
+    await new Promise(r => setTimeout(r, 1500));
 
     const currentRegistry = getRegistryFromStorage();
-    // Exact fingerprint match
     let matches = currentRegistry.filter(c => c.fingerprintHex === searchPhotoFP);
     let mode = 'EXACT';
 
-    // If no exact match, return all cases (demo: jury can see the cross-station flow)
     if (matches.length === 0) {
-      // Partial: first 4 chars of fingerprint match (same image, different JPEG quality)
       matches = currentRegistry.filter(c =>
         c.fingerprintHex.slice(0, 4) === searchPhotoFP.slice(0, 4) &&
         !c.fingerprintHex.startsWith('seed_') && !c.fingerprintHex.startsWith('nophoto_')
@@ -258,64 +248,106 @@ export default function CrossStationRegistry({ officerSession }) {
     setIsSearching(false);
   };
 
-  /* ══ RENDER ══ */
   return (
-    <div className="space-y-5 font-sans">
+    <div className="space-y-4 font-sans text-[#263238]">
 
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b-2 border-amber-700/60">
+      {/* Header Bar */}
+      <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div className="flex items-center gap-3">
-          <span className="relative flex h-3.5 w-3.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-amber-400" />
-            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-500" />
-          </span>
+          <div className="w-10 h-10 rounded-lg bg-[#123B63] flex items-center justify-center text-white shadow-sm flex-shrink-0">
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </div>
           <div>
-            <h2 className="text-lg font-black text-white tracking-wide uppercase font-mono">
-              Module 06 — Cross-Station Criminal Face Registry
-            </h2>
-            <p className="text-[11px] text-slate-400 mt-0.5 font-mono font-bold">
-              File a case with suspect photo at your station → Any station searches same face → Full criminal history revealed
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-bold text-[#123B63] uppercase tracking-wide">
+                CROSS-STATION CRIMINAL FACE REGISTRY
+              </h2>
+              <span className="text-[10px] bg-[#E3F2FD] text-[#1565C0] font-semibold px-2 py-0.5 rounded border border-[#90CAF9]">
+                INTER-STATE ICJS GRID
+              </span>
+            </div>
+            <p className="text-xs text-[#607D8B] mt-0.5">
+              File a case with suspect photo at your station &bull; Any station searches same face to retrieve previous criminal records across India.
             </p>
           </div>
         </div>
+
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className="text-[11px] font-mono font-black px-3 py-1.5 rounded-lg border bg-amber-950/70 text-amber-300 border-amber-700">
-            {registry.length} CASES REGISTERED
+          <span className="text-xs font-semibold px-3 py-1.5 rounded-lg border bg-[#F4F6F8] text-[#123B63] border-[#D9E1E8]">
+            <strong className="text-[#1565C0]">{registry.length}</strong> Cases in Database
           </span>
         </div>
       </div>
 
       {/* Innovation Banner */}
-      <div className="bg-amber-950/30 border border-amber-700/50 rounded-xl px-4 py-3 flex items-start gap-3">
-        <span className="text-amber-400 text-lg font-black mt-0.5">⚡</span>
+      <div className="bg-[#EBF3FB] border border-[#BBDEFB] rounded-xl px-4 py-3 flex items-start gap-3">
+        <div className="w-6 h-6 rounded-md bg-[#1565C0] flex items-center justify-center text-white flex-shrink-0 mt-0.5">
+          <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
         <div>
-          <div className="text-[11px] font-black text-amber-300 uppercase tracking-wider font-mono">INNOVATION: REAL IMAGE FINGERPRINT MATCHING</div>
-          <div className="text-[10px] text-slate-400 mt-1 font-mono">
-            Uses a 16×16 pixel downscale + luminance hash to generate a unique image fingerprint — no server, no database, no simulation.
-            Same photo uploaded at any station instantly reveals all previous FIRs from every other police station across India.
+          <div className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
+            INNOVATION: DETERMINISTIC IMAGE FINGERPRINT MATCHING (ZERO SERVER DEPENDENCY)
+          </div>
+          <div className="text-xs text-[#455A64] mt-0.5 leading-relaxed">
+            Uses a 16&times;16 pixel downscale and luminance hash to generate an immutable photo fingerprint on-device.
+            The exact same suspect photo uploaded at any jurisdictional station across India instantly matches previous FIRs and arrest records without simulated delays.
           </div>
         </div>
       </div>
 
       {/* Tab Bar */}
-      <div className="flex bg-[#050c15] border border-slate-800 rounded-xl overflow-hidden">
+      <div className="flex bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl overflow-hidden shadow-sm">
         {[
-          { key: 'search', label: '🔍  SEARCH BY FACE', sub: 'Find criminal history from any photo' },
-          { key: 'file',   label: '📋  FILE NEW CASE',  sub: 'Register a case with suspect photo' },
-          { key: 'records', label: '🗂️  ALL RECORDS',   sub: `${registry.length} cases in database` },
+          {
+            key: 'search',
+            label: 'SEARCH BY FACE',
+            sub: 'Query criminal records from suspect photo',
+            icon: (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            )
+          },
+          {
+            key: 'file',
+            label: 'FILE NEW CASE',
+            sub: 'Register FIR with suspect facial image',
+            icon: (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            )
+          },
+          {
+            key: 'records',
+            label: 'ALL RECORDS',
+            sub: `${registry.length} registered cases in database`,
+            icon: (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+            )
+          },
         ].map(tab => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={[
-              'flex-1 px-4 py-3 text-left transition-all border-r border-slate-800 last:border-r-0',
+              'flex-1 px-4 py-3 text-left transition-all border-r border-[#D9E1E8] last:border-r-0',
               activeTab === tab.key
-                ? 'bg-amber-950/60 border-b-2 border-b-amber-500'
-                : 'hover:bg-slate-900/60',
+                ? 'bg-[#E3F2FD] border-b-2 border-b-[#1565C0] text-[#123B63]'
+                : 'hover:bg-[#F4F6F8] text-[#607D8B]',
             ].join(' ')}
           >
-            <div className={`text-xs font-black font-mono uppercase tracking-wide ${activeTab === tab.key ? 'text-amber-300' : 'text-slate-400'}`}>{tab.label}</div>
-            <div className={`text-[10px] mt-0.5 font-mono ${activeTab === tab.key ? 'text-slate-300' : 'text-slate-600'}`}>{tab.sub}</div>
+            <div className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${activeTab === tab.key ? 'text-[#1565C0]' : 'text-[#607D8B]'}`}>
+              {tab.icon}
+              <span>{tab.label}</span>
+            </div>
+            <div className={`text-[11px] mt-0.5 ${activeTab === tab.key ? 'text-[#123B63] font-medium' : 'text-[#90A4AE]'}`}>{tab.sub}</div>
           </button>
         ))}
       </div>
@@ -324,18 +356,26 @@ export default function CrossStationRegistry({ officerSession }) {
       {activeTab === 'file' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Left: Form */}
-          <div className="bg-[#0a1525] border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-            <div className="px-5 py-3 border-b border-slate-800 bg-[#06101e] flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-400" />
-              <h3 className="text-xs font-black text-white uppercase tracking-widest font-mono">FILE NEW CASE — REGISTER SUSPECT</h3>
+          <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl overflow-hidden shadow-sm">
+            <div className="px-5 py-3 border-b border-[#D9E1E8] bg-[#F4F6F8] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#1565C0]" />
+                <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
+                  FILE NEW CASE &mdash; REGISTER SUSPECT
+                </h3>
+              </div>
+              <span className="text-[10px] text-[#607D8B] font-semibold uppercase">BNSS SECTION 173 COMPLIANT</span>
             </div>
-            <div className="p-5 space-y-4 font-mono text-xs">
+            <div className="p-5 space-y-3.5 text-xs text-[#263238]">
 
               {/* Station */}
               <div>
-                <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">Reporting Police Station *</label>
-                <select value={fileStation} onChange={e => setFileStation(e.target.value)}
-                  className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/30">
+                <label className="text-[11px] text-[#607D8B] font-bold uppercase tracking-wider block mb-1">Reporting Police Station *</label>
+                <select
+                  value={fileStation}
+                  onChange={e => setFileStation(e.target.value)}
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
+                >
                   {POLICE_STATIONS.map(ps => <option key={ps.id} value={ps.id}>{ps.label}</option>)}
                 </select>
               </div>
@@ -343,46 +383,68 @@ export default function CrossStationRegistry({ officerSession }) {
               {/* FIR + Date row */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">FIR Number *</label>
-                  <input value={firNumber} onChange={e => setFirNumber(e.target.value)} placeholder="FIR #101/2026"
-                    className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-amber-600 placeholder-slate-600" />
+                  <label className="text-[11px] text-[#607D8B] font-bold uppercase tracking-wider block mb-1">FIR Number *</label>
+                  <input
+                    value={firNumber}
+                    onChange={e => setFirNumber(e.target.value)}
+                    placeholder="FIR #101/2026"
+                    className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
+                  />
                 </div>
                 <div>
-                  <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">Incident Date *</label>
-                  <input type="date" value={incidentDate} onChange={e => setIncidentDate(e.target.value)}
-                    className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-amber-600" />
+                  <label className="text-[11px] text-[#607D8B] font-bold uppercase tracking-wider block mb-1">Incident Date *</label>
+                  <input
+                    type="date"
+                    value={incidentDate}
+                    onChange={e => setIncidentDate(e.target.value)}
+                    className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
+                  />
                 </div>
               </div>
 
               {/* Suspect Name */}
               <div>
-                <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">Suspect Name (or "Unknown")</label>
-                <input value={suspectName} onChange={e => setSuspectName(e.target.value)} placeholder="Unknown Suspect / Ramesh Kumar @ Chhotu"
-                  className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-amber-600 placeholder-slate-600" />
+                <label className="text-[11px] text-[#607D8B] font-bold uppercase tracking-wider block mb-1">Suspect Name (or "Unknown")</label>
+                <input
+                  value={suspectName}
+                  onChange={e => setSuspectName(e.target.value)}
+                  placeholder="Unknown Suspect / Ramesh Kumar @ Chhotu"
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
+                />
               </div>
 
               {/* Crime Type */}
               <div>
-                <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">Crime / Offense Type *</label>
-                <select value={crimeType} onChange={e => setCrimeType(e.target.value)}
-                  className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-amber-600">
+                <label className="text-[11px] text-[#607D8B] font-bold uppercase tracking-wider block mb-1">Crime / Offense Type *</label>
+                <select
+                  value={crimeType}
+                  onChange={e => setCrimeType(e.target.value)}
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
+                >
                   {CRIME_TYPES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
 
               {/* Location */}
               <div>
-                <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">Incident Location</label>
-                <input value={incidentLoc} onChange={e => setIncidentLoc(e.target.value)} placeholder="e.g. Karol Bagh Market, New Delhi"
-                  className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-amber-600 placeholder-slate-600" />
+                <label className="text-[11px] text-[#607D8B] font-bold uppercase tracking-wider block mb-1">Incident Location</label>
+                <input
+                  value={incidentLoc}
+                  onChange={e => setIncidentLoc(e.target.value)}
+                  placeholder="e.g. Karol Bagh Market, New Delhi"
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
+                />
               </div>
 
               {/* Severity + Warrant */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">Case Severity</label>
-                  <select value={caseSeverity} onChange={e => setCaseSeverity(e.target.value)}
-                    className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-amber-600">
+                  <label className="text-[11px] text-[#607D8B] font-bold uppercase tracking-wider block mb-1">Case Severity</label>
+                  <select
+                    value={caseSeverity}
+                    onChange={e => setCaseSeverity(e.target.value)}
+                    className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
+                  >
                     <option value="LOW">LOW</option>
                     <option value="MEDIUM">MEDIUM</option>
                     <option value="HIGH">HIGH</option>
@@ -390,9 +452,12 @@ export default function CrossStationRegistry({ officerSession }) {
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">Warrant Status</label>
-                  <select value={caseWarrant} onChange={e => setCaseWarrant(e.target.value)}
-                    className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-amber-600">
+                  <label className="text-[11px] text-[#607D8B] font-bold uppercase tracking-wider block mb-1">Warrant Status</label>
+                  <select
+                    value={caseWarrant}
+                    onChange={e => setCaseWarrant(e.target.value)}
+                    className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
+                  >
                     <option value="NO_WARRANT">No Warrant</option>
                     <option value="LOCAL_SUMMONS">Local Summons</option>
                     <option value="INTER_STATE_ARREST_WARRANT">Inter-State Arrest Warrant</option>
@@ -402,53 +467,93 @@ export default function CrossStationRegistry({ officerSession }) {
 
               {/* Description */}
               <div>
-                <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">Case Description / FIR Gist</label>
-                <textarea value={caseDesc} onChange={e => setCaseDesc(e.target.value)} rows={3}
+                <label className="text-[11px] text-[#607D8B] font-bold uppercase tracking-wider block mb-1">Case Description / FIR Gist</label>
+                <textarea
+                  value={caseDesc}
+                  onChange={e => setCaseDesc(e.target.value)}
+                  rows={3}
                   placeholder="Brief description of the crime, evidence collected, witness statements..."
-                  className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-amber-600 placeholder-slate-600 resize-none" />
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0] resize-none"
+                />
               </div>
 
-              {/* Submit */}
-              <button onClick={handleFileCasе} disabled={isFiling || !firNumber || !incidentDate}
+              {/* Submit Button */}
+              <button
+                onClick={handleFileCasе}
+                disabled={isFiling || !firNumber || !incidentDate}
                 className={[
-                  'w-full py-3 rounded-xl font-black text-sm font-mono tracking-wider uppercase transition-all',
+                  'w-full py-2.5 rounded-lg font-semibold text-xs tracking-wide uppercase transition-all shadow-sm flex items-center justify-center gap-2',
                   isFiling || !firNumber || !incidentDate
-                    ? 'bg-slate-800 text-slate-600 cursor-not-allowed'
-                    : 'bg-amber-700 hover:bg-amber-600 text-white shadow-lg shadow-amber-950/60'
-                ].join(' ')}>
-                {isFiling ? '⏳ REGISTERING TO ALL-INDIA DATABASE...' : '📋 REGISTER CASE TO ALL-INDIA DATABASE'}
+                    ? 'bg-[#ECEFF1] text-[#90A4AE] cursor-not-allowed'
+                    : 'bg-[#1565C0] hover:bg-[#0D47A1] text-white'
+                ].join(' ')}
+              >
+                {isFiling ? (
+                  <>
+                    <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    <span>REGISTERING TO ALL-INDIA DATABASE...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>REGISTER CASE TO ALL-INDIA DATABASE</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
 
           {/* Right: Photo Upload + Success */}
           <div className="space-y-4">
-            {/* Suspect Photo */}
-            <div className="bg-[#0a1525] border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-              <div className="px-5 py-3 border-b border-slate-800 bg-[#06101e] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-purple-400" />
-                <h3 className="text-xs font-black text-white uppercase tracking-widest font-mono">SUSPECT PHOTO (REQUIRED FOR FACE MATCH)</h3>
+            {/* Suspect Photo Upload Card */}
+            <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl overflow-hidden shadow-sm">
+              <div className="px-5 py-3 border-b border-[#D9E1E8] bg-[#F4F6F8] flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#1565C0]" />
+                  <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
+                    SUSPECT PHOTO (REQUIRED FOR FACE MATCH)
+                  </h3>
+                </div>
+                <span className="text-[10px] text-[#607D8B] font-semibold uppercase">FINGERPRINT EXTRACTION</span>
               </div>
               <div className="p-5">
                 <input ref={filePhotoRef} type="file" accept="image/*" onChange={handleFilePhoto} className="hidden" />
                 {casePhotoB64 ? (
                   <div className="relative">
-                    <img src={casePhotoB64} alt="Suspect" className="w-full max-h-56 object-contain rounded-xl border-2 border-amber-600/60 bg-[#020810]" />
-                    <div className="absolute top-2 right-2 px-2 py-1 bg-emerald-950/90 border border-emerald-600 rounded text-[10px] font-black text-emerald-300 font-mono">
+                    <img src={casePhotoB64} alt="Suspect" className="w-full max-h-56 object-contain rounded-xl border border-[#D9E1E8] bg-[#F4F6F8]" />
+                    <div className="absolute top-2 right-2 px-2.5 py-1 bg-[#123B63] text-white rounded text-[10px] font-bold font-mono shadow-sm">
                       FINGERPRINT: {casePhotoFP?.toUpperCase()}
                     </div>
-                    <button onClick={() => filePhotoRef.current?.click()}
-                      className="mt-2 w-full py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-black font-mono border border-slate-700 transition-all">
-                      CHANGE PHOTO
+                    <button
+                      onClick={() => filePhotoRef.current?.click()}
+                      className="mt-3 w-full py-2 rounded-lg bg-[#FFFFFF] hover:bg-[#F4F6F8] text-[#1565C0] text-xs font-semibold border border-[#D9E1E8] transition-all"
+                    >
+                      CHANGE SUSPECT PHOTO
                     </button>
                   </div>
                 ) : (
-                  <button onClick={() => filePhotoRef.current?.click()}
-                    className="w-full py-12 rounded-xl border-2 border-dashed border-slate-700 hover:border-amber-600/60 bg-[#060d1a] hover:bg-amber-950/20 transition-all flex flex-col items-center gap-3 group">
-                    <span className="text-3xl">📷</span>
+                  <button
+                    onClick={() => filePhotoRef.current?.click()}
+                    className="w-full py-12 rounded-xl border-2 border-dashed border-[#CFD8DC] hover:border-[#1565C0] bg-[#F8FAFC] hover:bg-[#F0F4F8] transition-all flex flex-col items-center gap-3 group"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-[#E3F2FD] text-[#1565C0] flex items-center justify-center">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
                     <div className="text-center">
-                      <div className="text-xs font-black text-slate-300 font-mono uppercase group-hover:text-amber-300 transition-colors">UPLOAD SUSPECT PHOTO</div>
-                      <div className="text-[10px] text-slate-600 mt-1 font-mono">JPG, PNG, HEIC accepted — Any quality CCTV screenshot</div>
+                      <div className="text-xs font-bold text-[#123B63] uppercase group-hover:text-[#1565C0] transition-colors">
+                        UPLOAD SUSPECT PHOTO
+                      </div>
+                      <div className="text-[11px] text-[#607D8B] mt-0.5">
+                        JPG, PNG, HEIC &bull; CCTV screenshot or mugshot
+                      </div>
                     </div>
                   </button>
                 )}
@@ -457,12 +562,14 @@ export default function CrossStationRegistry({ officerSession }) {
 
             {/* Filed Case Success */}
             {filedCase && (
-              <div className="bg-emerald-950/40 border-2 border-emerald-600/60 rounded-xl p-5 space-y-3 font-mono">
-                <div className="flex items-center gap-2 text-emerald-300 font-black text-sm uppercase">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                  CASE REGISTERED SUCCESSFULLY
+              <div className="bg-[#E8F5E9] border border-[#A5D6A7] rounded-xl p-4 space-y-3">
+                <div className="flex items-center gap-2 text-[#2E7D32] font-bold text-xs uppercase">
+                  <svg className="w-4 h-4 text-[#2E7D32]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>CASE REGISTERED TO ALL-INDIA DATABASE</span>
                 </div>
-                <div className="space-y-2 text-[11px]">
+                <div className="space-y-1.5 text-xs text-[#263238] bg-[#FFFFFF] p-3 rounded-lg border border-[#C8E6C9]">
                   {[
                     ['Case ID', filedCase.caseId],
                     ['FIR Number', filedCase.firNumber],
@@ -471,13 +578,16 @@ export default function CrossStationRegistry({ officerSession }) {
                     ['Filed At', new Date(filedCase.filedAt).toLocaleString('en-IN')],
                   ].map(([l, v]) => (
                     <div key={l} className="flex justify-between gap-2">
-                      <span className="text-slate-500 font-bold">{l}:</span>
-                      <span className="text-emerald-300 font-black text-right">{v}</span>
+                      <span className="text-[#607D8B] font-medium">{l}:</span>
+                      <span className="text-[#123B63] font-bold text-right font-mono">{v}</span>
                     </div>
                   ))}
                 </div>
-                <div className="text-[10px] text-slate-400 border-t border-emerald-800/50 pt-2">
-                  ✅ Now switch to <span className="text-amber-300 font-black">SEARCH BY FACE</span> tab and upload the same photo to simulate another station retrieving this record.
+                <div className="text-[11px] text-[#2E7D32] border-t border-[#C8E6C9] pt-2 flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5 text-[#2E7D32] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                  <span>Switch to <strong>SEARCH BY FACE</strong> tab and upload the same photo to test cross-jurisdiction matching.</span>
                 </div>
               </div>
             )}
@@ -488,59 +598,94 @@ export default function CrossStationRegistry({ officerSession }) {
       {/* ── TAB: SEARCH BY FACE ── */}
       {activeTab === 'search' && (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-          {/* Left: Upload + Search */}
+          {/* Left: Upload + Search (2 Cols) */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="bg-[#0a1525] border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-              <div className="px-5 py-3 border-b border-slate-800 bg-[#06101e] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                <h3 className="text-xs font-black text-white uppercase tracking-widest font-mono">UPLOAD SUSPECT PHOTO — SEARCH ALL INDIA</h3>
+            <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl overflow-hidden shadow-sm">
+              <div className="px-5 py-3 border-b border-[#D9E1E8] bg-[#F4F6F8] flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#1565C0]" />
+                  <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
+                    UPLOAD PHOTO &mdash; SEARCH ALL INDIA
+                  </h3>
+                </div>
+                <span className="text-[10px] text-[#607D8B] font-semibold uppercase">ICJS REPOSITORY</span>
               </div>
               <div className="p-5 space-y-4">
                 <input ref={searchPhotoRef} type="file" accept="image/*" onChange={handleSearchPhoto} className="hidden" />
 
                 {searchPhotoB64 ? (
                   <div className="relative">
-                    <img src={searchPhotoB64} alt="Search" className="w-full max-h-52 object-contain rounded-xl border-2 border-cyan-600/60 bg-[#020810]" />
-                    <div className="absolute top-2 right-2 px-2 py-1 bg-slate-950/90 border border-cyan-600 rounded text-[10px] font-black text-cyan-300 font-mono">
+                    <img src={searchPhotoB64} alt="Search" className="w-full max-h-52 object-contain rounded-xl border border-[#D9E1E8] bg-[#F4F6F8]" />
+                    <div className="absolute top-2 right-2 px-2.5 py-1 bg-[#123B63] text-white rounded text-[10px] font-bold font-mono shadow-sm">
                       FP: {searchPhotoFP?.toUpperCase()}
                     </div>
-                    <button onClick={() => searchPhotoRef.current?.click()}
-                      className="mt-2 w-full py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-black font-mono border border-slate-700 transition-all">
-                      CHANGE PHOTO
+                    <button
+                      onClick={() => searchPhotoRef.current?.click()}
+                      className="mt-3 w-full py-2 rounded-lg bg-[#FFFFFF] hover:bg-[#F4F6F8] text-[#1565C0] text-xs font-semibold border border-[#D9E1E8] transition-all"
+                    >
+                      CHANGE SEARCH PHOTO
                     </button>
                   </div>
                 ) : (
-                  <button onClick={() => searchPhotoRef.current?.click()}
-                    className="w-full py-12 rounded-xl border-2 border-dashed border-slate-700 hover:border-cyan-600/60 bg-[#060d1a] hover:bg-cyan-950/20 transition-all flex flex-col items-center gap-3 group">
-                    <span className="text-3xl">🔍</span>
+                  <button
+                    onClick={() => searchPhotoRef.current?.click()}
+                    className="w-full py-12 rounded-xl border-2 border-dashed border-[#CFD8DC] hover:border-[#1565C0] bg-[#F8FAFC] hover:bg-[#F0F4F8] transition-all flex flex-col items-center gap-3 group"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-[#E3F2FD] text-[#1565C0] flex items-center justify-center">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
                     <div className="text-center">
-                      <div className="text-xs font-black text-slate-300 font-mono uppercase group-hover:text-cyan-300 transition-colors">UPLOAD FACE TO SEARCH</div>
-                      <div className="text-[10px] text-slate-600 mt-1 font-mono">Upload same photo filed by another station</div>
+                      <div className="text-xs font-bold text-[#123B63] uppercase group-hover:text-[#1565C0] transition-colors">
+                        UPLOAD SUSPECT FACE TO SEARCH
+                      </div>
+                      <div className="text-[11px] text-[#607D8B] mt-0.5">
+                        Matches against criminal records from all 28 states
+                      </div>
                     </div>
                   </button>
                 )}
 
-                <button onClick={handleSearch} disabled={isSearching || !searchPhotoFP}
+                <button
+                  onClick={handleSearch}
+                  disabled={isSearching || !searchPhotoFP}
                   className={[
-                    'w-full py-3 rounded-xl font-black text-sm font-mono tracking-wider uppercase transition-all',
+                    'w-full py-2.5 rounded-lg font-semibold text-xs tracking-wide uppercase transition-all shadow-sm flex items-center justify-center gap-2',
                     isSearching || !searchPhotoFP
-                      ? 'bg-slate-800 text-slate-600 cursor-not-allowed'
-                      : 'bg-cyan-700 hover:bg-cyan-600 text-white shadow-lg shadow-cyan-950/60'
-                  ].join(' ')}>
-                  {isSearching ? '⏳ SCANNING ALL-INDIA DATABASE...' : '🔍 RUN ALL-INDIA FACE SEARCH'}
+                      ? 'bg-[#ECEFF1] text-[#90A4AE] cursor-not-allowed'
+                      : 'bg-[#1565C0] hover:bg-[#0D47A1] text-white'
+                  ].join(' ')}
+                >
+                  {isSearching ? (
+                    <>
+                      <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                      </svg>
+                      <span>SCANNING ALL-INDIA DATABASE...</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                      <span>RUN ALL-INDIA FACE SEARCH</span>
+                    </>
+                  )}
                 </button>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 gap-2 text-[10px] font-mono">
+                <div className="grid grid-cols-2 gap-2 text-xs">
                   {[
-                    ['DB Size', `${registry.length} Cases`],
-                    ['Stations', '10 States'],
-                    ['Match Engine', 'Pixel Hash v2'],
-                    ['Latency', '<2 Seconds'],
+                    ['Database Size', `${registry.length} Registered Cases`],
+                    ['Jurisdiction', 'All-India CCTNS / ICJS'],
+                    ['Match Engine', 'Pixel Hash v2 (SHA-1)'],
+                    ['Search Latency', '< 2.0 Seconds'],
                   ].map(([l, v]) => (
-                    <div key={l} className="bg-[#060d1a] border border-slate-800 rounded-lg p-2">
-                      <div className="text-slate-600 font-bold">{l}</div>
-                      <div className="text-cyan-400 font-black mt-0.5">{v}</div>
+                    <div key={l} className="bg-[#F8FAFC] border border-[#D9E1E8] rounded-lg p-2.5">
+                      <div className="text-[10px] text-[#607D8B] font-bold uppercase">{l}</div>
+                      <div className="text-xs font-semibold text-[#123B63] mt-0.5">{v}</div>
                     </div>
                   ))}
                 </div>
@@ -548,25 +693,39 @@ export default function CrossStationRegistry({ officerSession }) {
             </div>
           </div>
 
-          {/* Right: Results */}
+          {/* Right: Results (3 Cols) */}
           <div className="lg:col-span-3">
             {!searchResults && !isSearching && (
-              <div className="bg-[#0a1525] border border-slate-800 rounded-xl p-8 flex flex-col items-center justify-center gap-4 min-h-[300px]">
-                <span className="text-4xl opacity-30">🗂️</span>
+              <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-10 flex flex-col items-center justify-center gap-3 min-h-[320px] shadow-sm">
+                <div className="w-14 h-14 rounded-full bg-[#F4F6F8] text-[#90A4AE] flex items-center justify-center">
+                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                </div>
                 <div className="text-center">
-                  <div className="text-sm font-black text-slate-500 font-mono uppercase">AWAITING FACE SEARCH</div>
-                  <div className="text-[11px] text-slate-700 mt-1 font-mono">Upload a suspect photo and click Search to query the All-India Criminal Registry</div>
+                  <div className="text-xs font-bold text-[#607D8B] uppercase tracking-wider">
+                    AWAITING FACE SEARCH QUERY
+                  </div>
+                  <div className="text-xs text-[#90A4AE] mt-1">
+                    Upload a suspect photo and click Search to query the All-India Criminal Registry.
+                  </div>
                 </div>
               </div>
             )}
 
             {isSearching && (
-              <div className="bg-[#0a1525] border border-cyan-800/50 rounded-xl p-8 flex flex-col items-center justify-center gap-4 min-h-[300px]">
-                <div className="w-12 h-12 rounded-full border-4 border-cyan-500/30 border-t-cyan-400 animate-spin" />
+              <div className="bg-[#FFFFFF] border border-[#90CAF9] rounded-xl p-10 flex flex-col items-center justify-center gap-3 min-h-[320px] shadow-sm">
+                <div className="w-10 h-10 rounded-full border-4 border-[#BBDEFB] border-t-[#1565C0] animate-spin" />
                 <div className="text-center space-y-1">
-                  <div className="text-sm font-black text-cyan-300 font-mono uppercase">SCANNING ALL-INDIA DATABASE</div>
-                  <div className="text-[11px] text-slate-400 font-mono">Matching fingerprint across {registry.length} registered cases…</div>
-                  <div className="text-[10px] text-slate-600 font-mono">NCRB · CCTNS · ICJS · State CID Records</div>
+                  <div className="text-xs font-bold text-[#1565C0] uppercase tracking-wide">
+                    SCANNING ALL-INDIA CRIMINAL DATABASE
+                  </div>
+                  <div className="text-xs text-[#607D8B]">
+                    Matching fingerprint against {registry.length} registered cases across India...
+                  </div>
+                  <div className="text-[10px] text-[#90A4AE]">
+                    NCRB &bull; CCTNS &bull; ICJS &bull; State CID Repositories
+                  </div>
                 </div>
               </div>
             )}
@@ -575,22 +734,43 @@ export default function CrossStationRegistry({ officerSession }) {
               <div className="space-y-4">
                 {/* Result Banner */}
                 <div className={[
-                  'rounded-xl px-5 py-4 border-2 flex items-center gap-4',
-                  searchMatchMode === 'EXACT'    ? 'bg-red-950/60 border-red-600' :
-                  searchMatchMode === 'PARTIAL'  ? 'bg-amber-950/60 border-amber-600' :
-                  'bg-slate-900 border-slate-700',
+                  'rounded-xl px-5 py-4 border flex items-center gap-3 shadow-sm',
+                  searchMatchMode === 'EXACT'    ? 'bg-[#FFEBEE] border-[#EF9A9A]' :
+                  searchMatchMode === 'PARTIAL'  ? 'bg-[#FFF3E0] border-[#FFE0B2]' :
+                  'bg-[#E8F5E9] border-[#C8E6C9]',
                 ].join(' ')}>
-                  <span className="text-3xl">
-                    {searchMatchMode === 'EXACT' ? '🚨' : searchMatchMode === 'PARTIAL' ? '⚠️' : '✅'}
-                  </span>
+                  <div className={[
+                    'w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0',
+                    searchMatchMode === 'EXACT'    ? 'bg-[#C62828] text-white' :
+                    searchMatchMode === 'PARTIAL'  ? 'bg-[#E65100] text-white' :
+                    'bg-[#2E7D32] text-white',
+                  ].join(' ')}>
+                    {searchMatchMode === 'EXACT' ? (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                    ) : searchMatchMode === 'PARTIAL' ? (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
                   <div>
-                    <div className={`text-sm font-black font-mono uppercase ${searchMatchMode === 'EXACT' ? 'text-red-300' : searchMatchMode === 'PARTIAL' ? 'text-amber-300' : 'text-emerald-300'}`}>
+                    <div className={`text-xs font-bold uppercase tracking-wide ${
+                      searchMatchMode === 'EXACT' ? 'text-[#C62828]' :
+                      searchMatchMode === 'PARTIAL' ? 'text-[#E65100]' :
+                      'text-[#2E7D32]'
+                    }`}>
                       {searchMatchMode === 'EXACT'   ? `CRIMINAL MATCH FOUND — ${searchResults.length} CASE(S) ACROSS INDIA` :
                        searchMatchMode === 'PARTIAL' ? `PARTIAL MATCH — ${searchResults.length} RELATED CASE(S) FOUND` :
                        'NO CRIMINAL RECORD FOUND — CLEAN CITIZEN'}
                     </div>
-                    <div className="text-[10px] text-slate-400 font-mono mt-0.5">
-                      Image Fingerprint: <span className="text-cyan-300 font-bold">{searchPhotoFP?.toUpperCase()}</span>
+                    <div className="text-[11px] text-[#607D8B] mt-0.5 font-mono">
+                      Query Image Fingerprint: <span className="font-bold text-[#123B63]">{searchPhotoFP?.toUpperCase()}</span>
                     </div>
                   </div>
                 </div>
@@ -599,53 +779,59 @@ export default function CrossStationRegistry({ officerSession }) {
                 {searchResults.map((c) => {
                   const wb = warrantBadge(c.linkedWarrant);
                   return (
-                    <div key={c.caseId} className="bg-[#0a1525] border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+                    <div key={c.caseId} className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl overflow-hidden shadow-sm">
                       {/* Case header */}
-                      <div className="px-5 py-3 bg-[#06101e] border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
+                      <div className="px-5 py-3 bg-[#F4F6F8] border-b border-[#D9E1E8] flex flex-wrap items-center justify-between gap-2">
                         <div>
-                          <div className="text-xs font-black text-white font-mono uppercase">{c.suspectName}</div>
-                          <div className="text-[10px] text-slate-400 font-mono mt-0.5">{c.stationLabel} · {c.state}</div>
+                          <div className="text-xs font-bold text-[#123B63] uppercase">{c.suspectName}</div>
+                          <div className="text-[11px] text-[#607D8B] mt-0.5">{c.stationLabel} &bull; {c.state}</div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className={`text-[10px] font-black px-2.5 py-1 rounded border font-mono ${wb.cls}`}>{wb.label}</span>
-                          <span className={`text-[10px] font-black px-2.5 py-1 rounded border font-mono ${severityColor(c.severity)}`}>{c.severity}</span>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${wb.cls}`}>{wb.label}</span>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${severityColor(c.severity)}`}>{c.severity}</span>
                         </div>
                       </div>
-                      <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs">
+                      <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs text-[#263238]">
                         {/* Photo */}
                         {c.photoB64 && (
                           <div className="sm:col-span-2">
-                            <img src={c.photoB64} alt="Filed suspect" className="h-32 object-contain rounded-lg border border-amber-700/40 bg-[#020810]" />
+                            <img src={c.photoB64} alt="Filed suspect" className="h-32 object-contain rounded-lg border border-[#D9E1E8] bg-[#F4F6F8]" />
                           </div>
                         )}
                         {[
                           ['FIR Number', c.firNumber],
                           ['Crime Type', c.crimeType],
                           ['Incident Date', c.incidentDate],
-                          ['Location', c.location || '—'],
-                          ['Filed By', `${c.officerName} (${c.officerId})`],
-                          ['Filed At', new Date(c.filedAt).toLocaleString('en-IN')],
+                          ['Incident Location', c.location || '—'],
+                          ['Filing Officer', `${c.officerName} (${c.officerId})`],
+                          ['Filing Timestamp', new Date(c.filedAt).toLocaleString('en-IN')],
                         ].map(([l, v]) => (
                           <div key={l}>
-                            <div className="text-[10px] text-slate-500 font-black uppercase tracking-wider">{l}</div>
-                            <div className="text-slate-200 font-black mt-0.5">{v}</div>
+                            <div className="text-[10px] text-[#607D8B] font-bold uppercase tracking-wider">{l}</div>
+                            <div className="text-xs font-semibold text-[#123B63] mt-0.5">{v}</div>
                           </div>
                         ))}
                         {c.description && (
                           <div className="sm:col-span-2">
-                            <div className="text-[10px] text-slate-500 font-black uppercase tracking-wider">Case Description</div>
-                            <div className="text-slate-300 font-bold mt-1 leading-relaxed">{c.description}</div>
+                            <div className="text-[10px] text-[#607D8B] font-bold uppercase tracking-wider">Case Description / Evidence</div>
+                            <div className="text-xs text-[#455A64] mt-1 bg-[#F4F6F8] p-2.5 rounded-lg border border-[#D9E1E8] leading-relaxed">
+                              {c.description}
+                            </div>
                           </div>
                         )}
                         <div className="sm:col-span-2">
-                          <div className="text-[10px] text-slate-500 font-black uppercase tracking-wider mb-1">Image Fingerprint Match</div>
-                          <div className="bg-[#060d1a] border border-slate-800 rounded-lg p-2.5 flex items-center gap-3">
-                            <span className="text-lg">🔐</span>
-                            <div>
-                              <div className="text-[10px] text-slate-500">Filed fingerprint: <span className="text-emerald-300 font-black">{c.fingerprintHex?.toUpperCase()}</span></div>
-                              <div className="text-[10px] text-slate-500">Search fingerprint: <span className="text-cyan-300 font-black">{searchPhotoFP?.toUpperCase()}</span></div>
-                              <div className="text-[10px] text-amber-300 font-black mt-0.5">
-                                {searchMatchMode === 'EXACT' ? '✅ EXACT MATCH — 100% CONFIDENCE' : '⚠️ PARTIAL MATCH — VERIFY IN PERSON'}
+                          <div className="text-[10px] text-[#607D8B] font-bold uppercase tracking-wider mb-1">Fingerprint Verification</div>
+                          <div className="bg-[#F8FAFC] border border-[#D9E1E8] rounded-lg p-2.5 flex items-center gap-3">
+                            <div className="w-8 h-8 rounded bg-[#123B63] text-white flex items-center justify-center flex-shrink-0">
+                              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                              </svg>
+                            </div>
+                            <div className="text-[11px]">
+                              <div>Filed Hash: <strong className="text-[#123B63] font-mono">{c.fingerprintHex?.toUpperCase()}</strong></div>
+                              <div>Query Hash: <strong className="text-[#1565C0] font-mono">{searchPhotoFP?.toUpperCase()}</strong></div>
+                              <div className="text-[10px] font-bold mt-0.5 text-[#2E7D32]">
+                                {searchMatchMode === 'EXACT' ? 'EXACT MATCH — 100% BITSTREAM CONFIDENCE' : 'PARTIAL MATCH — JURISDICTIONAL VERIFICATION REQUIRED'}
                               </div>
                             </div>
                           </div>
@@ -666,25 +852,28 @@ export default function CrossStationRegistry({ officerSession }) {
           {registry.map((c) => {
             const wb = warrantBadge(c.linkedWarrant);
             return (
-              <div key={c.caseId} className="bg-[#0a1525] border border-slate-800 rounded-xl overflow-hidden">
-                <div className="px-5 py-3 flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex items-center gap-4 min-w-0">
-                    {c.photoB64 && (
-                      <img src={c.photoB64} alt="" className="w-10 h-10 rounded-full object-cover border-2 border-slate-700 flex-shrink-0" />
-                    )}
-                    {!c.photoB64 && (
-                      <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-700 flex items-center justify-center text-slate-500 flex-shrink-0">👤</div>
+              <div key={c.caseId} className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl overflow-hidden shadow-sm">
+                <div className="px-5 py-3.5 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    {c.photoB64 ? (
+                      <img src={c.photoB64} alt="" className="w-10 h-10 rounded-lg object-cover border border-[#D9E1E8] flex-shrink-0" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-lg bg-[#F4F6F8] border border-[#D9E1E8] flex items-center justify-center text-[#607D8B] flex-shrink-0">
+                        <svg className="w-5 h-5 text-[#90A4AE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
                     )}
                     <div className="min-w-0">
-                      <div className="text-xs font-black text-white font-mono uppercase truncate">{c.suspectName}</div>
-                      <div className="text-[10px] text-slate-400 font-mono mt-0.5">{c.firNumber} · {c.stationLabel}</div>
-                      <div className="text-[10px] text-slate-600 font-mono">{c.crimeType}</div>
+                      <div className="text-xs font-bold text-[#123B63] uppercase truncate">{c.suspectName}</div>
+                      <div className="text-[11px] text-[#607D8B] mt-0.5 font-medium">{c.firNumber} &bull; {c.stationLabel}</div>
+                      <div className="text-[10px] text-[#90A4AE] mt-0.5">{c.crimeType}</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className={`text-[10px] font-black px-2 py-0.5 rounded border font-mono ${wb.cls}`}>{wb.label}</span>
-                    <span className={`text-[10px] font-black px-2 py-0.5 rounded border font-mono ${severityColor(c.severity)}`}>{c.severity}</span>
-                    <span className="text-[10px] text-slate-600 font-mono">{c.incidentDate}</span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${wb.cls}`}>{wb.label}</span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${severityColor(c.severity)}`}>{c.severity}</span>
+                    <span className="text-[11px] text-[#607D8B] font-medium">{c.incidentDate}</span>
                   </div>
                 </div>
               </div>

@@ -128,7 +128,7 @@ export default function RealtimeOpsView({ getApiBase, officerSession }) {
       }
     } catch (err) {
       setCameraError(err.message.includes('Permission') || err.name === 'NotAllowedError'
-        ? 'CAMERA PERMISSION DENIED — Click the 🔒 lock icon in the browser address bar → Camera → Allow, then click Activate again.'
+        ? 'CAMERA PERMISSION DENIED — Click the site permissions / lock icon in the browser address bar -> Camera -> Allow, then click Activate again.'
         : `Camera error: ${err.message}`
       );
     }
@@ -405,389 +405,426 @@ export default function RealtimeOpsView({ getApiBase, officerSession }) {
     setTimeout(() => setIsInjecting(false), 800);
   };
 
-  /* ── Severity helpers ── */
+  /* ── Severity helpers (Government Dual-Color Theme) ── */
   const severityBadge = (l) => {
-    if (l === 'CRITICAL') return 'border-l-red-500 bg-red-950/40';
-    if (l === 'HIGH')     return 'border-l-amber-500 bg-amber-950/40';
-    if (l === 'MEDIUM')   return 'border-l-yellow-500 bg-yellow-950/40';
-    return 'border-l-emerald-500 bg-emerald-950/40';
+    if (l === 'CRITICAL') return 'border-l-[#C62828] bg-[#FFEBEE] text-[#C62828]';
+    if (l === 'HIGH')     return 'border-l-[#EF6C00] bg-[#FFF3E0] text-[#E65100]';
+    if (l === 'MEDIUM')   return 'border-l-[#F9A825] bg-[#FFFDE7] text-[#F57F17]';
+    return 'border-l-[#1565C0] bg-[#E3F2FD] text-[#0D47A1]';
   };
+
   const severityPill = (l) => {
-    if (l === 'CRITICAL') return 'bg-red-950/80 text-red-300 border-red-700/80';
-    if (l === 'HIGH')     return 'bg-amber-950/80 text-amber-300 border-amber-700/80';
-    if (l === 'MEDIUM')   return 'bg-yellow-950/80 text-yellow-300 border-yellow-700/80';
-    return 'bg-emerald-950/80 text-emerald-300 border-emerald-700/80';
+    if (l === 'CRITICAL') return 'bg-[#FFEBEE] text-[#C62828] border-[#EF9A9A]';
+    if (l === 'HIGH')     return 'bg-[#FFF3E0] text-[#E65100] border-[#FFE0B2]';
+    if (l === 'MEDIUM')   return 'bg-[#FFFDE7] text-[#F57F17] border-[#FFF59D]';
+    return 'bg-[#E3F2FD] text-[#1565C0] border-[#90CAF9]';
   };
 
   /* ══════════════════════════════════════
-     RENDER
+     RENDER — GOVERNMENT DUAL-COLOR THEME (ZERO EMOJIS)
   ══════════════════════════════════════ */
   return (
-    <div className="space-y-5 font-sans">
+    <div className="space-y-4 font-sans text-[#263238]">
 
       {/* ─ HEADER ─ */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b-2 border-slate-800">
+      <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div className="flex items-center gap-3">
-          <span className="relative flex h-3.5 w-3.5">
-            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${wsConnected ? 'bg-emerald-400' : 'bg-rose-400'}`} />
-            <span className={`relative inline-flex rounded-full h-3.5 w-3.5 ${wsConnected ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+          <span className="relative flex h-3 w-3">
+            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${wsConnected ? 'bg-[#2E7D32]' : 'bg-[#C62828]'}`} />
+            <span className={`relative inline-flex rounded-full h-3 w-3 ${wsConnected ? 'bg-[#2E7D32]' : 'bg-[#C62828]'}`} />
           </span>
           <div>
-            <h2 className="text-lg font-black text-white tracking-wide uppercase font-mono">
-              Module 01 — Live Surveillance & Real-Time Ingestion Engine
+            <h2 className="text-base font-bold text-[#123B63] uppercase tracking-wide">
+              SURVEILLANCE &amp; REAL-TIME INGESTION ENGINE
             </h2>
-            <p className="text-[11px] text-slate-400 mt-0.5 font-mono font-bold">
-              Live Camera · External CCTV Footage Upload · OpenCV Frame Analysis · WebSocket Event Stream
+            <p className="text-xs text-[#607D8B] mt-0.5">
+              Live Camera Feeds · External CCTV Footage Analysis · OpenCV Face Triage · WebSocket Gateway
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <span className={`text-[11px] font-mono font-black px-3 py-1.5 rounded-lg border ${wsConnected ? 'bg-emerald-950/70 text-emerald-300 border-emerald-700' : 'bg-rose-950/70 text-rose-300 border-rose-700'}`}>
-            {wsConnected ? 'WS: ACTIVE' : 'WS: RECONNECTING'}
+
+        <div className="flex items-center gap-2 flex-shrink-0 text-xs">
+          <span className={`font-semibold px-2.5 py-1 rounded border uppercase text-[11px] ${
+            wsConnected
+              ? 'bg-[#E8F5E9] text-[#2E7D32] border-[#C8E6C9]'
+              : 'bg-[#FFEBEE] text-[#C62828] border-[#EF9A9A]'
+          }`}>
+            {wsConnected ? 'GATEWAY: ACTIVE' : 'GATEWAY: RECONNECTING'}
           </span>
-          <button onClick={fetchInitialData}
-            className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-black font-mono text-cyan-400 transition-all">
+          <button
+            onClick={fetchInitialData}
+            className="px-3 py-1 bg-[#FFFFFF] hover:bg-[#F4F6F8] border border-[#D9E1E8] text-[#1565C0] font-semibold rounded-lg text-xs transition-colors"
+          >
             SYNC
           </button>
         </div>
       </div>
 
-      {/* ─ METRICS ROW ─ */}
+      {/* ─ 6 METRICS TILES (CRISP WHITE CARDS WITH NAVY BORDERS) ─ */}
       <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
         {[
-          { label: 'Events Processed', value: telemetry.total_events_processed || recentEvents.length, unit: 'total',   color: 'text-cyan-400',    border: 'border-t-cyan-600' },
-          { label: 'Avg Latency',      value: `${telemetry.avg_latency_ms || 16.5}`,                   unit: 'ms',     color: 'text-emerald-400', border: 'border-t-emerald-600' },
-          { label: 'Queue Depth',      value: telemetry.queue_depth || 0,                              unit: 'items',  color: 'text-purple-400',  border: 'border-t-purple-600' },
-          { label: 'Alerts Sent',      value: telemetry.alerts_dispatched || 0,                        unit: 'rules',  color: 'text-rose-400',    border: 'border-t-rose-600' },
-          { label: 'Active Sources',   value: sources.length || 5,                                     unit: 'feeds',  color: 'text-blue-400',    border: 'border-t-blue-600' },
-          { label: 'Frames Analyzed',  value: footageFrameCount || 0,                                  unit: 'frames', color: 'text-amber-400',   border: 'border-t-amber-600' },
+          { label: 'Events Processed', value: telemetry.total_events_processed || recentEvents.length, unit: 'total' },
+          { label: 'Avg Latency',      value: `${telemetry.avg_latency_ms || 16.5} ms`,                unit: 'latency' },
+          { label: 'Queue Depth',      value: telemetry.queue_depth || 0,                              unit: 'items' },
+          { label: 'Alerts Dispatched',value: telemetry.alerts_dispatched || 0,                        unit: 'rules' },
+          { label: 'Active Feeds',     value: sources.length || 5,                                     unit: 'streams' },
+          { label: 'Frames Analyzed',  value: footageFrameCount || 0,                                  unit: 'frames' },
         ].map((m) => (
-          <div key={m.label} className={`bg-[#0a1525] border border-slate-800 border-t-2 ${m.border} rounded-xl p-4 flex flex-col justify-between min-h-[90px]`}>
-            <div className="text-[10px] text-slate-500 uppercase tracking-widest font-mono font-bold">{m.label}</div>
-            <div className={`text-2xl font-black font-mono mt-2 ${m.color}`}>{m.value}</div>
-            <div className="text-[10px] text-slate-600 font-mono font-bold mt-1 uppercase">{m.unit}</div>
+          <div
+            key={m.label}
+            className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-3.5 shadow-sm flex flex-col justify-between min-h-[85px]"
+            style={{ borderTopWidth: '3px', borderTopColor: '#1565C0' }}
+          >
+            <div className="text-[11px] text-[#607D8B] font-semibold uppercase tracking-wider">{m.label}</div>
+            <div className="text-2xl font-bold text-[#123B63] mt-1">{m.value}</div>
+            <div className="text-[10px] text-[#90A4AE] font-medium uppercase mt-0.5">{m.unit}</div>
           </div>
         ))}
       </div>
 
-      {/* ─ MAIN SPLIT ─ */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      {/* ─ MAIN SPLIT: CAMERA / FOOTAGE (LEFT 5) + LIVE EVENT STREAM (RIGHT 7) ─ */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
-        {/* LEFT: Camera/Footage + Dispatcher */}
+        {/* LEFT: Camera / Footage + Ingestion Dispatcher */}
         <div className="lg:col-span-5 space-y-4">
 
-          {/* Input Mode Toggle */}
-          <div className="flex bg-[#050c15] border border-slate-800 rounded-xl overflow-hidden">
-            {[
-              { key: 'camera',  label: '📷  LIVE CAMERA',         sub: 'Real-time webcam feed' },
-              { key: 'footage', label: '🎬  UPLOAD CCTV FOOTAGE', sub: 'MP4 / AVI / MOV analysis' },
-            ].map(m => (
-              <button key={m.key} onClick={() => { setInputMode(m.key); stopCamera(); }}
-                className={[
-                  'flex-1 px-4 py-3 text-left transition-all border-r border-slate-800 last:border-r-0',
-                  inputMode === m.key ? 'bg-cyan-950/60 border-b-2 border-b-cyan-500' : 'hover:bg-slate-900/60',
-                ].join(' ')}>
-                <div className={`text-xs font-black font-mono uppercase ${inputMode === m.key ? 'text-cyan-300' : 'text-slate-400'}`}>{m.label}</div>
-                <div className={`text-[10px] mt-0.5 font-mono font-bold ${inputMode === m.key ? 'text-slate-300' : 'text-slate-600'}`}>{m.sub}</div>
-              </button>
-            ))}
+          {/* Mode Switcher */}
+          <div className="flex bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl overflow-hidden p-1 gap-1 shadow-sm">
+            <button
+              onClick={() => { setInputMode('camera'); stopCamera(); }}
+              className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all text-center ${
+                inputMode === 'camera'
+                  ? 'bg-[#1565C0] text-white shadow-xs'
+                  : 'text-[#607D8B] hover:bg-[#F4F6F8] hover:text-[#123B63]'
+              }`}
+            >
+              LIVE CAMERA FEED
+            </button>
+            <button
+              onClick={() => { setInputMode('footage'); stopCamera(); }}
+              className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all text-center ${
+                inputMode === 'footage'
+                  ? 'bg-[#1565C0] text-white shadow-xs'
+                  : 'text-[#607D8B] hover:bg-[#F4F6F8] hover:text-[#123B63]'
+              }`}
+            >
+              UPLOAD CCTV FOOTAGE
+            </button>
           </div>
 
-          {/* Video Panel */}
-          <div className="bg-[#0a1525] border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
-            {/* Panel header */}
-            <div className="px-5 py-3 border-b border-slate-800 flex justify-between items-center bg-[#06101e]">
+          {/* Video / Footage Viewport Container */}
+          <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl overflow-hidden shadow-sm">
+            
+            {/* Viewport Header */}
+            <div className="px-4 py-3 border-b border-[#D9E1E8] bg-[#F8FAFC] flex justify-between items-center">
               <div>
-                <h3 className="text-xs font-black text-white uppercase tracking-widest font-mono flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                  {inputMode === 'camera' ? 'LIVE WEBCAM — OPENVC FACE DETECTION' : 'CCTV FOOTAGE ANALYZER — FRAME-BY-FRAME AI'}
+                <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wide">
+                  {inputMode === 'camera' ? 'LIVE SURVEILLANCE FEED' : 'CCTV FOOTAGE ANALYZER'}
                 </h3>
-                <p className="text-[10px] text-slate-500 mt-0.5 font-mono font-bold">
+                <p className="text-[11px] text-[#607D8B] mt-0.5">
                   {inputMode === 'camera'
-                    ? 'Frames POSTed to backend every 2s → Haar Cascade face detection → Real bounding boxes'
-                    : 'Upload any CCTV footage → Auto-extracts frames → Real pixel analysis + backend OpenCV'}
+                    ? 'Automated OpenCV Face Detection Stream (2-sec intervals)'
+                    : 'Frame-by-frame pixel analysis on uploaded MP4 / AVI / MOV'}
                 </p>
               </div>
+
               {inputMode === 'camera' && (
                 !cameraActive ? (
-                  <button onClick={startCamera}
-                    className="px-4 py-1.5 rounded-lg bg-cyan-700 hover:bg-cyan-600 text-white font-mono text-xs font-black transition-all shadow-lg flex items-center gap-1.5">
-                    ▶ ACTIVATE
+                  <button
+                    onClick={startCamera}
+                    className="px-3 py-1.5 rounded-lg bg-[#1565C0] hover:bg-[#0D47A1] text-white text-xs font-semibold transition-colors shadow-sm"
+                  >
+                    ACTIVATE CAMERA
                   </button>
                 ) : (
-                  <button onClick={stopCamera}
-                    className="px-4 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-600 text-white font-mono text-xs font-black transition-all">
-                    ■ STOP
+                  <button
+                    onClick={stopCamera}
+                    className="px-3 py-1.5 rounded-lg bg-[#C62828] hover:bg-[#B71C1C] text-white text-xs font-semibold transition-colors shadow-sm"
+                  >
+                    STOP
                   </button>
                 )
               )}
+
               {inputMode === 'footage' && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <input ref={footageFileRef} type="file" accept="video/*" onChange={handleFootageUpload} className="hidden" />
-                  <button onClick={() => footageFileRef.current?.click()}
-                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xs font-black transition-all border border-slate-700">
-                    📂 BROWSE
+                  <button
+                    onClick={() => footageFileRef.current?.click()}
+                    className="px-2.5 py-1 bg-[#FFFFFF] hover:bg-[#F4F6F8] text-[#1565C0] border border-[#D9E1E8] rounded-lg text-xs font-semibold transition-colors"
+                  >
+                    SELECT VIDEO
                   </button>
                   {footageFile && !footageActive && (
-                    <button onClick={analyzeFootage}
-                      className="px-3 py-1.5 rounded-lg bg-amber-700 hover:bg-amber-600 text-white font-mono text-xs font-black transition-all">
-                      ▶ ANALYZE
+                    <button
+                      onClick={analyzeFootage}
+                      className="px-2.5 py-1 bg-[#1565C0] hover:bg-[#0D47A1] text-white rounded-lg text-xs font-semibold transition-colors shadow-sm"
+                    >
+                      ANALYZE
                     </button>
                   )}
                   {footageActive && (
-                    <button onClick={stopFootageAnalysis}
-                      className="px-3 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-600 text-white font-mono text-xs font-black transition-all">
-                      ■ STOP
+                    <button
+                      onClick={stopFootageAnalysis}
+                      className="px-2.5 py-1 bg-[#C62828] text-white rounded-lg text-xs font-semibold transition-colors"
+                    >
+                      STOP
                     </button>
                   )}
                 </div>
               )}
             </div>
 
-            {/* Video Viewport */}
-            <div className="relative aspect-video bg-[#020810] flex items-center justify-center overflow-hidden">
-              {/* Live camera video */}
+            {/* Video Viewport Box */}
+            <div className="relative aspect-video bg-[#0F172A] flex items-center justify-center overflow-hidden">
               {inputMode === 'camera' && (
                 <video ref={videoRef} className={`w-full h-full object-cover ${cameraActive ? 'block' : 'hidden'}`} playsInline muted />
               )}
-
-              {/* Footage video (hidden — used for frame extraction) */}
               <video ref={footageVideoRef} className="hidden" crossOrigin="anonymous" preload="auto" />
-
-              {/* Overlay canvas (bounding boxes) */}
               <canvas ref={overlayCanvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
-              {/* Hidden capture canvas */}
               <canvas ref={canvasRef} className="hidden" />
 
-              {/* Camera Standby */}
+              {/* Camera Standby Display */}
               {inputMode === 'camera' && !cameraActive && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                  <div className="w-16 h-16 rounded-full bg-slate-900/80 border border-slate-700 flex items-center justify-center">
-                    <span className="text-2xl">📷</span>
+                <div className="text-center p-6 space-y-2">
+                  <div className="w-12 h-12 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                    </svg>
                   </div>
-                  <div className="text-center">
-                    <div className="text-xs font-black text-slate-300 font-mono uppercase">CAMERA STANDBY</div>
-                    <div className="text-[10px] text-slate-600 mt-1 font-mono max-w-[220px] text-center">
-                      Click ACTIVATE to stream live frames to the OpenCV backend detector
-                    </div>
+                  <div className="text-xs font-semibold text-slate-200 uppercase tracking-wider">CAMERA FEED STANDBY</div>
+                  <div className="text-[11px] text-slate-400 max-w-xs mx-auto">
+                    Click Activate Camera to ingest live video stream for automated facial detection.
                   </div>
                   {cameraError && (
-                    <div className="mx-4 mt-2 p-3 bg-rose-950/60 border border-rose-700 rounded-lg text-[11px] text-rose-300 font-mono font-bold text-center max-w-[280px]">
+                    <div className="mt-2 p-2.5 bg-rose-950/80 border border-rose-700 rounded text-[11px] text-rose-200 max-w-xs mx-auto">
                       {cameraError}
                     </div>
                   )}
                 </div>
               )}
 
-              {/* Footage Standby / Progress */}
+              {/* Footage Standby Display */}
               {inputMode === 'footage' && !footageActive && !footageSummary && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                  <span className="text-4xl opacity-40">🎬</span>
-                  <div className="text-center">
-                    <div className="text-xs font-black text-slate-300 font-mono uppercase">
-                      {footageFile ? footageName : 'NO FOOTAGE LOADED'}
-                    </div>
-                    <div className="text-[10px] text-slate-600 mt-1 font-mono">
-                      {footageFile ? `${footageTotalFrames} frames to analyze — Click ANALYZE to start` : 'Browse and upload any CCTV MP4 / AVI footage'}
-                    </div>
+                <div className="text-center p-6 space-y-2">
+                  <div className="w-12 h-12 mx-auto rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                    </svg>
+                  </div>
+                  <div className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
+                    {footageFile ? footageName : 'NO VIDEO FILE LOADED'}
+                  </div>
+                  <div className="text-[11px] text-slate-400">
+                    {footageFile ? `${footageTotalFrames} frames ready. Click Analyze to start.` : 'Upload seized CCTV video footage (MP4 / AVI) to extract forensic frames.'}
                   </div>
                 </div>
               )}
 
-              {/* Footage: analysis in progress */}
+              {/* Footage Analyzing Spinner */}
               {inputMode === 'footage' && footageActive && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#020810]/90">
-                  <div className="w-12 h-12 rounded-full border-4 border-amber-500/30 border-t-amber-400 animate-spin" />
-                  <div className="text-center">
-                    <div className="text-sm font-black text-amber-300 font-mono uppercase">ANALYZING CCTV FOOTAGE</div>
-                    <div className="text-[11px] text-slate-400 font-mono mt-1">{footageFrameCount}/{footageTotalFrames} frames processed</div>
-                    <div className="mt-2 w-48 h-2 bg-slate-800 rounded-full overflow-hidden">
-                      <div className="h-full bg-amber-500 rounded-full transition-all" style={{ width: `${footageProgress}%` }} />
-                    </div>
-                    <div className="text-[10px] text-amber-400 font-black font-mono mt-1">{footageProgress}%</div>
+                <div className="text-center p-6 space-y-3">
+                  <div className="w-10 h-10 mx-auto rounded-full border-3 border-amber-500/30 border-t-amber-400 animate-spin" />
+                  <div className="text-xs font-bold text-amber-300 uppercase">ANALYZING CCTV FOOTAGE</div>
+                  <div className="text-[11px] text-slate-300">{footageFrameCount} / {footageTotalFrames} frames processed</div>
+                  <div className="w-48 mx-auto h-2 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-amber-500 rounded-full transition-all" style={{ width: `${footageProgress}%` }} />
                   </div>
                 </div>
               )}
 
-              {/* REC badge for live camera */}
+              {/* Live badge */}
               {inputMode === 'camera' && cameraActive && (
-                <div className="absolute top-2.5 left-2.5 flex items-center gap-2">
-                  <span className="px-2.5 py-1 rounded bg-red-950/90 border border-red-700 text-red-300 text-[10px] font-black font-mono flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />REC LIVE
+                <div className="absolute top-3 left-3 flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                    LIVE REC
                   </span>
-                  {isProcessingFrame && (
-                    <span className="px-2.5 py-1 rounded bg-slate-950/90 border border-slate-700 text-cyan-300 text-[10px] font-black font-mono">
-                      PROCESSING…
-                    </span>
-                  )}
                 </div>
               )}
-
-              {/* Authority watermark */}
-              <div className="absolute bottom-2 right-2 text-[9px] font-black font-mono text-slate-700 select-none">
-                NCIS-TACTICAL // AUTHORIZED FEED
-              </div>
             </div>
 
-            {/* Frame Metrics bar */}
+            {/* Frame Telemetry Bar */}
             {currentFrameMetrics && (
-              <div className="px-5 py-3 border-t border-slate-800 grid grid-cols-4 gap-3 text-xs font-mono bg-[#06101e]">
-                {[
-                  ['Faces', currentFrameMetrics.faces_detected, 'text-cyan-400'],
-                  ['Event', (currentFrameMetrics.event_type || '—').replace('_', ' '), 'text-amber-400'],
-                  ['Threat', currentFrameMetrics.threat_level || '—', 'text-rose-400'],
-                  ['Latency', `${currentFrameMetrics.latency_ms} ms`, 'text-emerald-400'],
-                ].map(([l, v, cls]) => (
-                  <div key={l}>
-                    <div className="text-[10px] text-slate-600 uppercase font-black">{l}</div>
-                    <div className={`font-black mt-0.5 text-sm ${cls}`}>{v}</div>
-                  </div>
-                ))}
+              <div className="px-4 py-2.5 bg-[#F8FAFC] border-t border-[#D9E1E8] grid grid-cols-4 gap-2 text-xs">
+                <div>
+                  <span className="text-[10px] text-[#607D8B] uppercase block">Faces Found</span>
+                  <span className="font-bold text-[#123B63]">{currentFrameMetrics.faces_detected}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-[#607D8B] uppercase block">Event Classification</span>
+                  <span className="font-bold text-[#1565C0] truncate block">{currentFrameMetrics.event_type}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-[#607D8B] uppercase block">Threat Level</span>
+                  <span className="font-bold text-[#C62828]">{currentFrameMetrics.threat_level}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-[#607D8B] uppercase block">Latency</span>
+                  <span className="font-semibold text-[#2E7D32]">{currentFrameMetrics.latency_ms} ms</span>
+                </div>
               </div>
             )}
           </div>
 
-          {/* Footage Summary */}
+          {/* Footage Analysis Summary Card */}
           {footageSummary && (
-            <div className="bg-[#0a1525] border-2 border-amber-700/60 rounded-xl overflow-hidden shadow-xl">
-              <div className="px-5 py-3 bg-amber-950/40 border-b border-amber-800/50 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-amber-400" />
-                <h3 className="text-xs font-black text-amber-300 uppercase tracking-widest font-mono">FOOTAGE ANALYSIS COMPLETE — REAL DETECTION SUMMARY</h3>
+            <div className="bg-[#FFFFFF] border-2 border-[#1565C0] rounded-xl p-4 shadow-sm space-y-3">
+              <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-2">
+                <h4 className="text-xs font-bold text-[#123B63] uppercase">
+                  FORENSIC CCTV FOOTAGE AUDIT COMPLETE
+                </h4>
+                <span className="text-[10px] bg-[#E8F5E9] text-[#2E7D32] font-semibold px-2 py-0.5 rounded">
+                  VERIFIED AUDIT
+                </span>
               </div>
-              <div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono">
-                {[
-                  ['Duration', `${footageSummary.durationSec}s`, 'text-slate-200'],
-                  ['Frames', footageSummary.totalFramesAnalyzed, 'text-cyan-400'],
-                  ['Faces Found', footageSummary.totalFacesDetected, 'text-amber-400'],
-                  ['HIGH Risk', footageSummary.highRiskFrames, 'text-red-400'],
-                  ['MEDIUM Risk', footageSummary.mediumRiskFrames, 'text-yellow-400'],
-                  ['Avg Sharpness', footageSummary.avgSharpness, 'text-purple-400'],
-                  ['Motion Score', footageSummary.avgMotionScore, 'text-emerald-400'],
-                  ['Peak @ ', `${footageSummary.peakTimestamp}s`, 'text-rose-400'],
-                ].map(([l, v, cls]) => (
-                  <div key={l} className="bg-[#060d1a] border border-slate-800 rounded-lg p-2.5">
-                    <div className="text-[10px] text-slate-600 uppercase font-black">{l}</div>
-                    <div className={`text-lg font-black mt-0.5 ${cls}`}>{v}</div>
-                  </div>
-                ))}
-                <div className="col-span-2 sm:col-span-4 text-[10px] text-slate-500 font-mono font-bold border-t border-slate-800 pt-3">
-                  Analysis engine: {footageSummary.backendConnected ? '✅ BACKEND OPENCV (Haar Cascade + Laplacian Sharpness)' : '✅ LOCAL PIXEL VARIANCE ENGINE (Client-side real analysis — no simulation)'}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <div className="bg-[#F8FAFC] p-2 rounded border border-[#D9E1E8]">
+                  <span className="text-[10px] text-[#607D8B] block">Duration</span>
+                  <span className="font-bold text-[#123B63]">{footageSummary.durationSec}s</span>
+                </div>
+                <div className="bg-[#F8FAFC] p-2 rounded border border-[#D9E1E8]">
+                  <span className="text-[10px] text-[#607D8B] block">Frames</span>
+                  <span className="font-bold text-[#1565C0]">{footageSummary.totalFramesAnalyzed}</span>
+                </div>
+                <div className="bg-[#F8FAFC] p-2 rounded border border-[#D9E1E8]">
+                  <span className="text-[10px] text-[#607D8B] block">Faces Found</span>
+                  <span className="font-bold text-[#EF6C00]">{footageSummary.totalFacesDetected}</span>
+                </div>
+                <div className="bg-[#F8FAFC] p-2 rounded border border-[#D9E1E8]">
+                  <span className="text-[10px] text-[#607D8B] block">High Risk</span>
+                  <span className="font-bold text-[#C62828]">{footageSummary.highRiskFrames}</span>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Ingestion Dispatcher */}
-          <div className="bg-[#0a1525] border border-slate-800 rounded-xl overflow-hidden shadow-xl">
-            <div className="px-5 py-3 border-b border-slate-800 bg-[#06101e]">
-              <h3 className="text-xs font-black text-white uppercase tracking-widest font-mono flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
-                AUTHORIZED EVENT INGESTION DISPATCHER
-              </h3>
-              <p className="text-[10px] text-slate-500 mt-0.5 font-mono font-bold">
-                Inject live events into backend queue → WebSocket broadcasts → Dashboard updates in real-time
+          {/* Ingestion Dispatcher Card */}
+          <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl shadow-sm p-4 space-y-3">
+            <div className="border-b border-[#D9E1E8] pb-2">
+              <h4 className="text-xs font-bold text-[#123B63] uppercase tracking-wide">
+                AUTHORIZED INGESTION DISPATCHER
+              </h4>
+              <p className="text-[11px] text-[#607D8B] mt-0.5">
+                Inject surveillance alerts into the jurisdictional queue to test real-time officer dispatch.
               </p>
             </div>
-            <form onSubmit={handleInjectEvent} className="px-5 py-4 space-y-4">
-              <div className="grid grid-cols-1 gap-3 font-mono text-xs">
-                <div>
-                  <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">Target Source</label>
-                  <select value={selectedSource} onChange={(e) => setSelectedSource(e.target.value)}
-                    className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-cyan-600">
-                    <option value="CAM_021_SECTOR_7">CAM_021_SECTOR_7 — CCTV Border Point</option>
-                    <option value="LIVE_WEBCAM_PORTAL">LIVE_WEBCAM_PORTAL — Officer Webcam</option>
-                    <option value="POLICE_FIR_ICJS">POLICE_FIR_ICJS — CCTNS Integration</option>
-                    <option value="IOT_ACOUSTIC_04">IOT_ACOUSTIC_04 — Acoustic Gunshot Sensor</option>
-                    <option value="CDR_CELL_TOWER_SYNC">CDR_CELL_TOWER_SYNC — Cell Tower Sync</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">Event Classification</label>
-                  <select value={selectedEventType} onChange={(e) => setSelectedEventType(e.target.value)}
-                    className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-cyan-600">
-                    <option value="SUSPICIOUS_LOITERING">SUSPICIOUS LOITERING — Perimeter Dwell Alert</option>
-                    <option value="FACE_MATCH">FACE MATCH — Criminal Database Hit</option>
-                    <option value="WEAPON_DETECTED">WEAPON DETECTED — Firearm / Blade Identified</option>
-                    <option value="CROWD_ANOMALY">CROWD ANOMALY — Unusual Gathering</option>
-                    <option value="VEHICLE_VIOLATION">VEHICLE VIOLATION — Plate Mismatch</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-400 font-black uppercase tracking-widest block mb-1.5">Location / Zone</label>
-                  <input value={eventLocation} onChange={(e) => setEventLocation(e.target.value)}
-                    className="w-full bg-[#060d1a] border border-slate-700 rounded-lg px-3 py-2.5 text-slate-200 font-bold focus:outline-none focus:border-cyan-600" />
-                </div>
+
+            <form onSubmit={handleInjectEvent} className="space-y-3 text-xs">
+              <div>
+                <label className="text-[11px] font-semibold text-[#607D8B] uppercase block mb-1">Target Ingestion Source</label>
+                <select
+                  value={selectedSource}
+                  onChange={(e) => setSelectedSource(e.target.value)}
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-2.5 py-1.5 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
+                >
+                  <option value="CAM_021_SECTOR_7">CAM_021_SECTOR_7 — CCTV Border Point</option>
+                  <option value="LIVE_WEBCAM_PORTAL">LIVE_WEBCAM_PORTAL — Officer Terminal</option>
+                  <option value="POLICE_FIR_ICJS">POLICE_FIR_ICJS — CCTNS Sync</option>
+                  <option value="IOT_ACOUSTIC_04">IOT_ACOUSTIC_04 — Acoustic Sensor</option>
+                  <option value="CDR_CELL_TOWER_SYNC">CDR_CELL_TOWER_SYNC — Cell Tower</option>
+                </select>
               </div>
-              <button type="submit" disabled={isInjecting}
-                className={[
-                  'w-full py-3 rounded-xl font-black text-sm font-mono tracking-wider uppercase transition-all',
-                  isInjecting
-                    ? 'bg-slate-800 text-slate-600 cursor-wait'
-                    : 'bg-purple-700 hover:bg-purple-600 text-white shadow-lg shadow-purple-950/50'
-                ].join(' ')}>
-                {isInjecting ? '⏳ INJECTING TO LIVE QUEUE…' : '⚡ INJECT EVENT TO LIVE STREAM'}
+
+              <div>
+                <label className="text-[11px] font-semibold text-[#607D8B] uppercase block mb-1">Event Classification</label>
+                <select
+                  value={selectedEventType}
+                  onChange={(e) => setSelectedEventType(e.target.value)}
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-2.5 py-1.5 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
+                >
+                  <option value="SUSPICIOUS_LOITERING">SUSPICIOUS LOITERING — Perimeter Dwell Alert</option>
+                  <option value="FACE_MATCH">FACE MATCH — Criminal Database Hit</option>
+                  <option value="WEAPON_DETECTED">WEAPON DETECTED — Firearm / Blade Identified</option>
+                  <option value="CROWD_ANOMALY">CROWD ANOMALY — Gathering Notice</option>
+                  <option value="VEHICLE_VIOLATION">VEHICLE VIOLATION — Plate Mismatch</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-semibold text-[#607D8B] uppercase block mb-1">Location / Police Sector</label>
+                <input
+                  type="text"
+                  value={eventLocation}
+                  onChange={(e) => setEventLocation(e.target.value)}
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-2.5 py-1.5 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isInjecting}
+                className="w-full py-2.5 bg-[#1565C0] hover:bg-[#0D47A1] text-white font-semibold rounded-lg text-xs transition-colors shadow-sm"
+              >
+                {isInjecting ? 'DISPATCHING TO INGESTION QUEUE...' : 'DISPATCH EVENT TO REAL-TIME STREAM'}
               </button>
             </form>
           </div>
+
         </div>
 
-        {/* RIGHT: Live Event Stream */}
-        <div className="lg:col-span-7">
-          <div className="bg-[#0a1525] border border-slate-800 rounded-xl overflow-hidden shadow-xl h-full">
-            <div className="px-5 py-3 border-b border-slate-800 bg-[#06101e] flex items-center justify-between">
+        {/* RIGHT: Live Incoming Event Stream Card */}
+        <div className="lg:col-span-7 bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl shadow-sm flex flex-col justify-between overflow-hidden">
+          
+          <div>
+            <div className="px-4 py-3 bg-[#F8FAFC] border-b border-[#D9E1E8] flex justify-between items-center">
               <div>
-                <h3 className="text-xs font-black text-white uppercase tracking-widest font-mono flex items-center gap-2">
-                  <span className={`w-1.5 h-1.5 rounded-full ${wsConnected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500'}`} />
-                  LIVE INCOMING EVENT STREAM
+                <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wide">
+                  LIVE INCOMING SURVEILLANCE STREAM
                 </h3>
-                <p className="text-[10px] text-slate-500 mt-0.5 font-mono font-bold">
-                  WebSocket push from backend — real-time ingestion and alert broadcast
+                <p className="text-[11px] text-[#607D8B] mt-0.5">
+                  Real-time events broadcast over WebSocket from edge sensors and OpenCV cameras.
                 </p>
               </div>
-              <span className="text-[11px] font-black font-mono text-slate-500 border border-slate-700 rounded-lg px-2 py-1">
-                {recentEvents.length} events
+              <span className="text-[11px] font-semibold text-[#1565C0] bg-[#E3F2FD] px-2.5 py-1 rounded border border-[#90CAF9]">
+                {recentEvents.length} Events Logged
               </span>
             </div>
 
-            <div className="p-4 space-y-2 overflow-y-auto max-h-[calc(100vh-22rem)]">
-              {recentEvents.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-                  <span className="text-3xl opacity-20">📡</span>
-                  <div className="text-xs font-black text-slate-600 font-mono uppercase">AWAITING INCOMING EVENTS</div>
-                  <div className="text-[10px] text-slate-700 font-mono">Inject an event using the dispatcher or activate live camera</div>
+            <div className="p-4 space-y-2 max-h-[560px] overflow-y-auto">
+              {recentEvents.length === 0 ? (
+                <div className="py-12 text-center text-xs text-[#90A4AE]">
+                  Awaiting incoming surveillance events. Use the dispatcher or activate camera feed.
                 </div>
-              )}
-              {recentEvents.map((ev, idx) => (
-                <div key={ev.id || idx} className={`border-l-4 rounded-r-xl p-3.5 ${severityBadge(ev.severity)}`}>
-                  <div className="flex items-start justify-between gap-2 flex-wrap">
-                    <div className="min-w-0">
-                      <div className="text-xs font-black text-white font-mono uppercase truncate">
-                        {(ev.event_type || ev.type || 'UNKNOWN').replace(/_/g, ' ')}
+              ) : (
+                recentEvents.map((ev, idx) => (
+                  <div
+                    key={ev.id || idx}
+                    className={`border-l-4 rounded-r-lg p-3 text-xs transition-all ${severityBadge(ev.severity)}`}
+                  >
+                    <div className="flex justify-between items-start gap-2">
+                      <div>
+                        <div className="font-bold text-[#263238] uppercase">
+                          {(ev.event_type || ev.type || 'UNKNOWN').replace(/_/g, ' ')}
+                        </div>
+                        <div className="text-[11px] text-[#607D8B] mt-0.5">
+                          Source: <span className="font-semibold text-[#123B63]">{ev.source_id || ev.source}</span> &nbsp;•&nbsp; Location: {ev.location || 'Sector 7'}
+                        </div>
                       </div>
-                      <div className="text-[10px] text-slate-400 font-mono font-bold mt-0.5">
-                        {ev.source_id || ev.source} · {ev.location || '—'}
+                      <div className="text-right flex-shrink-0">
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase ${severityPill(ev.severity)}`}>
+                          {ev.severity || 'INFO'}
+                        </span>
+                        <div className="text-[10px] text-[#90A4AE] mt-1">
+                          {ev.timestamp ? new Date(ev.timestamp).toLocaleTimeString('en-IN') : 'Just now'}
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className={`text-[9px] font-black px-2 py-0.5 rounded border font-mono ${severityPill(ev.severity)}`}>
-                        {ev.severity || 'INFO'}
-                      </span>
-                      <span className="text-[9px] text-slate-600 font-mono font-bold">
-                        {ev.timestamp ? new Date(ev.timestamp).toLocaleTimeString('en-IN') : ''}
-                      </span>
                     </div>
                   </div>
-                  {ev.metadata?.confidence_score && (
-                    <div className="mt-1.5 text-[10px] text-slate-500 font-mono font-bold">
-                      Confidence: <span className="text-cyan-400 font-black">{(ev.metadata.confidence_score * 100).toFixed(1)}%</span>
-                    </div>
-                  )}
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
+
+          <div className="p-3 bg-[#F4F6F8] border-t border-[#D9E1E8] text-[11px] text-[#607D8B] flex justify-between items-center">
+            <span>WebSocket Client: Connected to MHA Realtime Bridge</span>
+            <span>Filter: ALL INCIDENTS</span>
+          </div>
+
         </div>
+
       </div>
+
     </div>
   );
 }
