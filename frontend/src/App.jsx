@@ -6,6 +6,7 @@ import RealtimeOpsView from './components/RealtimeOpsView';
 import EdgeHardwareConsole from './components/EdgeHardwareConsole';
 import GovernmentAuthPortal from './components/GovernmentAuthPortal';
 import IntroSplash from './components/IntroSplash';
+import CrossStationRegistry from './components/CrossStationRegistry';
 import { AshokaLionCapital, IndianFlag } from './components/NationalEmblems';
 
 
@@ -129,13 +130,14 @@ export default function App() {
   if (appStage === 'intro') return <IntroSplash onDone={handleIntroDone} />;
   if (appStage === 'login') return <GovernmentAuthPortal onAuthenticate={handleAuthenticate} />;
 
-  /* ── Navigation modules (5 operational modules — pure hardware controller, zero simulations) ── */
+  /* ── Navigation modules ── */
   const navItems = [
-    { id:'realtime',     code:'MOD-01', label:'Live Surveillance',  sub:'Real-Time Camera & Event Ingestion', color:'emerald', live:true },
-    { id:'console',      code:'MOD-02', label:'Digital Forensics',  sub:'Physical Drive Carve & Analysis',    color:'cyan' },
-    { id:'intelligence', code:'MOD-03', label:'Syndicate Intel',    sub:'GNN Network Graph Analysis',         color:'purple' },
-    { id:'emergency',    code:'MOD-04', label:'ERSS Patrol Mesh',   sub:'Dial 112 Rapid Dispatch System',     color:'red' },
-    { id:'hardware',     code:'MOD-05', label:'Tactical Hardware',  sub:'Port Switch & Data Retrieval',       color:'indigo' },
+    { id:'realtime',     code:'MOD-01', label:'LIVE SURVEILLANCE',       sub:'Camera · CCTV Footage · Events',   color:'emerald', live:true },
+    { id:'console',      code:'MOD-02', label:'DIGITAL FORENSICS',       sub:'Physical Drive Carve & Analysis',   color:'cyan' },
+    { id:'intelligence', code:'MOD-03', label:'SYNDICATE INTEL',         sub:'GNN Network & NLP Graph Analysis',  color:'purple' },
+    { id:'emergency',    code:'MOD-04', label:'ERSS PATROL MESH',        sub:'Dial 112 Rapid Dispatch',           color:'red' },
+    { id:'hardware',     code:'MOD-05', label:'TACTICAL HARDWARE',       sub:'Port Switch & Data Retrieval',      color:'indigo' },
+    { id:'crossstation', code:'MOD-06', label:'CROSS-STATION REGISTRY',  sub:'File Case · Search Face · History', color:'amber' },
   ];
 
   const colorMap = {
@@ -144,6 +146,7 @@ export default function App() {
     purple:  { active:'border-l-purple-500 bg-purple-950/60 text-purple-200',    badge:'bg-purple-950 text-purple-400 border-purple-700' },
     red:     { active:'border-l-red-500 bg-red-950/60 text-red-200',             badge:'bg-red-950 text-red-400 border-red-700' },
     indigo:  { active:'border-l-indigo-500 bg-indigo-950/60 text-indigo-200',    badge:'bg-indigo-950 text-indigo-400 border-indigo-700' },
+    amber:   { active:'border-l-amber-500 bg-amber-950/60 text-amber-200',       badge:'bg-amber-950 text-amber-400 border-amber-700' },
   };
 
   return (
@@ -172,9 +175,9 @@ export default function App() {
                   Ministry of Home Affairs &nbsp;•&nbsp; I4C &nbsp;•&nbsp; BPR&D
                 </span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white leading-tight font-mono uppercase">
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight font-mono uppercase">
                 NCIS-TACTICAL
-                <span className="hidden sm:inline text-slate-500 font-light text-sm ml-3 tracking-normal normal-case">
+                <span className="hidden sm:inline text-slate-400 font-bold text-sm ml-3 tracking-normal normal-case">
                   National Cyber Crime Investigation Platform
                 </span>
               </h1>
@@ -263,8 +266,8 @@ export default function App() {
                       </span>
                     )}
                   </div>
-                  <div className={`text-xs font-bold uppercase tracking-wide font-mono ${isActive ? '' : 'text-slate-400'}`}>{item.label}</div>
-                  <div className={`text-[10px] mt-0.5 ${isActive ? 'text-slate-400' : 'text-slate-600'}`}>{item.sub}</div>
+                  <div className={`text-xs font-black uppercase tracking-wider font-mono ${isActive ? '' : 'text-slate-400'}`}>{item.label}</div>
+                  <div className={`text-[10px] mt-0.5 font-bold ${isActive ? 'text-slate-400' : 'text-slate-600'}`}>{item.sub}</div>
                 </button>
               );
             })}
@@ -278,6 +281,8 @@ export default function App() {
           <RealtimeOpsView getApiBase={getApiBase} officerSession={officerSession} />
         ) : activeCore === 'hardware' ? (
           <EdgeHardwareConsole officerSession={officerSession} onDataRetrieved={handleHardwareDataRetrieved} />
+        ) : activeCore === 'crossstation' ? (
+          <CrossStationRegistry officerSession={officerSession} />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left 8 Columns: Active Module */}
