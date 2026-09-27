@@ -92,32 +92,35 @@ export default function GovernmentAuthPortal({ onAuthenticate }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 font-sans relative overflow-hidden">
-      {/* Background Subtle Watermark Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30 pointer-events-none"></div>
+    <div className="min-h-screen bg-[#F4F6F8] text-[#263238] flex items-center justify-center p-4 font-sans relative">
+      {/* Sovereignty Tricolor Top Ribbon */}
+      <div className="w-full h-1.5 bg-[#FF9933] absolute top-0 left-0 right-0 z-20 flex">
+        <div className="w-1/3 bg-[#FF9933] h-full" />
+        <div className="w-1/3 bg-white h-full" />
+        <div className="w-1/3 bg-[#138808] h-full" />
+      </div>
 
-      <div className="max-w-4xl w-full bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl backdrop-blur-xl p-6 sm:p-10 relative z-10 space-y-6">
+      <div className="max-w-4xl w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-2xl shadow-md p-6 sm:p-10 relative z-10 space-y-6 my-6">
         
         {/* National Emblem & Institutional Header */}
-        <div className="text-center space-y-3 border-b border-slate-800/80 pb-6">
-          {/* Official Emblem of India with Indian Flag Overlay Mask */}
+        <div className="text-center space-y-3 border-b border-[#D9E1E8] pb-6">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5 sm:gap-6">
-            <div className="p-1 rounded-full bg-slate-950/90 border border-amber-500/60 shadow-2xl shadow-amber-950/50">
-              <AshokaLionCapital className="w-20 h-20 sm:w-24 sm:h-24" />
+            <div className="p-1 rounded-full bg-white border-2 border-[#D9E1E8] shadow-sm flex-shrink-0">
+              <AshokaLionCapital className="w-20 h-20 sm:w-22 sm:h-22 text-[#123B63]" />
             </div>
             
             <div className="text-center sm:text-left">
-              <div className="text-[11px] font-mono tracking-widest text-amber-400 uppercase font-bold flex items-center justify-center sm:justify-start gap-2">
-                <span>भारत सरकार • GOVERNMENT OF INDIA</span>
-                <span className="text-slate-500">•</span>
-                <span>गृह मंत्रालय • MHA</span>
+              <div className="text-xs font-semibold text-[#123B63] uppercase tracking-wider flex items-center justify-center sm:justify-start gap-2">
+                <span>भारत सरकार &bull; GOVERNMENT OF INDIA</span>
+                <span className="text-[#90A4AE]">&bull;</span>
+                <span>गृह मंत्रालय &bull; MHA</span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold font-mono tracking-tight text-white mt-1">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#123B63] mt-1">
                 INDIAN CYBER CRIME COORDINATION CENTRE (I4C)
               </h1>
-              <div className="text-xs text-slate-400 font-mono flex items-center justify-center sm:justify-start gap-2 mt-1">
+              <div className="text-xs text-[#607D8B] flex items-center justify-center sm:justify-start gap-2 mt-1">
                 <span>NATIONAL CYBER CRIME &amp; FORENSIC INVESTIGATION SYSTEM (NCIS)</span>
-                <span className="text-[10px] bg-red-950/80 text-red-400 border border-red-800 px-2 py-0.5 rounded font-bold">
+                <span className="text-[10px] bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A] px-2 py-0.5 rounded font-bold uppercase">
                   RESTRICTED // SECRET
                 </span>
               </div>
@@ -125,14 +128,14 @@ export default function GovernmentAuthPortal({ onAuthenticate }) {
           </div>
 
           {/* Statutory Law Warning */}
-          <div className="bg-red-950/30 border border-red-800/60 rounded-xl p-3 text-[11px] text-red-200/90 font-mono text-left space-y-1">
-            <div className="font-bold flex items-center gap-2 text-red-400">
-              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-[#FFEBEE] border border-[#EF9A9A] rounded-xl p-3 text-xs text-[#C62828] text-left space-y-1">
+            <div className="font-bold flex items-center gap-2">
+              <svg className="w-4 h-4 shrink-0 text-[#C62828]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
               </svg>
-              OFFICIAL SECRETS ACT 1923 & SECTION 66F IT ACT 2000 (CYBER TERRORISM)
+              OFFICIAL SECRETS ACT 1923 &amp; SECTION 66F IT ACT 2000 (CYBER TERRORISM)
             </div>
-            <p className="text-[10.5px] leading-relaxed text-red-300/80">
+            <p className="text-[11px] leading-relaxed text-[#B71C1C]">
               Unauthorized access, tampering, or dissemination of classified forensic intelligence from this terminal is a non-bailable offense punishable by life imprisonment. Keystrokes, terminal fingerprints, and cryptographic handshakes are subject to continuous judicial audit.
             </p>
           </div>
@@ -140,64 +143,64 @@ export default function GovernmentAuthPortal({ onAuthenticate }) {
 
         {/* Quick Demo Credentials Presets */}
         <div className="space-y-2">
-          <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex justify-between items-center">
+          <div className="text-xs font-semibold text-[#607D8B] uppercase tracking-wider flex justify-between items-center">
             <span>Select Authorized Investigation Profile:</span>
-            <span className="text-[10px] text-cyan-400 font-semibold">1-Click Fast Verification</span>
+            <span className="text-[11px] text-[#1565C0] font-bold">1-Click Fast Verification</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
             {presets.map((p, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => applyPreset(p)}
-                className={`p-2.5 rounded-xl border text-left transition-all ${
+                className={`p-3 rounded-lg border text-left transition-all ${
                   officerId === p.id
-                    ? 'bg-cyan-950/80 border-cyan-500 text-cyan-200 shadow-md shadow-cyan-950/50'
-                    : 'bg-slate-950/80 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                    ? 'bg-[#E3F2FD] border-2 border-[#1565C0] text-[#123B63] shadow-xs'
+                    : 'bg-[#F8FAFC] border-[#D9E1E8] text-[#607D8B] hover:border-[#90CAF9] hover:bg-white'
                 }`}
               >
-                <div className="font-bold text-slate-200 truncate">{p.name}</div>
-                <div className="text-[10px] text-cyan-400 truncate mt-0.5">{p.id}</div>
-                <div className="text-[10px] text-slate-500 truncate">{p.city}</div>
+                <div className="font-bold text-xs text-[#123B63] truncate">{p.name}</div>
+                <div className="text-[11px] text-[#1565C0] font-mono mt-0.5 truncate">{p.id}</div>
+                <div className="text-[10px] text-[#607D8B] truncate mt-0.5">{p.city}</div>
               </button>
             ))}
           </div>
         </div>
 
         {/* Authentication Form */}
-        <form onSubmit={handleLogin} className="space-y-4 font-mono text-xs">
+        <form onSubmit={handleLogin} className="space-y-4 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             
             {/* Officer ID & Designation */}
             <div className="space-y-1.5">
-              <label className="text-slate-400 text-[11px]">Officer Service ID / Police PIN:</label>
+              <label className="text-[#607D8B] text-xs font-semibold uppercase tracking-wide block">Officer Service ID / Police PIN:</label>
               <input
                 type="text"
                 value={officerId}
                 onChange={(e) => setOfficerId(e.target.value)}
                 required
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-100 font-bold focus:outline-none focus:border-cyan-500"
+                className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3.5 py-2.5 text-[#263238] font-bold focus:outline-none focus:border-[#1565C0]"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-slate-400 text-[11px]">Officer Full Name & Designation:</label>
+              <label className="text-[#607D8B] text-xs font-semibold uppercase tracking-wide block">Officer Full Name &amp; Designation:</label>
               <input
                 type="text"
                 value={officerName}
                 onChange={(e) => setOfficerName(e.target.value)}
                 required
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-slate-100 font-bold focus:outline-none focus:border-cyan-500"
+                className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3.5 py-2.5 text-[#263238] font-bold focus:outline-none focus:border-[#1565C0]"
               />
             </div>
 
             {/* Department & Agency */}
             <div className="space-y-1.5">
-              <label className="text-slate-400 text-[11px]">Law Enforcement Agency / Directorate:</label>
+              <label className="text-[#607D8B] text-xs font-semibold uppercase tracking-wide block">Law Enforcement Agency / Directorate:</label>
               <select
                 value={agency}
                 onChange={(e) => setAgency(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500"
+                className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2.5 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
               >
                 <option value="Indian Cyber Crime Coordination Centre (I4C)">Indian Cyber Crime Coordination Centre (I4C) - MHA</option>
                 <option value="State Cyber Crime Police Station (CID Cyber Cell)">State Cyber Crime Police Station (CID Cyber Cell)</option>
@@ -210,27 +213,27 @@ export default function GovernmentAuthPortal({ onAuthenticate }) {
 
             {/* Operational Desk / Branch */}
             <div className="space-y-1.5">
-              <label className="text-slate-400 text-[11px]">Operational Division / Desk:</label>
+              <label className="text-[#607D8B] text-xs font-semibold uppercase tracking-wide block">Operational Division / Desk:</label>
               <select
                 value={branch}
                 onChange={(e) => setBranch(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500"
+                className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2.5 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
               >
-                <option value="Special Investigation Team (SIT) - Financial Mule & Hawala Ring">SIT - Financial Mule & Hawala Ring</option>
-                <option value="Darknet & Crypto Threat Analytics Unit">Darknet & Crypto Threat Analytics Unit</option>
-                <option value="Digital Forensics & On-Scene Physical Drive Carving Wing">Digital Forensics & Physical Drive Carving Wing</option>
-                <option value="GNN Syndicate & Organized Crime Cartel Desk">GNN Syndicate & Organized Crime Cartel Desk</option>
+                <option value="Special Investigation Team (SIT) - Financial Mule & Hawala Ring">SIT - Financial Mule &amp; Hawala Ring</option>
+                <option value="Darknet & Crypto Threat Analytics Unit">Darknet &amp; Crypto Threat Analytics Unit</option>
+                <option value="Digital Forensics & On-Scene Physical Drive Carving Wing">Digital Forensics &amp; Physical Drive Carving Wing</option>
+                <option value="GNN Syndicate & Organized Crime Cartel Desk">GNN Syndicate &amp; Organized Crime Cartel Desk</option>
                 <option value="Dial 112 ERSS Interceptor Mesh Command">Dial 112 ERSS Interceptor Mesh Command</option>
               </select>
             </div>
 
             {/* Jurisdiction City */}
             <div className="space-y-1.5">
-              <label className="text-slate-400 text-[11px]">Station Jurisdiction & City:</label>
+              <label className="text-[#607D8B] text-xs font-semibold uppercase tracking-wide block">Station Jurisdiction &amp; City:</label>
               <select
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500"
+                className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3 py-2.5 text-[#263238] font-medium focus:outline-none focus:border-[#1565C0]"
               >
                 <option value="New Delhi HQ (North Block)">New Delhi HQ (North Block / Central Command)</option>
                 <option value="Mumbai (Maharashtra State Cyber HQ, BKC)">Mumbai (Maharashtra State Cyber HQ, BKC)</option>
@@ -239,69 +242,69 @@ export default function GovernmentAuthPortal({ onAuthenticate }) {
                 <option value="Kolkata (CID West Bengal Cyber Wing)">Kolkata (CID West Bengal Cyber Wing)</option>
                 <option value="Chennai (State Cyber Crime Division)">Chennai (State Cyber Crime Division)</option>
                 <option value="Ahmedabad (Gujarat Cyber Crime Police Station)">Ahmedabad (Gujarat Cyber Crime Police Station)</option>
-                <option value="Jammu & Kashmir (Tactical Border Cyber Cell)">Jammu & Kashmir (Tactical Border Cyber Cell)</option>
+                <option value="Jammu & Kashmir (Tactical Border Cyber Cell)">Jammu &amp; Kashmir (Tactical Border Cyber Cell)</option>
               </select>
             </div>
 
             {/* Cryptographic Key Token */}
             <div className="space-y-1.5">
-              <label className="text-slate-400 text-[11px]">Hardware Token / 2FA Cryptographic Key:</label>
+              <label className="text-[#607D8B] text-xs font-semibold uppercase tracking-wide block">Hardware Token / 2FA Cryptographic Key:</label>
               <input
                 type="password"
                 value={securityToken}
                 onChange={(e) => setSecurityToken(e.target.value)}
                 required
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-cyan-400 font-mono tracking-widest focus:outline-none focus:border-cyan-500"
+                className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg px-3.5 py-2.5 text-[#1565C0] font-mono tracking-widest focus:outline-none focus:border-[#1565C0]"
               />
             </div>
           </div>
 
           {/* Verification Progress Modal / Strip */}
           {isVerifying && (
-            <div className="bg-slate-950 border border-cyan-800/80 rounded-2xl p-4 space-y-2">
-              <div className="flex justify-between items-center text-[11px] text-cyan-300">
+            <div className="bg-[#F8FAFC] border border-[#D9E1E8] rounded-xl p-4 space-y-2">
+              <div className="flex justify-between items-center text-xs text-[#1565C0] font-semibold">
                 <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                  <span className="w-2 h-2 rounded-full bg-[#1565C0] animate-ping"></span>
                   AUTHENTICATING WITH CENTRAL NATIONAL GRID...
                 </span>
                 <span className="font-bold">{verifyStep + 1} / {verificationSteps.length}</span>
               </div>
-              <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
+              <div className="w-full bg-[#E0E0E0] rounded-full h-2 overflow-hidden border border-[#D9E1E8]">
                 <div
-                  className="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full transition-all duration-300"
+                  className="bg-[#1565C0] h-full transition-all duration-300"
                   style={{ width: `${((verifyStep + 1) / verificationSteps.length) * 100}%` }}
                 ></div>
               </div>
-              <p className="text-[10px] text-slate-400 italic">
+              <p className="text-[11px] text-[#607D8B] italic">
                 &gt; {verificationSteps[verifyStep]}
               </p>
             </div>
           )}
 
-          {/* Submit Button */}
+          {/* Submit Button (Solid Government Navy/Blue, No Gradients) */}
           <button
             type="submit"
             disabled={isVerifying}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 via-cyan-600 to-blue-600 hover:from-emerald-500 hover:to-blue-500 text-white font-bold uppercase tracking-wider text-xs shadow-xl shadow-cyan-950/50 transition-all border border-cyan-400/40 flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl bg-[#1565C0] hover:bg-[#0D47A1] text-white font-bold uppercase tracking-wider text-xs shadow-sm transition-colors flex items-center justify-center gap-2"
           >
             {isVerifying ? (
               <span>ESTABLISHING ENCRYPTED TERMINAL LINK...</span>
             ) : (
               <>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                 </svg>
-                <span>VERIFY CREDENTIALS & INITIALIZE NCIS-TACTICAL TERMINAL</span>
+                <span>VERIFY CREDENTIALS &amp; INITIALIZE NCIS-TACTICAL TERMINAL</span>
               </>
             )}
           </button>
         </form>
 
         {/* Footer Audit Protocol */}
-        <div className="border-t border-slate-800/80 pt-4 flex flex-col sm:flex-row justify-between items-center text-[10px] font-mono text-slate-500 gap-2">
+        <div className="border-t border-[#D9E1E8] pt-4 flex flex-col sm:flex-row justify-between items-center text-xs text-[#607D8B] gap-2">
           <span>PORTAL ID: I4C-NCIS-IND-2026-V3.4</span>
-          <span>STATUTORY AUDIT: BNS 2023 SEC 63 & BSA SEC 65B CERTIFIED</span>
-          <span className="text-emerald-400 font-bold">MHA SECURE NODE ONLINE</span>
+          <span>STATUTORY AUDIT: BNS 2023 SEC 63 &amp; BSA SEC 65B CERTIFIED</span>
+          <span className="text-[#2E7D32] font-semibold">MHA SECURE NODE ONLINE</span>
         </div>
 
       </div>
