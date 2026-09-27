@@ -210,101 +210,101 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
   };
 
   const capabilities = [
-    { code: 'GNN', title: 'GNN Link Prediction', desc: 'Deep Graph Neural Network topology & multi-hop syndicate linker', metric: '98.6% Acc', color: 'text-red-400 border-red-800 bg-red-950/40' },
-    { code: 'KPG', title: 'Kingpin Isolation', desc: 'Eigenvector & Betweenness Centrality ranking', metric: '0.964 Rank', color: 'text-purple-400 border-purple-800 bg-purple-950/40' },
-    { code: 'WPN', title: 'Weapons Detection', desc: 'Handguns, rifles, knives, explosives', metric: '96.4% mAP', color: 'text-red-400 border-red-800 bg-red-950/40' },
-    { code: 'NAR', title: 'Narcotics Classifier', desc: 'Drug packaging, pills, powders', metric: '91.8% mAP', color: 'text-amber-400 border-amber-800 bg-amber-950/40' },
-    { code: 'FAC', title: 'Face Embedding', desc: '128D Facial vector embedding match', metric: '98.6% Prec', color: 'text-cyan-400 border-cyan-800 bg-cyan-950/40' },
-    { code: 'DOC', title: 'Document OCR', desc: 'IDs, passports, contracts, receipts', metric: '92.5% mAP', color: 'text-blue-400 border-blue-800 bg-blue-950/40' },
-    { code: 'NLP', title: 'Chat NLP Parser', desc: 'Threat keywords, drug trade, fraud', metric: '89.7% F1', color: 'text-emerald-400 border-emerald-800 bg-emerald-950/40' },
-    { code: 'TSA', title: 'Timestamp Audit', desc: 'EXIF vs MACB conflict audit', metric: '96.8% AUC', color: 'text-purple-400 border-purple-800 bg-purple-950/40' },
-    { code: 'CSH', title: 'Currency & Cash', desc: 'Large cash bundles & Hawala logs', metric: '88.3% mAP', color: 'text-amber-400 border-amber-800 bg-amber-950/40' },
-    { code: 'ANPR', title: 'License Plates', desc: 'Vehicle plate OCR from photos', metric: '93.1% Acc', color: 'text-slate-300 border-slate-700 bg-slate-900' }
+    { code: 'GNN', title: 'GNN Link Prediction', desc: 'Deep Graph Neural Network topology & multi-hop syndicate linker', metric: '98.6% Acc', color: 'text-[#C62828] border-[#EF9A9A] bg-[#FFEBEE]' },
+    { code: 'KPG', title: 'Kingpin Isolation', desc: 'Eigenvector & Betweenness Centrality ranking', metric: '0.964 Rank', color: 'text-[#1565C0] border-[#90CAF9] bg-[#E3F2FD]' },
+    { code: 'WPN', title: 'Weapons Detection', desc: 'Handguns, rifles, knives, explosives', metric: '96.4% mAP', color: 'text-[#C62828] border-[#EF9A9A] bg-[#FFEBEE]' },
+    { code: 'NAR', title: 'Narcotics Classifier', desc: 'Drug packaging, pills, powders', metric: '91.8% mAP', color: 'text-[#E65100] border-[#FFE0B2] bg-[#FFF3E0]' },
+    { code: 'FAC', title: 'Face Embedding', desc: '128D Facial vector embedding match', metric: '98.6% Prec', color: 'text-[#1565C0] border-[#90CAF9] bg-[#E3F2FD]' },
+    { code: 'DOC', title: 'Document OCR', desc: 'IDs, passports, contracts, receipts', metric: '92.5% mAP', color: 'text-[#123B63] border-[#B0BEC5] bg-[#ECEFF1]' },
+    { code: 'NLP', title: 'Chat NLP Parser', desc: 'Threat keywords, drug trade, fraud', metric: '89.7% F1', color: 'text-[#2E7D32] border-[#C8E6C9] bg-[#E8F5E9]' },
+    { code: 'TSA', title: 'Timestamp Audit', desc: 'EXIF vs MACB conflict audit', metric: '96.8% AUC', color: 'text-[#1565C0] border-[#90CAF9] bg-[#E3F2FD]' },
+    { code: 'CSH', title: 'Currency & Cash', desc: 'Large cash bundles & Hawala logs', metric: '88.3% mAP', color: 'text-[#E65100] border-[#FFE0B2] bg-[#FFF3E0]' },
+    { code: 'ANPR', title: 'License Plates', desc: 'Vehicle plate OCR from photos', metric: '93.1% Acc', color: 'text-[#123B63] border-[#B0BEC5] bg-[#ECEFF1]' }
   ];
 
   return (
-    <div className="space-y-5 font-sans">
+    <div className="space-y-4 font-sans text-[#263238]">
       {/* Top Header & Server Telemetry */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 shadow-xl font-mono">
+      <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 shadow-sm">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
-              CRIMINAL SYNDICATE & ENTITY GRAPH ANALYTICS (GNN-CORE) | Multi-Source Intelligence Engine
+            <span className="w-2.5 h-2.5 rounded-full bg-[#2E7D32] animate-pulse"></span>
+            <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
+              CRIMINAL SYNDICATE &amp; ENTITY GRAPH ANALYTICS (GNN-CORE) | Multi-Source Intelligence Engine
             </h3>
           </div>
-          <p className="text-[11px] text-slate-400 font-sans mt-0.5">
-            Cloud-Connected Real-Time GNN Network Analysis System with Government Warrant Extension & Tactical Hardware Bridge.
+          <p className="text-xs text-[#607D8B] mt-0.5">
+            Cloud-Connected Real-Time GNN Network Analysis System with Government Warrant Extension &amp; Tactical Hardware Bridge.
           </p>
         </div>
 
         {/* Real-Time Server Pill */}
-        <div className="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-emerald-900/60 text-[11px]">
-          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        <div className="flex items-center gap-2 bg-[#F8FAFC] px-3 py-1.5 rounded-lg border border-[#D9E1E8] text-xs">
+          <span className="text-[#2E7D32] font-semibold flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D32]"></span>
             LIVE SERVER REST API
           </span>
-          <span className="text-slate-500">|</span>
-          <span className="text-cyan-400 font-bold">{networkData?.total_nodes || 4} ACTIVE NODES</span>
-          <span className="text-slate-500">|</span>
-          <span className="text-slate-400 text-[10px]">{serverTimestamp ? new Date(serverTimestamp).toLocaleTimeString() : 'CONNECTED'}</span>
+          <span className="text-[#D9E1E8]">|</span>
+          <span className="text-[#1565C0] font-bold">{networkData?.total_nodes || 4} ACTIVE NODES</span>
+          <span className="text-[#D9E1E8]">|</span>
+          <span className="text-[#607D8B] text-[11px]">{serverTimestamp ? new Date(serverTimestamp).toLocaleTimeString('en-IN') : 'CONNECTED'}</span>
         </div>
       </div>
 
       {/* Sub Navigation Bar */}
-      <div className="flex flex-wrap bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs font-mono gap-1">
+      <div className="flex flex-wrap bg-[#FFFFFF] p-1.5 rounded-xl border border-[#D9E1E8] text-xs gap-1 shadow-xs">
         <button
           onClick={() => setSubTab('criminal_network_graph')}
-          className={`px-3 py-2 rounded-lg transition-all ${
-            subTab === 'criminal_network_graph' ? 'bg-purple-950 text-purple-300 border border-purple-800 font-bold' : 'text-slate-400 hover:text-slate-200'
+          className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+            subTab === 'criminal_network_graph' ? 'bg-[#1565C0] text-white shadow-xs' : 'text-[#607D8B] hover:text-[#123B63] hover:bg-[#F4F6F8]'
           }`}
         >
           1. Real-Time Network Graph
         </button>
         <button
           onClick={() => setSubTab('realtime_ingestion')}
-          className={`px-3 py-2 rounded-lg transition-all ${
-            subTab === 'realtime_ingestion' ? 'bg-purple-950 text-purple-300 border border-purple-800 font-bold' : 'text-slate-400 hover:text-slate-200'
+          className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+            subTab === 'realtime_ingestion' ? 'bg-[#1565C0] text-white shadow-xs' : 'text-[#607D8B] hover:text-[#123B63] hover:bg-[#F4F6F8]'
           }`}
         >
-          2. Live Ingestion & NLP NER
+          2. Live Ingestion &amp; NLP NER
         </button>
         <button
           onClick={() => setSubTab('government_warrant')}
-          className={`px-3 py-2 rounded-lg transition-all ${
-            subTab === 'government_warrant' ? 'bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold' : 'text-slate-400 hover:text-slate-200'
+          className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+            subTab === 'government_warrant' ? 'bg-[#1565C0] text-white shadow-xs' : 'text-[#607D8B] hover:text-[#123B63] hover:bg-[#F4F6F8]'
           }`}
         >
-          3. Government Warrant & BNS 63
+          3. Government Warrant &amp; BNS 63
         </button>
         <button
           onClick={() => setSubTab('hardware_extension')}
-          className={`px-3 py-2 rounded-lg transition-all ${
-            subTab === 'hardware_extension' ? 'bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold' : 'text-slate-400 hover:text-slate-200'
+          className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+            subTab === 'hardware_extension' ? 'bg-[#1565C0] text-white shadow-xs' : 'text-[#607D8B] hover:text-[#123B63] hover:bg-[#F4F6F8]'
           }`}
         >
-          4. Tactical Hardware Extension (Future)
+          4. Tactical Hardware Extension
         </button>
         <button
           onClick={() => setSubTab('yolo_gallery')}
-          className={`px-3 py-2 rounded-lg transition-all ${
-            subTab === 'yolo_gallery' ? 'bg-purple-950 text-purple-300 border border-purple-800 font-bold' : 'text-slate-400 hover:text-slate-200'
+          className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+            subTab === 'yolo_gallery' ? 'bg-[#1565C0] text-white shadow-xs' : 'text-[#607D8B] hover:text-[#123B63] hover:bg-[#F4F6F8]'
           }`}
         >
           YOLO Evidence ({evidenceItems.length})
         </button>
         <button
           onClick={() => setSubTab('agent_trace')}
-          className={`px-3 py-2 rounded-lg transition-all ${
-            subTab === 'agent_trace' ? 'bg-purple-950 text-purple-300 border border-purple-800 font-bold' : 'text-slate-400 hover:text-slate-200'
+          className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+            subTab === 'agent_trace' ? 'bg-[#1565C0] text-white shadow-xs' : 'text-[#607D8B] hover:text-[#123B63] hover:bg-[#F4F6F8]'
           }`}
         >
           Agentic AI Trace
         </button>
         <button
           onClick={() => setSubTab('ai_matrix')}
-          className={`px-3 py-2 rounded-lg transition-all ${
-            subTab === 'ai_matrix' ? 'bg-purple-950 text-purple-300 border border-purple-800 font-bold' : 'text-slate-400 hover:text-slate-200'
+          className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+            subTab === 'ai_matrix' ? 'bg-[#1565C0] text-white shadow-xs' : 'text-[#607D8B] hover:text-[#123B63] hover:bg-[#F4F6F8]'
           }`}
         >
           10 AI Capabilities
@@ -313,16 +313,16 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
 
       {/* SUBTAB 1: REAL-TIME CRIMINAL NETWORK GRAPH */}
       {subTab === 'criminal_network_graph' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-5 font-mono">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4 font-sans text-[#263238]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#D9E1E8] pb-3">
             <div>
-              <h4 className="text-xs font-bold text-purple-300 uppercase tracking-wider flex items-center gap-2">
-                <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <h4 className="text-xs font-bold text-[#123B63] uppercase tracking-wider flex items-center gap-2">
+                <svg className="w-4 h-4 text-[#1565C0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                SPECTRAL GCN CRIMINAL TOPOLOGY & CENTRALITY RANKING (LIVE REST API)
+                SPECTRAL GCN CRIMINAL TOPOLOGY &amp; CENTRALITY RANKING (LIVE REST API)
               </h4>
-              <p className="text-[11px] text-slate-400 font-sans mt-0.5">
+              <p className="text-xs text-[#607D8B] mt-0.5">
                 Real-time multi-source graph linking suspects, FIRs, Hawala wallets, and cell towers. Click any node to inspect dossier.
               </p>
             </div>
@@ -330,14 +330,14 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowAddModal(true)}
-                className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-bold transition-all shadow-md"
+                className="px-3 py-1.5 bg-[#1565C0] hover:bg-[#0D47A1] text-white rounded-lg text-xs font-semibold transition-colors shadow-sm"
               >
                 + Add Suspect Node
               </button>
               <button
                 onClick={fetchLiveNetwork}
                 disabled={isLoadingNetwork}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-bold border border-slate-700 transition-all"
+                className="px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#F4F6F8] text-[#123B63] rounded-lg text-xs font-semibold border border-[#D9E1E8] transition-colors shadow-xs"
               >
                 {isLoadingNetwork ? 'SYNCING...' : 'Refresh Graph'}
               </button>
@@ -351,79 +351,79 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
                 <button
                   key={node.id}
                   onClick={() => inspectNode(node.id)}
-                  className={`p-3 rounded-xl border text-left transition-all ${
+                  className={`p-3 rounded-lg border text-left transition-all ${
                     selectedNode === node.id
-                      ? 'border-cyan-500 bg-cyan-950/80 text-cyan-200 ring-1 ring-cyan-500'
-                      : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700'
+                      ? 'border-2 border-[#1565C0] bg-[#E3F2FD] text-[#123B63] shadow-xs'
+                      : 'border border-[#D9E1E8] bg-[#F8FAFC] text-[#607D8B] hover:border-[#90CAF9] hover:bg-[#FFFFFF]'
                   }`}
                 >
-                  <div className="font-bold truncate text-[11px] text-white">{node.name}</div>
-                  <div className="text-[10px] text-amber-400 truncate mt-0.5">Rank #{node.centrality_rank} (Score: {node.centrality_score})</div>
-                  <div className="text-[9px] text-slate-400 mt-1 truncate">{node.role}</div>
+                  <div className="font-bold truncate text-xs text-[#123B63]">{node.name}</div>
+                  <div className="text-[10px] text-[#E65100] font-semibold truncate mt-0.5">Rank #{node.centrality_rank} (Score: {node.centrality_score})</div>
+                  <div className="text-[10px] text-[#607D8B] mt-1 truncate">{node.role}</div>
                 </button>
               ))
             ) : (
-              <div className="text-slate-400 text-xs py-2 col-span-full">Loading live network nodes from server...</div>
+              <div className="text-[#607D8B] text-xs py-2 col-span-full">Loading live network nodes from server...</div>
             )}
           </div>
 
           {/* Node Dossier Inspector */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Left 2 Cols: Detailed Inspector */}
-            <div className="lg:col-span-2 bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
-              <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-                <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider">
+            <div className="lg:col-span-2 bg-[#F8FAFC] border border-[#D9E1E8] p-4 rounded-xl space-y-3">
+              <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-2">
+                <span className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
                   NODE DOSSIER: {nodeDetails?.name || selectedNode}
                 </span>
-                <span className="text-[10px] bg-purple-950 text-purple-300 border border-purple-800 px-2.5 py-0.5 rounded font-bold">
+                <span className="text-[10px] bg-[#E3F2FD] text-[#1565C0] border border-[#90CAF9] px-2.5 py-0.5 rounded font-bold">
                   CENTRALITY: {nodeDetails?.centrality_score || '0.964'}
                 </span>
               </div>
 
               {isLoadingNode ? (
-                <div className="py-8 text-center text-slate-400 text-xs">Fetching node telemetry from server...</div>
+                <div className="py-8 text-center text-[#607D8B] text-xs">Fetching node telemetry from server...</div>
               ) : nodeDetails ? (
                 <div className="space-y-3 text-xs">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-slate-900/80 p-3 rounded-lg border border-slate-800">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-[#FFFFFF] p-3 rounded-lg border border-[#D9E1E8]">
                     <div>
-                      <span className="text-[10px] text-slate-400 block">ROLE</span>
-                      <span className="font-bold text-white text-[11px]">{nodeDetails.role}</span>
+                      <span className="text-[10px] text-[#607D8B] font-semibold block uppercase">ROLE</span>
+                      <span className="font-bold text-[#123B63] text-xs">{nodeDetails.role}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-400 block">PHONE</span>
-                      <span className="font-bold text-cyan-300 text-[11px]">{nodeDetails.phone || 'N/A'}</span>
+                      <span className="text-[10px] text-[#607D8B] font-semibold block uppercase">PHONE</span>
+                      <span className="font-bold text-[#1565C0] text-xs font-mono">{nodeDetails.phone || 'N/A'}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-400 block">VEHICLE PLATE</span>
-                      <span className="font-bold text-amber-300 text-[11px]">{nodeDetails.vehicle_plates?.join(', ') || 'N/A'}</span>
+                      <span className="text-[10px] text-[#607D8B] font-semibold block uppercase">VEHICLE PLATE</span>
+                      <span className="font-bold text-[#E65100] text-xs font-mono">{nodeDetails.vehicle_plates?.join(', ') || 'N/A'}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-400 block">WARRANT STATUS</span>
-                      <span className="font-bold text-red-400 text-[11px]">{nodeDetails.warrant_status}</span>
+                      <span className="text-[10px] text-[#607D8B] font-semibold block uppercase">WARRANT STATUS</span>
+                      <span className="font-bold text-[#C62828] text-xs">{nodeDetails.warrant_status}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-400 block">OPERATING STATES</span>
-                      <span className="font-bold text-slate-200 text-[11px]">{nodeDetails.operating_locations?.join(', ') || 'Delhi NCR'}</span>
+                      <span className="text-[10px] text-[#607D8B] font-semibold block uppercase">OPERATING STATES</span>
+                      <span className="font-bold text-[#263238] text-xs">{nodeDetails.operating_locations?.join(', ') || 'Delhi NCR'}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-400 block">LINKED SUSPECTS</span>
-                      <span className="font-bold text-purple-300 text-[11px]">{nodeDetails.linked_suspects?.join(', ') || 'KINGPIN'}</span>
+                      <span className="text-[10px] text-[#607D8B] font-semibold block uppercase">LINKED SUSPECTS</span>
+                      <span className="font-bold text-[#123B63] text-xs">{nodeDetails.linked_suspects?.join(', ') || 'KINGPIN'}</span>
                     </div>
                   </div>
 
                   {/* Registered FIRs */}
                   <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                      REGISTERED POLICE FIRs & LEGAL CHARGES:
+                    <span className="text-[10px] font-bold text-[#607D8B] uppercase tracking-wider block mb-1">
+                      REGISTERED POLICE FIRs &amp; LEGAL CHARGES:
                     </span>
                     <div className="space-y-1.5">
                       {nodeDetails.firs?.map((fir, idx) => (
-                        <div key={idx} className="bg-slate-900 p-2 rounded border border-slate-800 flex justify-between items-center text-[11px]">
+                        <div key={idx} className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#D9E1E8] flex justify-between items-center text-xs">
                           <div>
-                            <span className="text-cyan-400 font-bold">{fir.fir_no}</span> — <span className="text-slate-300">{fir.offense}</span>
-                            <span className="text-slate-500 text-[10px] block">{fir.station} | Date: {fir.date}</span>
+                            <span className="text-[#1565C0] font-bold">{fir.fir_no}</span> — <span className="text-[#263238] font-semibold">{fir.offense}</span>
+                            <span className="text-[#607D8B] text-[10px] block mt-0.5">{fir.station} | Date: {fir.date}</span>
                           </div>
-                          <span className="text-[10px] bg-red-950 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold">
+                          <span className="text-[10px] bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A] px-2 py-0.5 rounded font-bold">
                             {fir.status}
                           </span>
                         </div>
@@ -438,7 +438,7 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
                         setWarrantTargetNode(nodeDetails.id);
                         setSubTab('government_warrant');
                       }}
-                      className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg font-bold text-xs transition-all shadow-lg flex items-center gap-1.5"
+                      className="px-4 py-2 bg-[#C62828] hover:bg-[#B71C1C] text-white rounded-lg font-semibold text-xs transition-colors shadow-sm flex items-center gap-1.5"
                     >
                       Issue Government Warrant for {nodeDetails.name.split(' ')[0]}
                     </button>
@@ -448,36 +448,36 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
             </div>
 
             {/* Right Col: GNN Metrics & 7 Ingested Sources */}
-            <div className="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3 text-xs">
-              <span className="text-xs font-bold text-purple-400 uppercase tracking-wider block border-b border-slate-800 pb-2">
+            <div className="bg-[#F8FAFC] border border-[#D9E1E8] p-4 rounded-xl space-y-3 text-xs">
+              <span className="text-xs font-bold text-[#123B63] uppercase tracking-wider block border-b border-[#D9E1E8] pb-2">
                 GNN LINK ENGINE TELEMETRY
               </span>
               <div className="space-y-2">
-                <div className="flex justify-between items-center bg-slate-900 p-2 rounded">
-                  <span className="text-slate-400">GNN Architecture:</span>
-                  <span className="text-white font-bold">Spectral GCN (PyG)</span>
+                <div className="flex justify-between items-center bg-[#FFFFFF] p-2 rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#607D8B]">GNN Architecture:</span>
+                  <span className="text-[#123B63] font-bold">Spectral GCN (PyG)</span>
                 </div>
-                <div className="flex justify-between items-center bg-slate-900 p-2 rounded">
-                  <span className="text-slate-400">Link Precision:</span>
-                  <span className="text-emerald-400 font-bold">98.6%</span>
+                <div className="flex justify-between items-center bg-[#FFFFFF] p-2 rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#607D8B]">Link Precision:</span>
+                  <span className="text-[#2E7D32] font-bold">98.6%</span>
                 </div>
-                <div className="flex justify-between items-center bg-slate-900 p-2 rounded">
-                  <span className="text-slate-400">Kingpin Isolation:</span>
-                  <span className="text-amber-400 font-bold">Rank #1 Vikram Singh</span>
+                <div className="flex justify-between items-center bg-[#FFFFFF] p-2 rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#607D8B]">Kingpin Isolation:</span>
+                  <span className="text-[#E65100] font-bold">Rank #1 Vikram Singh</span>
                 </div>
-                <div className="flex justify-between items-center bg-slate-900 p-2 rounded">
-                  <span className="text-slate-400">Temporal Anomaly:</span>
-                  <span className="text-red-400 font-bold">Tower #412 Overlap</span>
+                <div className="flex justify-between items-center bg-[#FFFFFF] p-2 rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#607D8B]">Temporal Anomaly:</span>
+                  <span className="text-[#C62828] font-bold">Tower #412 Overlap</span>
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-800">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+              <div className="pt-2 border-t border-[#D9E1E8]">
+                <span className="text-[10px] font-bold text-[#607D8B] uppercase tracking-wider block mb-1.5">
                   7 Disparate Data Sources Ingested:
                 </span>
-                <ul className="text-[10px] text-slate-400 space-y-1">
-                  <li>• FIRs & Police Reports (CCTNS)</li>
-                  <li>• Call Detail Records & Tower Dumps</li>
+                <ul className="text-[11px] text-[#607D8B] space-y-1">
+                  <li>• FIRs &amp; Police Reports (CCTNS)</li>
+                  <li>• Call Detail Records &amp; Tower Dumps</li>
                   <li>• Financial Logs (Hawala / Bank / Crypto)</li>
                   <li>• Surveillance Reports (IB / NIA)</li>
                   <li>• Social Media OSINT (Telegram / WhatsApp)</li>
@@ -492,29 +492,29 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
 
       {/* SUBTAB 2: REAL-TIME INGESTION & NLP NER */}
       {subTab === 'realtime_ingestion' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-5 font-mono text-xs">
-          <div className="border-b border-slate-800 pb-3">
-            <h4 className="text-xs font-bold text-cyan-300 uppercase tracking-wider">
-              REAL-TIME CRIME DOCUMENT INGESTION & NLP ENTITY PARSER
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4 font-sans text-xs text-[#263238]">
+          <div className="border-b border-[#D9E1E8] pb-3">
+            <h4 className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
+              REAL-TIME CRIME DOCUMENT INGESTION &amp; NLP ENTITY PARSER
             </h4>
-            <p className="text-[11px] text-slate-400 font-sans mt-0.5">
+            <p className="text-xs text-[#607D8B] mt-0.5">
               Upload real FIR text files, CDR logs, or paste intelligence reports to dynamically extract entities and update the live criminal network on the server.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Left: Input Console */}
-            <div className="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <div className="space-y-3 bg-[#F8FAFC] p-4 rounded-xl border border-[#D9E1E8]">
               <div className="flex justify-between items-center">
-                <span className="font-bold text-slate-300">RAW CRIME INTEL INPUT:</span>
-                <label className="cursor-pointer text-[10px] bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2.5 py-1 rounded border border-slate-700">
+                <span className="font-bold text-[#123B63] uppercase text-xs">RAW CRIME INTEL INPUT:</span>
+                <label className="cursor-pointer text-[10px] bg-[#FFFFFF] hover:bg-[#F4F6F8] text-[#1565C0] px-2.5 py-1 rounded border border-[#D9E1E8] font-semibold transition-colors shadow-xs">
                   Browse File (.txt / .csv)
                   <input type="file" accept=".txt,.csv,.json" onChange={handleFileUpload} className="hidden" />
                 </label>
               </div>
 
               {uploadFileName && (
-                <div className="text-[10px] text-emerald-400 bg-emerald-950/50 p-1.5 rounded border border-emerald-900">
+                <div className="text-[10px] text-[#2E7D32] bg-[#E8F5E9] p-1.5 rounded border border-[#C8E6C9] font-medium">
                   Active File: {uploadFileName} ({uploadFileContent.length} bytes loaded)
                 </div>
               )}
@@ -526,7 +526,7 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
                   else setNlpInputText(e.target.value);
                 }}
                 rows={7}
-                className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-slate-200 text-xs font-mono focus:border-cyan-500 focus:outline-none"
+                className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg p-2.5 text-[#263238] text-xs font-sans focus:border-[#1565C0] focus:outline-none"
                 placeholder="Paste FIR narrative, CDR records, or interrogation transcript here..."
               />
 
@@ -534,14 +534,14 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
                 <button
                   onClick={runRealtimeNlpExtraction}
                   disabled={isProcessingNlp}
-                  className="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg transition-all shadow-md"
+                  className="flex-1 py-2 bg-[#1565C0] hover:bg-[#0D47A1] text-white font-semibold rounded-lg transition-colors shadow-sm"
                 >
                   {isProcessingNlp ? 'RUNNING NLP NER...' : 'Extract Entities via Server'}
                 </button>
                 <button
                   onClick={processUploadedEvidence}
                   disabled={isIngestingFile || (!uploadFileContent && !nlpInputText)}
-                  className="flex-1 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition-all shadow-md"
+                  className="flex-1 py-2 bg-[#123B63] hover:bg-[#0D2A4A] text-white font-semibold rounded-lg transition-colors shadow-sm"
                 >
                   {isIngestingFile ? 'INGESTING TO GRAPH...' : 'Ingest & Update Live Graph'}
                 </button>
@@ -549,49 +549,49 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
             </div>
 
             {/* Right: Extracted Entities Display */}
-            <div className="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
-              <span className="font-bold text-slate-300 block border-b border-slate-800 pb-2">
+            <div className="space-y-3 bg-[#F8FAFC] p-4 rounded-xl border border-[#D9E1E8]">
+              <span className="font-bold text-[#123B63] block border-b border-[#D9E1E8] pb-2 uppercase tracking-wide">
                 SERVER EXTRACTION RESULTS:
               </span>
 
               {ingestionResult && (
-                <div className="bg-emerald-950/60 p-3 rounded-lg border border-emerald-800 space-y-1">
-                  <div className="text-emerald-300 font-bold">EVIDENCE DOCUMENT INGESTED & SEALED</div>
-                  <div className="text-[10px] text-slate-300">SHA-256 Seal: {ingestionResult.sha256_evidence_seal}</div>
-                  <div className="text-[10px] text-cyan-300 font-bold">{ingestionResult.legal_admissibility}</div>
-                  <div className="text-[10px] text-white">Total Network Nodes Now: {ingestionResult.total_network_nodes_now}</div>
+                <div className="bg-[#E8F5E9] p-3 rounded-lg border border-[#C8E6C9] space-y-1">
+                  <div className="text-[#2E7D32] font-bold">EVIDENCE DOCUMENT INGESTED &amp; SEALED</div>
+                  <div className="text-[10px] text-[#607D8B]">SHA-256 Seal: {ingestionResult.sha256_evidence_seal}</div>
+                  <div className="text-[10px] text-[#1565C0] font-bold">{ingestionResult.legal_admissibility}</div>
+                  <div className="text-[10px] text-[#263238] font-semibold">Total Network Nodes Now: {ingestionResult.total_network_nodes_now}</div>
                 </div>
               )}
 
               {extractedEntities ? (
                 <div className="space-y-2 text-xs">
                   {extractedEntities.persons?.length > 0 && (
-                    <div className="bg-slate-900 p-2 rounded border border-slate-800">
-                      <span className="text-[10px] text-red-400 font-bold block">SUSPECTS IDENTIFIED:</span>
-                      <div className="text-white mt-0.5">{extractedEntities.persons.map(p => p.name).join(', ')}</div>
+                    <div className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#D9E1E8]">
+                      <span className="text-[10px] text-[#C62828] font-bold uppercase block">SUSPECTS IDENTIFIED:</span>
+                      <div className="text-[#123B63] font-semibold mt-0.5">{extractedEntities.persons.map(p => p.name).join(', ')}</div>
                     </div>
                   )}
                   {extractedEntities.fir_numbers?.length > 0 && (
-                    <div className="bg-slate-900 p-2 rounded border border-slate-800">
-                      <span className="text-[10px] text-cyan-400 font-bold block">FIR & LEGAL SECTIONS:</span>
-                      <div className="text-white mt-0.5">{extractedEntities.fir_numbers.map(f => f.fir).join(', ')}</div>
+                    <div className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#D9E1E8]">
+                      <span className="text-[10px] text-[#1565C0] font-bold uppercase block">FIR &amp; LEGAL SECTIONS:</span>
+                      <div className="text-[#123B63] font-semibold mt-0.5">{extractedEntities.fir_numbers.map(f => f.fir).join(', ')}</div>
                     </div>
                   )}
                   {extractedEntities.vehicles?.length > 0 && (
-                    <div className="bg-slate-900 p-2 rounded border border-slate-800">
-                      <span className="text-[10px] text-amber-400 font-bold block">VEHICLE PLATES (ANPR MATCH):</span>
-                      <div className="text-white mt-0.5">{extractedEntities.vehicles.map(v => v.plate).join(', ')}</div>
+                    <div className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#D9E1E8]">
+                      <span className="text-[10px] text-[#E65100] font-bold uppercase block">VEHICLE PLATES (ANPR MATCH):</span>
+                      <div className="text-[#123B63] font-semibold mt-0.5">{extractedEntities.vehicles.map(v => v.plate).join(', ')}</div>
                     </div>
                   )}
                   {extractedEntities.locations?.length > 0 && (
-                    <div className="bg-slate-900 p-2 rounded border border-slate-800">
-                      <span className="text-[10px] text-purple-400 font-bold block">SPATIAL LOCATIONS & TOWERS:</span>
-                      <div className="text-white mt-0.5">{extractedEntities.locations.join(', ')}</div>
+                    <div className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#D9E1E8]">
+                      <span className="text-[10px] text-[#123B63] font-bold uppercase block">SPATIAL LOCATIONS &amp; TOWERS:</span>
+                      <div className="text-[#263238] font-semibold mt-0.5">{extractedEntities.locations.join(', ')}</div>
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="py-12 text-center text-slate-500 text-xs">
+                <div className="py-12 text-center text-[#90A4AE] text-xs">
                   Click 'Extract Entities' to trigger server-side NLP entity extraction.
                 </div>
               )}
@@ -602,32 +602,32 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
 
       {/* SUBTAB 3: GOVERNMENT & JUDICIAL APPROVAL WORKFLOW */}
       {subTab === 'government_warrant' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-5 font-mono text-xs">
-          <div className="border-b border-slate-800 pb-3">
-            <h4 className="text-xs font-bold text-emerald-300 uppercase tracking-wider flex items-center gap-2">
-              <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4 font-sans text-xs text-[#263238]">
+          <div className="border-b border-[#D9E1E8] pb-3">
+            <h4 className="text-xs font-bold text-[#123B63] uppercase tracking-wider flex items-center gap-2">
+              <svg className="w-4 h-4 text-[#2E7D32]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
-              GOVERNMENT JUDICIAL APPROVAL & DIGITAL WARRANT ISSUANCE (BNS SEC 63)
+              GOVERNMENT JUDICIAL APPROVAL &amp; DIGITAL WARRANT ISSUANCE (BNS SEC 63)
             </h4>
-            <p className="text-[11px] text-slate-400 font-sans mt-0.5">
+            <p className="text-xs text-[#607D8B] mt-0.5">
               Level-3 Superintendent of Police (SP) and Judicial Magistrate e-Signature workflow. Generates SHA-256 evidence seals compliant with Bharatiya Sakshya Adhiniyam Sec 63 / 65B.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Left: Warrant Form */}
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-              <span className="font-bold text-slate-300 block border-b border-slate-800 pb-2">
+            <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#D9E1E8] space-y-3">
+              <span className="font-bold text-[#123B63] block border-b border-[#D9E1E8] pb-2 uppercase tracking-wide">
                 OFFICIAL AUTHORIZATION PARAMETERS:
               </span>
 
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">TARGET SUSPECT</label>
+                <label className="text-[10px] text-[#607D8B] font-semibold uppercase block mb-1">TARGET SUSPECT</label>
                 <select
                   value={warrantTargetNode}
                   onChange={(e) => setWarrantTargetNode(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-white font-mono"
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg p-2 text-[#263238] font-sans focus:border-[#1565C0] focus:outline-none"
                 >
                   <option value="KINGPIN">Vikram Singh @ Cyber-Ghost (Syndicate Kingpin)</option>
                   <option value="OPERATIVE_1">Ramesh Kumar @ Chhotu (Field Operative)</option>
@@ -637,93 +637,95 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
               </div>
 
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">WARRANT / LEGAL ORDER TYPE</label>
+                <label className="text-[10px] text-[#607D8B] font-semibold uppercase block mb-1">WARRANT / LEGAL ORDER TYPE</label>
                 <select
                   value={warrantType}
                   onChange={(e) => setWarrantType(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-white font-mono"
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg p-2 text-[#263238] font-sans focus:border-[#1565C0] focus:outline-none"
                 >
                   <option value="INTER_STATE_ARREST_WARRANT">Inter-State Non-Bailable Arrest Warrant (BNSS Sec 70)</option>
                   <option value="BNS_63_EVIDENCE_SEIZURE">Electronic Evidence Seizure Order (BNS Sec 63 / 65B)</option>
-                  <option value="PMLA_BANK_FREEZE">Bank & Hawala Asset Freeze Order (PMLA Sec 17)</option>
+                  <option value="PMLA_BANK_FREEZE">Bank &amp; Hawala Asset Freeze Order (PMLA Sec 17)</option>
                   <option value="NATIONAL_SECURITY_DETENTION">National Security Surveillance Directive (UAPA Sec 15)</option>
                 </select>
               </div>
 
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">APPROVING AUTHORITY</label>
+                <label className="text-[10px] text-[#607D8B] font-semibold uppercase block mb-1">APPROVING AUTHORITY</label>
                 <input
                   type="text"
                   value={approvingAuthority}
                   onChange={(e) => setApprovingAuthority(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-white font-mono"
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg p-2 text-[#263238] font-sans focus:border-[#1565C0] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">COURT / JURISDICTION</label>
+                <label className="text-[10px] text-[#607D8B] font-semibold uppercase block mb-1">COURT / JURISDICTION</label>
                 <input
                   type="text"
                   value={courtJurisdiction}
                   onChange={(e) => setCourtJurisdiction(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-white font-mono"
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg p-2 text-[#263238] font-sans focus:border-[#1565C0] focus:outline-none"
                 />
               </div>
 
               <button
                 onClick={handleIssueGovernmentApproval}
                 disabled={isSigningWarrant}
-                className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition-all shadow-lg flex items-center justify-center gap-2 mt-2"
+                className="w-full py-2.5 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-semibold rounded-lg transition-colors shadow-sm flex items-center justify-center gap-2 mt-2 uppercase tracking-wide"
               >
                 {isSigningWarrant ? 'SIGNING & HASHING...' : 'Sign with SP Digital Signature & Issue'}
               </button>
             </div>
 
             {/* Right: Issued Certificate */}
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-              <span className="font-bold text-slate-300 block border-b border-slate-800 pb-2">
+            <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#D9E1E8] space-y-3">
+              <span className="font-bold text-[#123B63] block border-b border-[#D9E1E8] pb-2 uppercase tracking-wide">
                 CERTIFIED JUDICIAL WARRANT CERTIFICATE:
               </span>
 
               {approvalResult ? (
-                <div className="bg-slate-900 p-4 rounded-xl border border-emerald-800 space-y-2.5">
+                <div className="bg-[#FFFFFF] p-4 rounded-xl border-2 border-[#2E7D32] space-y-2.5 shadow-sm">
                   <div className="flex justify-between items-center">
-                    <span className="text-emerald-400 font-bold text-xs">{approvalResult.warrant.warrant_id}</span>
-                    <span className="text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-700 px-2 py-0.5 rounded font-bold">
+                    <span className="text-[#2E7D32] font-bold text-xs">{approvalResult.warrant.warrant_id}</span>
+                    <span className="text-[10px] bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] px-2 py-0.5 rounded font-bold uppercase">
                       VERIFIED EXECUTABLE
                     </span>
                   </div>
 
-                  <div className="text-[11px] text-white font-bold">
+                  <div className="text-xs text-[#123B63] font-bold">
                     Target: {approvalResult.warrant.suspect_name} ({approvalResult.warrant.suspect_id})
                   </div>
 
-                  <div className="text-[10px] text-slate-300">
-                    <span className="text-slate-400 block">AUTHORITY:</span> {approvalResult.warrant.issuing_authority}
+                  <div className="text-xs text-[#607D8B]">
+                    <span className="text-[#607D8B] font-semibold block text-[10px] uppercase">AUTHORITY:</span>
+                    <strong className="text-[#263238]">{approvalResult.warrant.issuing_authority}</strong>
                   </div>
 
-                  <div className="text-[10px] text-slate-300">
-                    <span className="text-slate-400 block">JURISDICTION:</span> {approvalResult.warrant.court}
+                  <div className="text-xs text-[#607D8B]">
+                    <span className="text-[#607D8B] font-semibold block text-[10px] uppercase">JURISDICTION:</span>
+                    <strong className="text-[#263238]">{approvalResult.warrant.court}</strong>
                   </div>
 
-                  <div className="bg-slate-950 p-2 rounded border border-slate-800 font-mono text-[9px] break-all">
-                    <span className="text-cyan-400 block font-bold">SHA-256 DIGITAL EVIDENCE SEAL:</span>
+                  <div className="bg-[#F8FAFC] p-2.5 rounded-lg border border-[#D9E1E8] font-mono text-[10px] break-all">
+                    <span className="text-[#1565C0] block font-bold mb-0.5">SHA-256 DIGITAL EVIDENCE SEAL:</span>
                     {approvalResult.warrant.sha256_seal}
                   </div>
 
-                  <div className="text-[10px] text-emerald-400 font-bold pt-1 flex items-center gap-1.5">
-                    <svg className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="text-xs text-[#2E7D32] font-bold pt-1 flex items-center gap-1.5">
+                    <svg className="w-3.5 h-3.5 text-[#2E7D32] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
                     </svg>
                     <span>{approvalResult.compliance}</span>
                   </div>
 
-                  <div className="text-[10px] text-slate-400">
-                    Auto-dispatched to ERSS Dial 100/112 Patrol Mesh & Nearest Officer DND Override.
+                  <div className="text-[11px] text-[#607D8B]">
+                    Auto-dispatched to ERSS Dial 100/112 Patrol Mesh &amp; Nearest Officer DND Override.
                   </div>
                 </div>
               ) : (
-                <div className="py-12 text-center text-slate-500 text-xs">
+                <div className="py-12 text-center text-[#90A4AE] text-xs">
                   Click 'Sign with SP Digital Signature' to generate a legally binding digital warrant certificate.
                 </div>
               )}
@@ -734,56 +736,56 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
 
       {/* SUBTAB 4: TACTICAL HARDWARE EXTENSION PROPOSAL */}
       {subTab === 'hardware_extension' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-5 font-mono text-xs">
-          <div className="border-b border-slate-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4 font-sans text-xs text-[#263238]">
+          <div className="border-b border-[#D9E1E8] pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <div>
-              <h4 className="text-xs font-bold text-cyan-300 uppercase tracking-wider flex items-center gap-2">
-                <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <h4 className="text-xs font-bold text-[#123B63] uppercase tracking-wider flex items-center gap-2">
+                <svg className="w-4 h-4 text-[#1565C0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
                 TACTICAL FIELD UNIT (FORENSIX EDGE KIT) — HARDWARE ACQUISITION BRIDGE
               </h4>
-              <p className="text-[11px] text-slate-400 font-sans mt-0.5">
+              <p className="text-xs text-[#607D8B] mt-0.5">
                 Strategic proposal to complement the Software Core with an optional Make-in-India handheld unit for tamper-proof on-scene evidence acquisition.
               </p>
             </div>
-            <span className="text-[10px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-3 py-1 rounded font-bold">
-              TACTICAL PERIPHERAL BRIDGE: ONLINE
+            <span className="text-[10px] bg-[#E3F2FD] text-[#1565C0] border border-[#90CAF9] px-3 py-1 rounded font-bold uppercase">
+              Tactical Peripheral Bridge: Online
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Why Propose Hardware Card */}
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-              <span className="font-bold text-amber-400 block border-b border-slate-800 pb-2">
-                EVIDENTIARY PROTOCOLS & OPERATIONAL HARDWARE SAFEGUARDS:
+            <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#D9E1E8] space-y-3">
+              <span className="font-bold text-[#123B63] block border-b border-[#D9E1E8] pb-2 uppercase tracking-wide">
+                EVIDENTIARY PROTOCOLS &amp; OPERATIONAL HARDWARE SAFEGUARDS:
               </span>
 
-              <div className="space-y-2.5 text-[11px]">
-                <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-white font-bold block">1. Tamper-Proof Evidence Integrity (BNS Sec 63)</span>
-                  <p className="text-slate-400 text-[10px] mt-0.5">
+              <div className="space-y-2.5 text-xs">
+                <div className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#123B63] font-bold block text-xs">1. Tamper-Proof Evidence Integrity (BNS Sec 63)</span>
+                  <p className="text-[#607D8B] text-[11px] mt-0.5">
                     Physical FPGA Hardware Write-Blocker enforces `WRITE_ENABLE = FALSE` at pin level. Defense lawyers can never claim evidence was altered during field extraction.
                   </p>
                 </div>
 
-                <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-white font-bold block">2. Air-Gapped Remote & Border Operation</span>
-                  <p className="text-slate-400 text-[10px] mt-0.5">
-                    In zero-connectivity regions (J&K, Northeast, Maritime borders), the local 13 TOPS Hailo-8L NPU executes GNN link analysis and 128D facial matching 100% offline.
+                <div className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#123B63] font-bold block text-xs">2. Air-Gapped Remote &amp; Border Operation</span>
+                  <p className="text-[#607D8B] text-[11px] mt-0.5">
+                    In zero-connectivity regions (J&amp;K, Northeast, Maritime borders), the local 13 TOPS Hailo-8L NPU executes GNN link analysis and 128D facial matching 100% offline.
                   </p>
                 </div>
 
-                <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-white font-bold block">3. 99% Cost Disruption (Make in India)</span>
-                  <p className="text-slate-400 text-[10px] mt-0.5">
+                <div className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#123B63] font-bold block text-xs">3. 99% Cost Disruption (Make in India)</span>
+                  <p className="text-[#607D8B] text-[11px] mt-0.5">
                     Indigenous High-Security Forensic Architecture built using FPGA Write-Blocker ICs, Hailo-8L Edge NPU (26 TOPS), and FIPS 140-3 tamper-evident physical enclave.
                   </p>
                 </div>
 
-                <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-white font-bold block">4. Operational Deployment Readiness across Police Stations</span>
-                  <p className="text-slate-400 text-[10px] mt-0.5">
+                <div className="bg-[#FFFFFF] p-2.5 rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#123B63] font-bold block text-xs">4. Operational Deployment Readiness across Police Stations</span>
+                  <p className="text-[#607D8B] text-[11px] mt-0.5">
                     Seamlessly bridges cloud syndicate intelligence with ruggedized on-scene field acquisition hardware for deployment across state cyber police stations and border units.
                   </p>
                 </div>
@@ -791,44 +793,44 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
             </div>
 
             {/* Hardware BOM Specifications Card */}
-            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-              <span className="font-bold text-cyan-400 block border-b border-slate-800 pb-2">
-                TACTICAL UNIT SPECIFICATIONS & SCHEMATICS:
+            <div className="bg-[#F8FAFC] p-4 rounded-xl border border-[#D9E1E8] space-y-3">
+              <span className="font-bold text-[#123B63] block border-b border-[#D9E1E8] pb-2 uppercase tracking-wide">
+                TACTICAL UNIT SPECIFICATIONS &amp; SCHEMATICS:
               </span>
 
-              <div className="space-y-2 text-[11px]">
-                <div className="flex justify-between p-2 bg-slate-900 rounded border border-slate-800">
-                  <span className="text-slate-400">Processor:</span>
-                  <span className="text-white font-bold">Raspberry Pi 5 (8GB LPDDR4X)</span>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between p-2 bg-[#FFFFFF] rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#607D8B]">Processor:</span>
+                  <span className="text-[#123B63] font-semibold">Raspberry Pi 5 (8GB LPDDR4X)</span>
                 </div>
-                <div className="flex justify-between p-2 bg-slate-900 rounded border border-slate-800">
-                  <span className="text-slate-400">AI Accelerator:</span>
-                  <span className="text-purple-400 font-bold">Hailo-8L Edge NPU (13 TOPS AI Compute)</span>
+                <div className="flex justify-between p-2 bg-[#FFFFFF] rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#607D8B]">AI Accelerator:</span>
+                  <span className="text-[#1565C0] font-semibold">Hailo-8L Edge NPU (13 TOPS AI Compute)</span>
                 </div>
-                <div className="flex justify-between p-2 bg-slate-900 rounded border border-slate-800">
-                  <span className="text-slate-400">Write-Blocker:</span>
-                  <span className="text-emerald-400 font-bold">FPGA Controller IC (Read-Only Bridge)</span>
+                <div className="flex justify-between p-2 bg-[#FFFFFF] rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#607D8B]">Write-Blocker:</span>
+                  <span className="text-[#2E7D32] font-semibold">FPGA Controller IC (Read-Only Bridge)</span>
                 </div>
-                <div className="flex justify-between p-2 bg-slate-900 rounded border border-slate-800">
-                  <span className="text-slate-400">Storage:</span>
-                  <span className="text-white font-bold">1TB NVMe PCIe Gen4 High-Speed SSD</span>
+                <div className="flex justify-between p-2 bg-[#FFFFFF] rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#607D8B]">Storage:</span>
+                  <span className="text-[#123B63] font-semibold">1TB NVMe PCIe Gen4 High-Speed SSD</span>
                 </div>
-                <div className="flex justify-between p-2 bg-slate-900 rounded border border-slate-800">
-                  <span className="text-slate-400">Display:</span>
-                  <span className="text-white font-bold">5" Gorilla Glass Sunlight-Readable Touchscreen</span>
+                <div className="flex justify-between p-2 bg-[#FFFFFF] rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#607D8B]">Display:</span>
+                  <span className="text-[#123B63] font-semibold">5" Gorilla Glass Sunlight-Readable Touchscreen</span>
                 </div>
-                <div className="flex justify-between p-2 bg-slate-900 rounded border border-slate-800">
-                  <span className="text-slate-400">Battery:</span>
-                  <span className="text-amber-400 font-bold">10,000mAh Dual-Cell Li-Po (8+ Hrs Duty)</span>
+                <div className="flex justify-between p-2 bg-[#FFFFFF] rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#607D8B]">Battery:</span>
+                  <span className="text-[#E65100] font-semibold">10,000mAh Dual-Cell Li-Po (8+ Hrs Duty)</span>
                 </div>
-                <div className="flex justify-between p-2 bg-slate-900 rounded border border-slate-800">
-                  <span className="text-slate-400">Enclosure:</span>
-                  <span className="text-white font-bold">IP67 Mil-Spec CNC Aluminum Rugged Casing</span>
+                <div className="flex justify-between p-2 bg-[#FFFFFF] rounded-lg border border-[#D9E1E8]">
+                  <span className="text-[#607D8B]">Enclosure:</span>
+                  <span className="text-[#123B63] font-semibold">IP67 Mil-Spec CNC Aluminum Rugged Casing</span>
                 </div>
               </div>
 
-              <div className="p-3 bg-cyan-950/40 rounded-lg border border-cyan-900 text-[10px] text-cyan-200">
-                <span className="font-bold block text-cyan-300">GOVERNMENT EVALUATION SUMMARY:</span>
+              <div className="p-3 bg-[#E3F2FD] rounded-lg border border-[#90CAF9] text-[11px] text-[#123B63]">
+                <span className="font-bold block text-[#1565C0] uppercase tracking-wide mb-0.5">GOVERNMENT EVALUATION SUMMARY:</span>
                 "Certified for direct court-admissible forensic acquisition across State Cyber Police Stations, Intelligence Wings, and Special Investigation Teams (SIT) under Bharatiya Sakshya Adhiniyam Section 65B."
               </div>
             </div>
@@ -838,27 +840,27 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
 
       {/* SUBTAB 5: YOLO EVIDENCE */}
       {subTab === 'yolo_gallery' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4 font-mono">
-          <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-            <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4 font-sans text-xs text-[#263238]">
+          <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-3">
+            <h4 className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
               YOLOv8 DETECTED THREAT GALLERY ({evidenceItems.length} ARTIFACTS)
             </h4>
-            <span className="text-[10px] bg-red-950 text-red-300 border border-red-800 px-2.5 py-1 rounded font-bold">
+            <span className="text-[10px] bg-[#FFEBEE] text-[#C62828] border border-[#EF9A9A] px-2.5 py-1 rounded font-bold uppercase">
               AI INFERENCE ACTIVE
             </span>
           </div>
 
           {evidenceItems.length === 0 ? (
-            <div className="py-12 text-center text-slate-500 text-xs">
+            <div className="py-12 text-center text-[#90A4AE] text-xs">
               No evidence items logged yet. Upload or scan files from Field Console to populate.
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {evidenceItems.map((item, idx) => (
-                <div key={idx} className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
-                  <div className="font-bold text-white truncate">{item.name}</div>
-                  <div className="text-[10px] text-red-400 font-bold">{item.threat_level || 'EVIDENCE DETECTED'}</div>
-                  <div className="text-[9px] text-slate-500">SHA-256: {item.sha256?.slice(0, 16)}...</div>
+                <div key={idx} className="bg-[#F8FAFC] p-3 rounded-lg border border-[#D9E1E8] space-y-1.5 text-xs">
+                  <div className="font-bold text-[#123B63] truncate">{item.name}</div>
+                  <div className="text-[10px] text-[#C62828] font-bold">{item.threat_level || 'EVIDENCE DETECTED'}</div>
+                  <div className="text-[10px] text-[#607D8B] font-mono">SHA-256: {item.sha256?.slice(0, 16)}...</div>
                 </div>
               ))}
             </div>
@@ -868,12 +870,12 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
 
       {/* SUBTAB 6: AGENTIC AI REASONING TRACE */}
       {subTab === 'agent_trace' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4 font-mono">
-          <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-            <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4 font-sans text-xs text-[#263238]">
+          <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-3">
+            <h4 className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
               MULTI-STEP AGENTIC AI REASONING TRACES
             </h4>
-            <span className="text-[10px] bg-purple-950 text-purple-300 border border-purple-800 px-2.5 py-1 rounded font-bold">
+            <span className="text-[10px] bg-[#E3F2FD] text-[#1565C0] border border-[#90CAF9] px-2.5 py-1 rounded font-bold uppercase">
               OFFLINE LLM REASONER
             </span>
           </div>
@@ -886,13 +888,13 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
               { step: 4, action: 'TEMPORAL_ANOMALY_TRIGGER', detail: 'Detected Cell Tower #412 overlap and ₹42.5L Hawala smurfing in 48h.' },
               { step: 5, action: 'GOVERNMENT_WARRANT_GENERATED', detail: 'Superintendent of Police Level-3 digital signature affixed under BNS Sec 63.' }
             ].map((trace) => (
-              <div key={trace.step} className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-start gap-3 text-xs">
-                <span className="w-6 h-6 rounded-full bg-purple-900 text-purple-200 font-bold flex items-center justify-center text-[10px] shrink-0">
+              <div key={trace.step} className="bg-[#F8FAFC] p-3 rounded-lg border border-[#D9E1E8] flex items-start gap-3 text-xs">
+                <span className="w-6 h-6 rounded-full bg-[#123B63] text-white font-bold flex items-center justify-center text-[10px] shrink-0">
                   {trace.step}
                 </span>
                 <div>
-                  <div className="text-cyan-400 font-bold text-[11px]">{trace.action}</div>
-                  <div className="text-slate-300 text-[10px] mt-0.5">{trace.detail}</div>
+                  <div className="text-[#1565C0] font-bold text-xs">{trace.action}</div>
+                  <div className="text-[#607D8B] text-[11px] mt-0.5">{trace.detail}</div>
                 </div>
               </div>
             ))}
@@ -902,25 +904,25 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
 
       {/* SUBTAB 7: 10 AI CAPABILITIES */}
       {subTab === 'ai_matrix' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4 font-mono">
-          <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-            <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+        <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-5 shadow-sm space-y-4 font-sans text-xs text-[#263238]">
+          <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-3">
+            <h4 className="text-xs font-bold text-[#123B63] uppercase tracking-wider">
               10 SPECIALIZED AI INFERENCE CAPABILITIES
             </h4>
-            <span className="text-[10px] bg-cyan-950 text-cyan-300 border border-cyan-800 px-2.5 py-1 rounded font-bold">
-              HAILO-8L + PYTORCH
+            <span className="text-[10px] bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] px-2.5 py-1 rounded font-bold uppercase">
+              Hailo-8L + PyTorch
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
             {capabilities.map((cap) => (
-              <div key={cap.code} className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+              <div key={cap.code} className="bg-[#F8FAFC] p-3.5 rounded-lg border border-[#D9E1E8] space-y-1.5 text-xs">
                 <div className="flex justify-between items-center">
                   <span className={`text-[10px] px-2 py-0.5 rounded font-bold border ${cap.color}`}>{cap.code}</span>
-                  <span className="text-[10px] text-emerald-400 font-bold">{cap.metric}</span>
+                  <span className="text-[10px] text-[#2E7D32] font-bold">{cap.metric}</span>
                 </div>
-                <div className="font-bold text-white text-[11px] pt-1">{cap.title}</div>
-                <div className="text-[10px] text-slate-400">{cap.desc}</div>
+                <div className="font-bold text-[#123B63] text-xs pt-1">{cap.title}</div>
+                <div className="text-[11px] text-[#607D8B]">{cap.desc}</div>
               </div>
             ))}
           </div>
@@ -929,11 +931,11 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
 
       {/* Modal: Add Suspect Node */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 font-mono text-xs shadow-2xl">
-            <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-              <span className="font-bold text-white text-sm">ADD SUSPECT TO LIVE GRAPH</span>
-              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-800">
+        <div className="fixed inset-0 z-50 bg-[#123B63]/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl max-w-md w-full p-5 space-y-4 font-sans text-xs shadow-xl text-[#263238]">
+            <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-2">
+              <span className="font-bold text-[#123B63] text-sm uppercase tracking-wide">ADD SUSPECT TO LIVE GRAPH</span>
+              <button onClick={() => setShowAddModal(false)} className="text-[#607D8B] hover:text-[#123B63] p-1 rounded hover:bg-[#F4F6F8]">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -942,23 +944,23 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
 
             <form onSubmit={handleAddCustomSuspect} className="space-y-3">
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">SUSPECT FULL NAME & ALIAS</label>
+                <label className="text-[10px] text-[#607D8B] font-semibold uppercase block mb-1">SUSPECT FULL NAME &amp; ALIAS</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Gurpreet Singh @ Guri"
                   value={newSuspectName}
                   onChange={(e) => setNewSuspectName(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white"
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg p-2 text-[#263238] focus:border-[#1565C0] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">SYNDICATE ROLE</label>
+                <label className="text-[10px] text-[#607D8B] font-semibold uppercase block mb-1">SYNDICATE ROLE</label>
                 <select
                   value={newSuspectRole}
                   onChange={(e) => setNewSuspectRole(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white"
+                  className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg p-2 text-[#263238] focus:border-[#1565C0] focus:outline-none"
                 >
                   <option value="FIELD_OPERATIVE">Field Operative / Enforcer</option>
                   <option value="HAWALA_INTERMEDIARY">Hawala Financial Intermediary</option>
@@ -969,21 +971,21 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[10px] text-slate-400 block mb-1">PHONE NUMBER</label>
+                  <label className="text-[10px] text-[#607D8B] font-semibold uppercase block mb-1">PHONE NUMBER</label>
                   <input
                     type="text"
                     value={newSuspectPhone}
                     onChange={(e) => setNewSuspectPhone(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white"
+                    className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg p-2 text-[#263238] focus:border-[#1565C0] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] text-slate-400 block mb-1">FIRST FIR NUMBER</label>
+                  <label className="text-[10px] text-[#607D8B] font-semibold uppercase block mb-1">FIRST FIR NUMBER</label>
                   <input
                     type="text"
                     value={newSuspectFir}
                     onChange={(e) => setNewSuspectFir(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-white"
+                    className="w-full bg-[#FFFFFF] border border-[#D9E1E8] rounded-lg p-2 text-[#263238] focus:border-[#1565C0] focus:outline-none"
                   />
                 </div>
               </div>
@@ -992,14 +994,14 @@ export default function IntelligenceCenter({ evidenceItems = [], agentTraces = [
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 py-2 bg-slate-800 text-slate-300 rounded-lg font-bold"
+                  className="flex-1 py-2 bg-[#F4F6F8] hover:bg-[#E0E0E0] text-[#607D8B] border border-[#D9E1E8] rounded-lg font-semibold transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isAddingNode}
-                  className="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-bold transition-all shadow-lg"
+                  className="flex-1 py-2 bg-[#1565C0] hover:bg-[#0D47A1] text-white rounded-lg font-semibold transition-colors shadow-sm"
                 >
                   {isAddingNode ? 'Adding...' : 'Add to Server Graph'}
                 </button>
