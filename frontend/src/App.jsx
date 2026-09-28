@@ -9,7 +9,7 @@ import RealtimeOpsView from './components/RealtimeOpsView';
 import EdgeHardwareConsole from './components/EdgeHardwareConsole';
 import GovernmentAuthPortal from './components/GovernmentAuthPortal';
 import IntroSplash from './components/IntroSplash';
-import { AshokaLionCapital, IndianFlag } from './components/NationalEmblems';
+import CaseCopilot from './components/CaseCopilot';
 
 class ModuleErrorBoundary extends React.Component {
   constructor(props) {
@@ -74,16 +74,21 @@ export default function App() {
     setAppStage('intro');
   };
 
-  const [sessionUuid, setSessionUuid]     = useState('FX-20260829-9941');
-  const [isScanning, setIsScanning]       = useState(false);
-  const [progress, setProgress]           = useState(0);
-  const [carveSpeed, setCarveSpeed]       = useState('0.0 MB/s');
+  const [sessionUuid, setSessionUuid]       = useState('FX-20260829-9941');
+  const [isScanning, setIsScanning]         = useState(false);
+  const [progress, setProgress]             = useState(0);
+  const [carveSpeed, setCarveSpeed]         = useState('0.0 MB/s');
   
-  // Navigation: defaults to 'dashboard' (Investigation Overview) or 'pratibimb' (Pratibimb Geo Map)
-  const [activeNav, setActiveNav]         = useState('dashboard');
-  const [evidenceItems, setEvidenceItems] = useState([]);
-  const [agentTraces, setAgentTraces]     = useState([]);
-  const [sha256Hash, setSha256Hash]       = useState('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
+  // Navigation
+  const [activeNav, setActiveNav]           = useState('dashboard');
+  const [evidenceItems, setEvidenceItems]   = useState([]);
+  const [agentTraces, setAgentTraces]       = useState([]);
+  const [sha256Hash, setSha256Hash]         = useState('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
+
+  // Case Copilot drawer & mobile states
+  const [isCopilotOpen, setIsCopilotOpen]   = useState(false);
+  const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const getApiBase = () => {
     if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
@@ -130,15 +135,26 @@ export default function App() {
   if (appStage === 'intro') return <IntroSplash onDone={handleIntroDone} />;
   if (appStage === 'login') return <GovernmentAuthPortal onAuthenticate={handleAuthenticate} />;
 
-  // ── Official Government Navigation Sidebar Items (Clean SVG Icons, Zero Emojis) ──
+  // ── Navigation Items ──
   const sidebarNavItems = [
     {
       id: 'dashboard',
       label: 'DASHBOARD',
-      sub: 'Investigation Overview & KPIs',
+      sub: 'Investigation Overview & Radar',
       icon: (
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      )
+    },
+    {
+      id: 'copilot',
+      label: 'CASE COPILOT',
+      sub: 'Agentic Voice & Decision Support',
+      highlight: true,
+      icon: (
+        <svg className="w-4 h-4 text-[#0EA5A4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
         </svg>
       )
     },
@@ -175,7 +191,7 @@ export default function App() {
     {
       id: 'surveillance',
       label: 'SURVEILLANCE & CAMERA',
-      sub: 'Live Feed & CCTV Footage AI',
+      sub: 'SIH26150 Multi-Vendor DVR Feeds',
       icon: (
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -185,7 +201,7 @@ export default function App() {
     {
       id: 'hardware',
       label: 'TACTICAL HARDWARE',
-      sub: 'Bitstream Carving & WebUSB',
+      sub: 'DVR/NVR Bitstream Carving',
       icon: (
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
@@ -226,80 +242,91 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F4F6F8] text-[#263238] font-sans antialiased flex flex-col">
+    <div className="min-h-screen bg-[#F4F6F9] text-[#263238] font-sans antialiased flex flex-col pb-16 md:pb-0">
 
-      {/* ── SOVEREIGNTY TRICOLOR RIBBON (TIRANGA) ── */}
-      <div className="w-full h-1.5 bg-gradient-to-r from-[#FF9933] via-white to-[#138808] flex-shrink-0" />
+      {/* ── TOP HEADER (#0B1F3A Navy) ── */}
+      <header className="w-full bg-[#0B1F3A] text-white border-b border-[#1E3A5F] shadow-md flex-shrink-0">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
 
-      {/* ── TOP GOVERNMENT HEADER (#123B63) ── */}
-      <header className="w-full bg-[#123B63] text-white border-b border-[#0D2A4A] shadow-md flex-shrink-0">
-        <div className="max-w-screen-2xl mx-auto px-6 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-
-          {/* Left: Emblem + Ministry + System Identity */}
-          <div className="flex items-center gap-4 min-w-0">
-            <div className="flex-shrink-0 w-13 h-13 rounded-full bg-white p-1 border-2 border-[#D9E1E8] shadow-sm overflow-hidden flex items-center justify-center">
-              <AshokaLionCapital className="w-10 h-10 object-contain text-[#123B63]" />
+          {/* Left: NCIS Platform Identity & Prototype Label */}
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Modern Cyber Intelligence Icon */}
+            <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-[#0EA5A4] text-white flex items-center justify-center font-bold text-sm shadow-md">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
             </div>
 
             <div className="min-w-0">
               <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                <IndianFlag className="w-5 h-3.5 rounded-sm flex-shrink-0 shadow-xs" />
-                <span className="text-[11px] font-bold text-[#E3F2FD] tracking-wider uppercase">
-                  भारत सरकार &nbsp;|&nbsp; Government of India
+                <span className="text-[10px] font-bold bg-[#0EA5A4] text-white px-2 py-0.5 rounded tracking-wider uppercase">
+                  Prototype / Demo Data
                 </span>
-                <span className="hidden md:inline text-[#90CAF9] text-xs">•</span>
-                <span className="hidden md:inline text-[11px] text-[#B0BEC5] tracking-wide uppercase">
-                  Ministry of Home Affairs &nbsp;•&nbsp; I4C &nbsp;•&nbsp; BPR&amp;D
+                <span className="text-[#90CAF9] text-xs">•</span>
+                <span className="text-[11px] text-[#90CAF9] font-medium tracking-wide">
+                  SIH26150 Multi-Vendor Forensics
                 </span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white leading-tight uppercase">
-                NCIS &nbsp;|&nbsp;
-                <span className="text-sm sm:text-base font-medium text-[#E0E0E0] normal-case ml-1">
-                  Cyber Intelligence &amp; Investigation Platform
+              <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white leading-tight uppercase flex items-center gap-2">
+                <span>NCIS</span>
+                <span className="text-xs sm:text-sm font-normal text-[#B0BEC5] normal-case hidden sm:inline">
+                  | Cyber Intelligence &amp; Investigation Platform
                 </span>
               </h1>
             </div>
           </div>
 
-          {/* Right: Officer Profile, Unit & Logout */}
-          <div className="flex items-center gap-3 self-end sm:self-center">
-            <div className="bg-[#0D2A4A] border border-[#1E4E79] rounded-lg px-3 py-1.5 text-right hidden sm:block">
+          {/* Right: Ask Copilot Quick Button, Officer Profile & Logout */}
+          <div className="flex items-center gap-2.5 self-end sm:self-center">
+            {/* Quick Copilot Trigger in Header */}
+            <button
+              onClick={() => setIsCopilotOpen(true)}
+              className="px-3 py-1.5 bg-[#0EA5A4] hover:bg-[#0D8A89] text-white rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm"
+              title="Open Case Copilot AI"
+            >
+              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3zm7 9a7 7 0 01-14 0H3a9 9 0 0018 0h-2z" />
+              </svg>
+              <span>Copilot</span>
+            </button>
+
+            <div className="bg-[#102A43] border border-[#1E3A5F] rounded-lg px-3 py-1 text-right hidden sm:block">
               <div className="text-xs font-bold text-white whitespace-nowrap">
                 {officerSession?.officerName || 'Insp. Vikramaditya Rao'}
               </div>
-              <div className="text-[11px] text-[#90CAF9] font-medium">
-                Unit: {officerSession?.branch || 'SIT Mule Ring Desk'} &nbsp;|&nbsp; {officerSession?.officerId || 'IN-DL-4412-SIT'}
+              <div className="text-[10px] text-[#90CAF9]">
+                {officerSession?.branch || 'SIT Mule Ring Desk'} · {officerSession?.officerId || 'IN-DL-4412-SIT'}
               </div>
             </div>
 
             <button
               onClick={handleLogout}
               title="Secure Logout"
-              className="px-3.5 py-2 bg-[#0D2A4A] hover:bg-[#C62828] text-[#E0E0E0] hover:text-white border border-[#1E4E79] hover:border-[#C62828] rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm"
+              className="px-3 py-1.5 bg-[#102A43] hover:bg-[#DC2626] text-[#E0E0E0] hover:text-white border border-[#1E3A5F] hover:border-[#DC2626] rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
               </svg>
-              <span>Logout</span>
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
 
         </div>
 
-        {/* Agency Sub-ribbon */}
-        <div className="w-full bg-[#0D2A4A] border-t border-[#1E4E79]/80 py-1 px-6">
-          <div className="max-w-screen-2xl mx-auto flex flex-wrap justify-between items-center text-[11px] text-[#B0BEC5]">
+        {/* System Sub-ribbon */}
+        <div className="w-full bg-[#071326] border-t border-[#1E3A5F] py-1 px-4 sm:px-6">
+          <div className="max-w-screen-2xl mx-auto flex flex-wrap justify-between items-center text-[11px] text-[#90A4AE]">
             <div className="flex items-center gap-2">
-              <span className="text-[#FFB74D] font-bold">CLEARANCE: LEVEL-3 (SECRET)</span>
+              <span className="text-[#F59E0B] font-bold">SYNTHETIC EVIDENCE MODE</span>
               <span>•</span>
-              <span className="text-white">STATUTORY: BNS 2023 SEC 63 &amp; BSA SEC 65B</span>
+              <span className="text-[#E0E0E0]">STATUTORY COMPLIANCE: BNS 2023 SEC 63 &amp; BSA SEC 65B</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[#A5D6A7] font-semibold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#A5D6A7]" /> WRITE-BLOCKER: ACTIVE
+              <span className="text-[#16A34A] font-semibold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A]" /> WRITE-BLOCKER: ACTIVE
               </span>
               <span>|</span>
-              <span className="text-[#90CAF9] font-medium">NATGRID / CCTNS: CONNECTED</span>
+              <span className="text-[#0EA5A4] font-medium">SIH26150 DVR ENGINE: READY</span>
               <span>|</span>
               <span>SESSION: {sessionUuid}</span>
             </div>
@@ -307,38 +334,69 @@ export default function App() {
         </div>
       </header>
 
-      {/* ── CORE GOVERNMENT LAYOUT: SIDEBAR (#102A43) + MAIN WORKSPACE (#F4F6F8) ── */}
-      <div className="flex-1 flex max-w-screen-2xl mx-auto w-full">
+      {/* ── CORE LAYOUT: SIDEBAR (#0B1F3A) + MAIN WORKSPACE (#F4F6F9) ── */}
+      <div className="flex-1 flex max-w-screen-2xl mx-auto w-full relative">
 
-        {/* ── LEFT SIDEBAR: DARK NAVY (#102A43) ── */}
-        <aside className="w-64 bg-[#102A43] text-white flex-shrink-0 hidden md:flex flex-col justify-between border-r border-[#0A1B2C] shadow-lg">
+        {/* ── DESKTOP SIDEBAR: EXPANDABLE / COLLAPSIBLE ── */}
+        <aside
+          className={`bg-[#0B1F3A] text-white flex-shrink-0 hidden md:flex flex-col justify-between border-r border-[#1E3A5F] shadow-lg transition-all duration-200 ${
+            isSidebarCollapsed ? 'w-20' : 'w-64'
+          }`}
+        >
           <div className="py-4">
-            <div className="px-5 pb-3 mb-2 border-b border-[#1E3A5F]">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-[#90CAF9]">
-                INVESTIGATION SECTIONS
-              </span>
+            <div className="px-4 pb-3 mb-2 border-b border-[#1E3A5F] flex items-center justify-between">
+              {!isSidebarCollapsed && (
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#90CAF9]">
+                  INVESTIGATION MODULES
+                </span>
+              )}
+              <button
+                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                title={isSidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+                className="p-1 rounded text-[#90CAF9] hover:bg-[#1E3A5F] hover:text-white mx-auto transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {isSidebarCollapsed ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                  )}
+                </svg>
+              </button>
             </div>
 
             <nav className="space-y-1 px-2.5">
               {sidebarNavItems.map((item) => {
                 const isActive = activeNav === item.id;
+                const isHighlight = item.highlight;
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveNav(item.id)}
-                    className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-left transition-all ${
+                    onClick={() => {
+                      if (item.id === 'copilot') {
+                        setIsCopilotOpen(true);
+                      } else {
+                        setActiveNav(item.id);
+                      }
+                    }}
+                    title={item.label}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all ${
                       isActive
-                        ? 'bg-[#1565C0] text-white font-semibold shadow-sm'
-                        : 'text-[#B0BEC5] hover:bg-[#1A3B5C] hover:text-white font-medium'
+                        ? 'bg-[#1D4ED8] text-white font-semibold shadow-sm'
+                        : isHighlight
+                        ? 'bg-[#0EA5A4]/15 text-[#0EA5A4] hover:bg-[#0EA5A4]/25 font-semibold'
+                        : 'text-[#B0BEC5] hover:bg-[#102A43] hover:text-white font-medium'
                     }`}
                   >
                     <span className="text-base flex-shrink-0">{item.icon}</span>
-                    <div className="min-w-0">
-                      <div className="text-xs tracking-wide">{item.label}</div>
-                      <div className={`text-[10px] truncate ${isActive ? 'text-[#BBDEFB]' : 'text-[#78909C]'}`}>
-                        {item.sub}
+                    {!isSidebarCollapsed && (
+                      <div className="min-w-0">
+                        <div className="text-xs tracking-wide">{item.label}</div>
+                        <div className={`text-[10px] truncate ${isActive ? 'text-[#BFDBFE]' : isHighlight ? 'text-[#0EA5A4]' : 'text-[#78909C]'}`}>
+                          {item.sub}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </button>
                 );
               })}
@@ -346,41 +404,36 @@ export default function App() {
           </div>
 
           {/* Sidebar Footer Info Card */}
-          <div className="p-4 border-t border-[#1E3A5F] bg-[#0C2237] text-[11px] text-[#90A4AE] space-y-1">
-            <div className="text-white font-semibold text-xs flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#2E7D32]" />
-              I4C Command Online
+          {!isSidebarCollapsed && (
+            <div className="p-3.5 border-t border-[#1E3A5F] bg-[#071326] text-[11px] text-[#90A4AE] space-y-1">
+              <div className="text-white font-semibold text-xs flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#16A34A]" />
+                Forensic Hub Online
+              </div>
+              <div>SIH26150 NTRO Surveillance Suite</div>
+              <div className="text-[10px] text-[#78909C]">Build: PROD-2026.09 (Demo)</div>
             </div>
-            <div>Jurisdiction: Pan-India (All 36 States/UTs)</div>
-            <div className="text-[10px] text-[#78909C]">Build: PROD-MHA-2026.09</div>
-          </div>
+          )}
         </aside>
 
-        {/* ── MOBILE HORIZONTAL NAV TAB STRIP (SM SCREENS) ── */}
-        <div className="md:hidden w-full bg-[#102A43] text-white border-b border-[#0A1B2C] overflow-x-auto scrollbar-none flex p-2 gap-1 flex-shrink-0">
-          {sidebarNavItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActiveNav(item.id)}
-              className={`px-3 py-1.5 rounded text-xs whitespace-nowrap font-medium transition-colors ${
-                activeNav === item.id
-                  ? 'bg-[#1565C0] text-white font-bold'
-                  : 'text-[#B0BEC5] bg-[#0D2A4A]'
-              }`}
-            >
-              {item.icon} {item.label}
-            </button>
-          ))}
-        </div>
-
-        {/* ── MAIN WORKSPACE CONTENT AREA (LIGHT GREY #F4F6F8) ── */}
-        <main className="flex-1 p-5 md:p-6 overflow-y-auto bg-[#F4F6F8]">
+        {/* ── MAIN WORKSPACE CONTENT AREA (#F4F6F9) ── */}
+        <main className="flex-1 p-4 md:p-6 overflow-y-auto bg-[#F4F6F9]">
           <ModuleErrorBoundary>
             {activeNav === 'dashboard' && (
               <GovOverviewDashboard
                 onNavigateToSection={(section) => setActiveNav(section)}
                 officerSession={officerSession}
+                onOpenCopilot={() => setIsCopilotOpen(true)}
+                onCopilotQuery={(query) => {
+                  setIsCopilotOpen(true);
+                }}
               />
+            )}
+
+            {activeNav === 'copilot' && (
+              <div className="h-[calc(100vh-140px)]">
+                <CaseCopilot isPanel={false} />
+              </div>
             )}
 
             {activeNav === 'pratibimb' && (
@@ -432,22 +485,26 @@ export default function App() {
                 </div>
                 <div className="lg:col-span-4 space-y-4">
                   <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-4 shadow-sm space-y-3">
-                    <h3 className="text-xs font-bold text-[#123B63] uppercase tracking-wider flex items-center gap-2 border-b border-[#D9E1E8] pb-2">
-                      <span className="w-2 h-2 rounded-full bg-[#1565C0]" />
+                    <h3 className="text-xs font-bold text-[#0B1F3A] uppercase tracking-wider flex items-center gap-2 border-b border-[#D9E1E8] pb-2">
+                      <span className="w-2 h-2 rounded-full bg-[#1D4ED8]" />
                       Hardware Write-Blocker Status
                     </h3>
                     <div className="space-y-2 text-xs">
                       <div className="bg-[#F8FAFC] p-2.5 rounded border border-[#D9E1E8] flex justify-between">
                         <span className="text-[#607D8B]">Throughput:</span>
-                        <span className="font-bold text-[#1565C0]">{carveSpeed}</span>
+                        <span className="font-bold text-[#1D4ED8]">{carveSpeed}</span>
                       </div>
                       <div className="bg-[#F8FAFC] p-2.5 rounded border border-[#D9E1E8] flex justify-between">
                         <span className="text-[#607D8B]">NPU Accelerator:</span>
-                        <span className="font-bold text-[#2E7D32]">Hailo-8L (26 TOPS)</span>
+                        <span className="font-bold text-[#16A34A]">Hailo-8L (26 TOPS)</span>
+                      </div>
+                      <div className="bg-[#F8FAFC] p-2.5 rounded border border-[#D9E1E8] flex justify-between">
+                        <span className="text-[#607D8B]">SIH26150 Multi-Vendor:</span>
+                        <span className="font-bold text-[#0EA5A4]">Dahua/Hikvision/CP Plus</span>
                       </div>
                       <div className="bg-[#F8FAFC] p-2.5 rounded border border-[#D9E1E8] flex justify-between">
                         <span className="text-[#607D8B]">Bus Protocol:</span>
-                        <span className="font-bold text-[#EF6C00]">READ-ONLY (LOCKED)</span>
+                        <span className="font-bold text-[#F59E0B]">READ-ONLY (LOCKED)</span>
                       </div>
                     </div>
                   </div>
@@ -459,14 +516,14 @@ export default function App() {
               <div className="bg-[#FFFFFF] border border-[#D9E1E8] rounded-xl p-6 shadow-sm space-y-5">
                 <div className="flex justify-between items-start border-b border-[#D9E1E8] pb-4">
                   <div>
-                    <h2 className="text-base font-bold text-[#123B63] uppercase tracking-wide">
+                    <h2 className="text-base font-bold text-[#0B1F3A] uppercase tracking-wide">
                       JUDICIAL CERTIFICATE OF ADMISSIBILITY &amp; FORENSIC AUDIT
                     </h2>
                     <p className="text-xs text-[#607D8B] mt-0.5">
                       Statutory electronic record certificate under Section 65B Bharatiya Sakshya Adhiniyam (BSA) and Section 63 Bharatiya Nyaya Sanhita (BNS 2023).
                     </p>
                   </div>
-                  <span className="bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9] px-3 py-1 rounded text-xs font-bold uppercase">
+                  <span className="bg-[#E8F5E9] text-[#16A34A] border border-[#C8E6C9] px-3 py-1 rounded text-xs font-bold uppercase">
                     SEALED &amp; VERIFIED
                   </span>
                 </div>
@@ -475,7 +532,7 @@ export default function App() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
                       <span className="text-[11px] font-bold text-[#607D8B] uppercase block">Investigation Session</span>
-                      <span className="font-bold text-[#123B63] font-mono mt-0.5 inline-block">{sessionUuid}</span>
+                      <span className="font-bold text-[#0B1F3A] font-mono mt-0.5 inline-block">{sessionUuid}</span>
                     </div>
                     <div>
                       <span className="text-[11px] font-bold text-[#607D8B] uppercase block">Certifying Officer</span>
@@ -487,13 +544,13 @@ export default function App() {
                     </div>
                     <div>
                       <span className="text-[11px] font-bold text-[#607D8B] uppercase block">Digital Vault Hash</span>
-                      <span className="font-bold text-[#2E7D32] font-mono text-[11px] mt-0.5 inline-block truncate max-w-[140px]">{sha256Hash}</span>
+                      <span className="font-bold text-[#16A34A] font-mono text-[11px] mt-0.5 inline-block truncate max-w-[140px]">{sha256Hash}</span>
                     </div>
                   </div>
 
                   <div className="border-t border-[#D9E1E8] pt-3">
                     <span className="text-[11px] font-bold text-[#607D8B] uppercase block mb-1">Cryptographic Bitstream SHA-256 Digest</span>
-                    <div className="bg-[#FFFFFF] p-2.5 rounded border border-[#D9E1E8] font-mono text-xs text-[#1565C0] break-all select-all">
+                    <div className="bg-[#FFFFFF] p-2.5 rounded border border-[#D9E1E8] font-mono text-xs text-[#1D4ED8] break-all select-all">
                       {sha256Hash}
                     </div>
                   </div>
@@ -502,22 +559,22 @@ export default function App() {
                 <div className="flex gap-3">
                   <button
                     onClick={() => alert(
-                      `GOVERNMENT OF INDIA — MHA / I4C\n` +
+                      `NCIS TACTICAL EVIDENCE SUITE\n` +
                       `CERTIFICATE OF ELECTRONIC EVIDENCE UNDER BSA SEC 65B\n\n` +
                       `Case Session: ${sessionUuid}\n` +
                       `Sealing Hash (SHA-256): ${sha256Hash}\n` +
                       `Authorized Inspector: ${officerSession?.officerName || 'Inspector Vikramaditya Rao'} (${officerSession?.officerId || 'IN-DL-4412-SIT'})\n` +
-                      `Agency: ${officerSession?.agency || 'I4C Central Command'} — New Delhi HQ\n` +
+                      `Agency: ${officerSession?.agency || 'Cyber Investigation Division'}\n` +
                       `Status: Admissible in all Courts of Law under BNS 2023 Sec 63.\n` +
                       `Report exported to secure evidence vault.`
                     )}
-                    className="py-2.5 px-5 bg-[#1565C0] hover:bg-[#0D47A1] text-white font-semibold rounded-lg text-xs transition-colors shadow-sm"
+                    className="py-2.5 px-5 bg-[#1D4ED8] hover:bg-[#1E40AF] text-white font-semibold rounded-lg text-xs transition-colors shadow-sm"
                   >
                     EXPORT PRINTABLE SEC 65B CERTIFICATE (PDF)
                   </button>
                   <button
                     onClick={() => setActiveNav('pratibimb')}
-                    className="py-2.5 px-5 bg-[#FFFFFF] hover:bg-[#F4F6F8] text-[#1565C0] border border-[#1565C0] font-semibold rounded-lg text-xs transition-colors"
+                    className="py-2.5 px-5 bg-[#FFFFFF] hover:bg-[#F4F6F9] text-[#1D4ED8] border border-[#1D4ED8] font-semibold rounded-lg text-xs transition-colors"
                   >
                     VIEW IN PRATIBIMB MAP &rarr;
                   </button>
@@ -527,16 +584,136 @@ export default function App() {
           </ModuleErrorBoundary>
         </main>
 
+        {/* ── COPILOT RIGHT SLIDE-OUT PANEL ── */}
+        {isCopilotOpen && (
+          <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-[460px] md:w-[500px] shadow-2xl bg-white border-l border-[#D9E1E8] flex flex-col animate-in slide-in-from-right duration-200">
+            <CaseCopilot onClose={() => setIsCopilotOpen(false)} isPanel={true} />
+          </div>
+        )}
+
       </div>
 
+      {/* ── FLOATING MIC / COPILOT TRIGGER BUTTON ── */}
+      <button
+        onClick={() => setIsCopilotOpen(!isCopilotOpen)}
+        title="Open Case Copilot (Voice / Chat)"
+        className="fixed bottom-20 md:bottom-6 right-5 z-40 w-14 h-14 rounded-full bg-[#0EA5A4] hover:bg-[#0D8A89] text-white shadow-xl flex items-center justify-center transition-transform hover:scale-105 active:scale-95 group focus:outline-none focus:ring-4 focus:ring-[#0EA5A4]/30"
+      >
+        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#16A34A] border-2 border-white" />
+        <svg className="w-6 h-6 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+        </svg>
+      </button>
+
+      {/* ── MOBILE BOTTOM TAB BAR (SM SCREENS) ── */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0B1F3A] border-t border-[#1E3A5F] z-40 flex justify-around items-center py-2 px-1">
+        {/* Tab 1: Home */}
+        <button
+          onClick={() => setActiveNav('dashboard')}
+          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded text-[11px] font-medium transition-colors ${
+            activeNav === 'dashboard' ? 'text-[#0EA5A4]' : 'text-[#90CAF9]'
+          }`}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          <span>Home</span>
+        </button>
+
+        {/* Tab 2: Map */}
+        <button
+          onClick={() => setActiveNav('pratibimb')}
+          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded text-[11px] font-medium transition-colors ${
+            activeNav === 'pratibimb' ? 'text-[#0EA5A4]' : 'text-[#90CAF9]'
+          }`}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+          </svg>
+          <span>Map</span>
+        </button>
+
+        {/* Tab 3: Cases */}
+        <button
+          onClick={() => setActiveNav('crossstation')}
+          className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded text-[11px] font-medium transition-colors ${
+            activeNav === 'crossstation' ? 'text-[#0EA5A4]' : 'text-[#90CAF9]'
+          }`}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          <span>Cases</span>
+        </button>
+
+        {/* Tab 4: Copilot */}
+        <button
+          onClick={() => setIsCopilotOpen(true)}
+          className="flex flex-col items-center gap-0.5 px-2 py-1 rounded text-[11px] font-bold text-[#0EA5A4]"
+        >
+          <div className="w-6 h-6 rounded-full bg-[#0EA5A4] text-white flex items-center justify-center">
+            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3zm7 9a7 7 0 01-14 0H3a9 9 0 0018 0h-2z" />
+            </svg>
+          </div>
+          <span>Copilot</span>
+        </button>
+
+        {/* Tab 5: More */}
+        <button
+          onClick={() => setIsMobileMoreOpen(!isMobileMoreOpen)}
+          className="flex flex-col items-center gap-0.5 px-2 py-1 rounded text-[11px] font-medium text-[#90CAF9]"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <span>More</span>
+        </button>
+      </div>
+
+      {/* ── MOBILE MORE MODAL ── */}
+      {isMobileMoreOpen && (
+        <div className="md:hidden fixed inset-0 z-50 bg-black/60 flex flex-col justify-end p-4 animate-in fade-in">
+          <div className="bg-[#FFFFFF] rounded-2xl p-4 space-y-3 max-h-[80vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b border-[#D9E1E8] pb-2">
+              <span className="font-bold text-sm text-[#0B1F3A]">All Investigation Modules</span>
+              <button onClick={() => setIsMobileMoreOpen(false)} className="p-1 text-[#607D8B]">✕</button>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              {sidebarNavItems.map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    if (item.id === 'copilot') {
+                      setIsCopilotOpen(true);
+                    } else {
+                      setActiveNav(item.id);
+                    }
+                    setIsMobileMoreOpen(false);
+                  }}
+                  className={`p-3 rounded-xl border text-left flex flex-col gap-1 ${
+                    activeNav === item.id ? 'bg-[#1D4ED8] text-white' : 'bg-[#F8FAFC] border-[#D9E1E8] text-[#263238]'
+                  }`}
+                >
+                  <div className="font-bold">{item.label}</div>
+                  <div className={`text-[10px] truncate ${activeNav === item.id ? 'text-[#BFDBFE]' : 'text-[#78909C]'}`}>
+                    {item.sub}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── FOOTER BAR ── */}
-      <footer className="w-full bg-[#FFFFFF] border-t border-[#D9E1E8] py-2 px-6 flex-shrink-0 text-xs text-[#607D8B]">
+      <footer className="w-full bg-[#FFFFFF] border-t border-[#D9E1E8] py-2 px-6 flex-shrink-0 text-xs text-[#607D8B] hidden md:block">
         <div className="max-w-screen-2xl mx-auto flex flex-wrap justify-between items-center gap-2">
           <span>
-            NCIS &nbsp;|&nbsp; Ministry of Home Affairs &nbsp;•&nbsp; I4C &nbsp;•&nbsp; BPR&amp;D &nbsp;|&nbsp; RESTRICTED LAW ENFORCEMENT USE ONLY
+            NCIS – Cyber Intelligence &amp; Investigation Platform (Prototype / Demo Data) | Case Copilot Voice Decision Support
           </span>
           <span>
-            System: Pratibimb Cartographic &amp; Evidence Suite &nbsp;|&nbsp; Standards: CCTNS / ICJS / AIS-140 Compliant
+            SIH26150 Multi-Vendor DVR/NVR Forensics (NTRO) | Standards: CCTNS / ICJS / BSA Sec 65B
           </span>
         </div>
       </footer>

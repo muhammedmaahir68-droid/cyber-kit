@@ -122,10 +122,10 @@ export default function FacialRecognitionScanner() {
             </svg>
             ALL-INDIA FACIAL RECOGNITION &amp; NCRB CRIMINAL DOSSIER SCANNER
           </h3>
-          <p className="text-xs text-[#607D8B] mt-0.5">Upload suspect photograph or select preset dossiers to query All-India Criminal Database (NCRB / CCTNS).</p>
+          <p className="text-xs text-[#607D8B] mt-0.5">Upload suspect photograph or select preset dossiers to query All-India Criminal Database (Exact-image matching &amp; perceptual vector feature sim - Prototype/Demo data).</p>
         </div>
         <span className="text-[10px] bg-[#E3F2FD] text-[#1565C0] border border-[#90CAF9] px-3 py-1 rounded font-bold uppercase">
-          128D Vector Scanner
+          Exact-Image / Vector Match (Demo)
         </span>
       </div>
 

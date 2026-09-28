@@ -101,7 +101,7 @@ export default function EmergencyDispatchView() {
 
           <button
             onClick={handleBiometricUnlock}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-mono text-xs font-bold shadow-lg shadow-emerald-600/20 flex items-center gap-2"
+            className="px-4 py-2 rounded-xl bg-[#1565C0] hover:bg-[#0D47A1] text-white font-mono text-xs font-bold shadow-sm flex items-center gap-2"
           >
             <span className="text-sm"></span> SCAN FINGERPRINT & FACE
           </button>

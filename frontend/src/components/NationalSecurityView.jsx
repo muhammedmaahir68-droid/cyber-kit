@@ -207,7 +207,7 @@ export default function NationalSecurityView() {
           <button
             onClick={checkWatchlist}
             disabled={isLoading}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-mono text-xs font-bold shadow-lg shadow-red-600/20"
+            className="px-4 py-2 rounded-xl bg-[#C62828] hover:bg-[#B71C1C] text-white font-mono text-xs font-bold shadow-sm"
           >
             {isLoading ? 'QUERYING NATGRID...' : 'RUN NATIONAL WATCHLIST MATCH'}
           </button>

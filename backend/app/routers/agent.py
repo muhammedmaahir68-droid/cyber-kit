@@ -32,3 +32,37 @@ def run_agentic_analysis(req: AgenticAnalysisRequest):
         "traces": traces,
         "summary": "Agentic reasoning cycle completed with 0 external API calls."
     }
+
+from app.services.case_copilot_service import case_copilot_service
+
+class CopilotQueryRequest(BaseModel):
+    query: str
+    case_id: str = "FIR-991/2025"
+
+@router.get("/copilot/eval")
+def get_copilot_evaluation_benchmark():
+    """Runs accuracy benchmark on 50 synthetic FIR cases: Entity F1, Kingpin Top-3, Evidence Gap Recall"""
+    return case_copilot_service.run_benchmark_evaluation()
+
+@router.get("/copilot/cases")
+def list_copilot_cases():
+    """Returns synthetic cases available for investigation"""
+    return [
+        {"case_id": c["case_id"], "title": c["title"], "snippet": c["narrative"][:120] + "..."}
+        for c in case_copilot_service.cases.values()
+    ]
+
+@router.post("/copilot/query")
+def query_copilot(req: CopilotQueryRequest):
+    """Processes an investigation query with NER entity extraction, suspect ranking, and evidence gap detection"""
+    entities = case_copilot_service.extract_entities(req.query)
+    suspects = case_copilot_service.rank_suspects(req.case_id)
+    gaps = case_copilot_service.list_evidence_gaps(req.case_id)
+    return {
+        "case_id": req.case_id,
+        "query": req.query,
+        "extracted_entities": entities,
+        "suspect_rankings": suspects,
+        "evidence_gaps": gaps,
+        "status": "PROCESSED"
+    }
