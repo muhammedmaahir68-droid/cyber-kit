@@ -10,6 +10,7 @@ import EdgeHardwareConsole from './components/EdgeHardwareConsole';
 import GovernmentAuthPortal from './components/GovernmentAuthPortal';
 import IntroSplash from './components/IntroSplash';
 import CaseCopilot from './components/CaseCopilot';
+import { AshokaLionCapital, IndianFlag } from './components/NationalEmblems';
 
 class ModuleErrorBoundary extends React.Component {
   constructor(props) {
@@ -244,27 +245,29 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#F4F6F9] text-[#263238] font-sans antialiased flex flex-col pb-16 md:pb-0">
 
+      {/* ── SOVEREIGNTY TRICOLOR RIBBON (TIRANGA) ── */}
+      <div className="w-full h-1.5 bg-gradient-to-r from-[#FF9933] via-white to-[#138808] flex-shrink-0" />
+
       {/* ── TOP HEADER (#0B1F3A Navy) ── */}
       <header className="w-full bg-[#0B1F3A] text-white border-b border-[#1E3A5F] shadow-md flex-shrink-0">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
 
-          {/* Left: NCIS Platform Identity & Prototype Label */}
-          <div className="flex items-center gap-3 min-w-0">
-            {/* Modern Cyber Intelligence Icon */}
-            <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-[#0EA5A4] text-white flex items-center justify-center font-bold text-sm shadow-md">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
+          {/* Left: Indian Emblem + NCIS Platform Identity */}
+          <div className="flex items-center gap-3.5 min-w-0">
+            {/* Authentic State Emblem of India (Ashoka Lion Capital) */}
+            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white p-1 border-2 border-[#D9E1E8] shadow-sm overflow-hidden flex items-center justify-center">
+              <AshokaLionCapital className="w-10 h-10 object-contain text-[#123B63]" />
             </div>
 
             <div className="min-w-0">
               <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                <span className="text-[10px] font-bold bg-[#0EA5A4] text-white px-2 py-0.5 rounded tracking-wider uppercase">
-                  Prototype / Demo Data
+                <IndianFlag className="w-5 h-3.5 rounded-sm flex-shrink-0 shadow-xs" />
+                <span className="text-[11px] font-bold text-[#E3F2FD] tracking-wider uppercase">
+                  भारत सरकार &nbsp;|&nbsp; Government of India
                 </span>
                 <span className="text-[#90CAF9] text-xs">•</span>
-                <span className="text-[11px] text-[#90CAF9] font-medium tracking-wide">
-                  SIH26150 Multi-Vendor Forensics
+                <span className="text-[10px] font-bold bg-[#0EA5A4] text-white px-2 py-0.5 rounded tracking-wider uppercase">
+                  Prototype / Demo Data
                 </span>
               </div>
               <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white leading-tight uppercase flex items-center gap-2">
