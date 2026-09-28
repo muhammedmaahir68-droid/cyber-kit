@@ -206,4 +206,13 @@ class CaseCopilotService:
             "compliance": "SIH26150 & Bharatiya Nagarik Suraksha Sanhita (BNSS 2023) Standards Verified"
         }
 
+    def evaluate_benchmark(self) -> Dict[str, Any]:
+        return self.run_benchmark_evaluation()
+
 case_copilot_service = CaseCopilotService()
+
+if __name__ == "__main__":
+    import json
+    print("Running NCIS Case Copilot 50-Case Benchmark Evaluation...")
+    results = case_copilot_service.run_benchmark_evaluation()
+    print(json.dumps(results, indent=2))
