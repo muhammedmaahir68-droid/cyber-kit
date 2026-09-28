@@ -283,10 +283,6 @@ export default function App() {
                 <span className="text-[11px] font-bold text-[#E3F2FD] tracking-wider uppercase">
                   भारत सरकार &nbsp;|&nbsp; Government of India
                 </span>
-                <span className="text-[#90CAF9] text-xs">•</span>
-                <span className="text-[10px] font-bold bg-[#0EA5A4] text-white px-2 py-0.5 rounded tracking-wider uppercase">
-                  Prototype / Demo Data
-                </span>
               </div>
               <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white leading-tight uppercase flex items-center gap-2">
                 <span>NCIS</span>
