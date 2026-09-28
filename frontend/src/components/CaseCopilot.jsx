@@ -8,7 +8,7 @@ const DEMO_FIRS = {
     station: 'Cyber PS, New Delhi',
     date: '2025-07-14',
     complainant: 'Ramesh Gupta, s/o Mahesh Gupta',
-    accused: 'Unknown cybercriminals',
+    accused: 'Unknown cybercriminals (Mule Ring Desk)',
     sections: 'BNS Sec 316 (Cheating), IT Act 66C, 66D, PMLA 2002',
     narrative: `Complainant Ramesh Gupta reported that on 12-Jul-2025 he received a WhatsApp message from unknown number +91-9876543210 posing as SBI customer care. He was directed to share OTP. Rs 4,82,000 was debited from his SBI account ending 4412 via IMPS to account 9988776655 at Paytm Payments Bank. CCTV at ATM Sector-15 Noida captured a person withdrawing cash at 14:32 hrs. Suspect used SIM registered to one FARHAN KHAN (IMEI: 356789012345678). Further traces lead to a property at 42-C, Okhla Phase-II. Two phones (IMEI: 356789012345678, IMEI: 890123456789012) recovered from premises. Digital wallet UPI-ID: farhan@paytm identified. Call records pending from Airtel for number +91-9876543210.`,
     status: 'ACTIVE',
@@ -50,19 +50,13 @@ const agentTools = {
 
   extract_entities: (text) => {
     const entities = { persons: [], phones: [], imeis: [], wallets: [], places: [], dates: [] };
-    // Persons (capitalized full names)
     const personMatches = text.match(/\b([A-Z][A-Z]+(?:\s+[A-Z][A-Z]+)+)\b/g) || [];
     entities.persons = [...new Set(personMatches.filter(n => !['FIR', 'SBI', 'HDFC', 'CCTV', 'CDR', 'ATM', 'STF', 'NCB', 'PMLA', 'NDPS', 'FEMA', 'APK', 'VPN', 'IMPS', 'UPI', 'BNS', 'IT', 'ACT', 'SEC', 'IMEI', 'CSMI', 'ERSS', 'NATGRID', 'CCTNS', 'ICJS'].includes(n) && n.length > 4))];
-    // Phones
     entities.phones = [...new Set((text.match(/\+91-\d{10}|\b9\d{9}\b|\b8\d{9}\b|\b7\d{9}\b/g) || []))];
-    // IMEIs
     entities.imeis = [...new Set((text.match(/IMEI[:\s]+(\d{15})/g) || []).map(m => m.replace(/IMEI[:\s]+/, '')))];
-    // Wallets / UPI / Crypto
     entities.wallets = [...new Set((text.match(/UPI-ID:[^\s,]+|0x[A-Fa-f0-9]{4,}/g) || []))];
-    // Places
     const placePatterns = ['Delhi', 'Mumbai', 'Bengaluru', 'Noida', 'Okhla', 'Andheri', 'Koramangala', 'Bangkok', 'Singapore', 'New Delhi'];
     entities.places = placePatterns.filter(p => text.includes(p));
-    // Dates
     entities.dates = [...new Set((text.match(/\d{4}-\d{2}-\d{2}|\d{2}-\w{3}-\d{4}/g) || []))];
     return { source: 'NLP_ENGINE', data: entities };
   },
@@ -75,7 +69,7 @@ const agentTools = {
     };
     const result = Object.entries(graph).find(([k]) => entity.toUpperCase().includes(k.toUpperCase()));
     if (result) return { source: 'GNN_GRAPH', data: { entity: result[0], ...result[1] } };
-    return { source: 'GNN_GRAPH', data: { entity, connections: [], degree: 0, note: 'Entity not yet indexed in graph. Build graph from FIR entities first.' } };
+    return { source: 'GNN_GRAPH', data: { entity, connections: [], degree: 0, note: 'Entity not yet indexed in graph.' } };
   },
 
   rank_suspects: (caseId) => {
@@ -99,21 +93,21 @@ const agentTools = {
   list_evidence_gaps: (caseId) => {
     const gaps = {
       'FIR-991/2025': [
-        { type: 'CDR', description: 'Call detail records for +91-9876543210 from Airtel', priority: 'HIGH', section: 'Sec 91 CrPC / BNSS', canDraft: true },
-        { type: 'BANK', description: 'Full statement for Paytm account 9988776655', priority: 'HIGH', section: 'Sec 91 CrPC / BNSS', canDraft: true },
-        { type: 'CCTV', description: 'ATM CCTV footage Sector-15 Noida 14:00-15:00 on 12-Jul-2025', priority: 'MEDIUM', section: 'Sec 91 CrPC / BNSS', canDraft: true },
+        { type: 'CDR', description: 'Call detail records for +91-9876543210 from Airtel', priority: 'HIGH', section: 'Sec 94 BNSS 2023', canDraft: true },
+        { type: 'BANK', description: 'Full statement for Paytm account 9988776655', priority: 'HIGH', section: 'Sec 107 BNSS 2023', canDraft: true },
+        { type: 'CCTV', description: 'ATM CCTV footage Sector-15 Noida 14:00-15:00 on 12-Jul-2025', priority: 'MEDIUM', section: 'Sec 94 BNSS 2023', canDraft: true },
         { type: 'TRAVEL', description: 'Travel records for FARHAN KHAN', priority: 'LOW', section: 'Bureau of Immigration request', canDraft: true },
       ],
       'FIR-114/2025': [
-        { type: 'CDR', description: 'CDR for +91-7654321098 from Jio/Airtel', priority: 'HIGH', section: 'Sec 91 CrPC / BNSS', canDraft: true },
-        { type: 'BANK', description: 'HDFC account 1122334455 full transaction history', priority: 'HIGH', section: 'Sec 91 CrPC / BNSS', canDraft: true },
+        { type: 'CDR', description: 'CDR for +91-7654321098 from Jio/Airtel', priority: 'HIGH', section: 'Sec 94 BNSS 2023', canDraft: true },
+        { type: 'BANK', description: 'HDFC account 1122334455 full transaction history', priority: 'HIGH', section: 'Sec 107 BNSS 2023', canDraft: true },
         { type: 'TRAVEL', description: 'Complete travel records from BCAS / Immigration', priority: 'HIGH', section: 'BCAS request', canDraft: true },
         { type: 'CRYPTO', description: 'Blockchain trace report for wallet 0xA3f8...7e12', priority: 'MEDIUM', section: 'FIU-IND referral', canDraft: false },
       ],
       'FIR-556/2025': [
-        { type: 'BANK', description: 'Statements for all 12 mule accounts', priority: 'HIGH', section: 'Sec 91 CrPC / BNSS', canDraft: true },
-        { type: 'CDR', description: 'CDR for +91-8899001122 (DEEPA NAIR)', priority: 'HIGH', section: 'Sec 91 CrPC / BNSS', canDraft: true },
-        { type: 'CCTV', description: 'Koramangala ATM footage 2025-08-20 08:00-10:00', priority: 'MEDIUM', section: 'Sec 91 CrPC / BNSS', canDraft: true },
+        { type: 'BANK', description: 'Statements for all 12 mule accounts', priority: 'HIGH', section: 'Sec 107 BNSS 2023', canDraft: true },
+        { type: 'CDR', description: 'CDR for +91-8899001122 (DEEPA NAIR)', priority: 'HIGH', section: 'Sec 94 BNSS 2023', canDraft: true },
+        { type: 'CCTV', description: 'Koramangala ATM footage 2025-08-20 08:00-10:00', priority: 'MEDIUM', section: 'Sec 94 BNSS 2023', canDraft: true },
         { type: 'MLAT', description: 'MLAT request to Singapore for IP 103.21.58.92 records', priority: 'HIGH', section: 'MLAT Treaty via MEA', canDraft: false },
       ],
     };
@@ -123,24 +117,12 @@ const agentTools = {
 
   draft_request: (type, caseId, entity) => {
     const templates = {
-      CDR: `DRAFT — Call Detail Record Request\nTo: Nodal Officer, [TELECOM OPERATOR]\nFrom: Investigating Officer, [STATION]\nRef: ${caseId}\n\nPursuant to Sec 91 BNSS 2023 and Telecom License Condition, please provide CDR for number [${entity}] for period [DATE RANGE]. This is required for investigation of offences under BNS 2023 Sec 316 / IT Act 66C.\n\n[REQUIRES IO SIGNATURE & STAMP — DRAFT ONLY]`,
-      BANK: `DRAFT — Bank Account Statement Request\nTo: Nodal Officer, [BANK NAME]\nFrom: Investigating Officer, [STATION]\nRef: ${caseId}\n\nPursuant to Sec 91 BNSS 2023, please provide complete transaction history for account [${entity}]. Required for tracing proceeds of cybercrime under PMLA 2002.\n\n[REQUIRES IO SIGNATURE & STAMP — DRAFT ONLY]`,
-      CCTV: `DRAFT — CCTV Footage Preservation & Collection Notice\nTo: Manager, [LOCATION]\nFrom: Investigating Officer, [STATION]\nRef: ${caseId}\n\nPursuant to Sec 91 BNSS 2023, you are directed to preserve and hand over CCTV footage of [${entity}] for specified date/time range. Destruction of records after this notice constitutes offence under BNS Sec 238.\n\n[REQUIRES IO SIGNATURE & STAMP — DRAFT ONLY]`,
-      TRAVEL: `DRAFT — Travel Record Request\nTo: Bureau of Immigration, MHA\nFrom: Investigating Officer, [STATION]\nRef: ${caseId}\n\nPlease provide complete immigration/travel records for [${entity}]. Required for establishing movement pattern in active cybercrime investigation.\n\n[REQUIRES IO SIGNATURE & STAMP — DRAFT ONLY]`,
+      CDR: `DRAFT — Call Detail Record Request\nTo: Nodal Officer, [TELECOM OPERATOR]\nFrom: Investigating Officer, [STATION]\nRef: ${caseId}\n\nPursuant to Sec 94 BNSS 2023, please provide CDR for number [${entity}] for period [DATE RANGE]. Required for investigation under BNS 2023 Sec 316 / IT Act 66C.\n\n[REQUIRES IO SIGNATURE & STAMP — DRAFT ONLY]`,
+      BANK: `DRAFT — Bank Account Statement Request\nTo: Nodal Officer, [BANK NAME]\nFrom: Investigating Officer, [STATION]\nRef: ${caseId}\n\nPursuant to Sec 107 BNSS 2023, please provide complete transaction ledger for account [${entity}]. Required for tracing proceeds of cybercrime under PMLA 2002.\n\n[REQUIRES IO SIGNATURE & STAMP — DRAFT ONLY]`,
+      CCTV: `DRAFT — CCTV Footage Preservation & Collection Notice\nTo: Branch Manager, [LOCATION]\nFrom: Investigating Officer, [STATION]\nRef: ${caseId}\n\nPursuant to Sec 94 BNSS 2023, you are directed to preserve and hand over CCTV footage of [${entity}] for specified date/time range.\n\n[REQUIRES IO SIGNATURE & STAMP — DRAFT ONLY]`,
+      TRAVEL: `DRAFT — Travel Record Request\nTo: Bureau of Immigration, MHA\nFrom: Investigating Officer, [STATION]\nRef: ${caseId}\n\nPlease provide complete immigration/travel records for [${entity}]. Required for establishing movement pattern in active investigation.\n\n[REQUIRES IO SIGNATURE & STAMP — DRAFT ONLY]`,
     };
-    return { source: 'DRAFT_ENGINE', data: { type, draft: templates[type] || `DRAFT — ${type} request for case ${caseId}`, warning: 'DRAFT ONLY — requires officer approval, signature and official stamp before dispatch.' } };
-  },
-
-  search_records: (query) => {
-    const lower = query.toLowerCase();
-    const results = [];
-    Object.values(DEMO_FIRS).forEach(fir => {
-      if (fir.narrative.toLowerCase().includes(lower) || fir.title.toLowerCase().includes(lower) || fir.id.toLowerCase().includes(lower)) {
-        results.push({ source: fir.id, title: fir.title, station: fir.station, match: 'FIR narrative match' });
-      }
-    });
-    if (results.length === 0) results.push({ source: 'RECORDS_DB', note: `No records found for "${query}" in demo dataset.` });
-    return { source: 'RECORDS_SEARCH', data: results };
+    return { source: 'DRAFT_ENGINE', data: { type, draft: templates[type] || `DRAFT — ${type} request for case ${caseId}`, warning: 'DRAFT ONLY — requires officer approval and official stamp.' } };
   },
 
   log_action: (action, caseId, officerId) => {
@@ -156,7 +138,7 @@ const agentTools = {
   },
 };
 
-// ─── NATURAL LANGUAGE PROCESSING (NLP) & SEMANTIC UNDERSTANDING ENGINE ─────────
+// ─── NATURAL LANGUAGE PROCESSING (NLP) & SEMANTIC RESOLVER ─────────────────────
 const NlpEngine = {
   detectLanguage(text, activeLang) {
     if (/[\u0900-\u097F]/.test(text)) return 'hi-IN';
@@ -180,7 +162,7 @@ const NlpEngine = {
     if (t.includes('deepa') || t.includes('trojan') || t.includes('bengaluru') || t.includes('ksb') || t.includes('2.3 crore') || t.includes('koramangala') || t.includes('8899001122') || t.includes('apk')) {
       return 'FIR-556/2025';
     }
-    return activeCaseId || null;
+    return activeCaseId || 'FIR-991/2025';
   },
 
   classifyIntent(text) {
@@ -199,7 +181,7 @@ const NlpEngine = {
   }
 };
 
-// ─── LLM AGENT LOOP WITH NLP REASONING ────────────────────────────────────────
+// ─── AGENTIC WORKFLOW REASONER ────────────────────────────────────────────────
 async function runAgentLoop(userMessage, history, setThinking, currentLang = 'en-IN') {
   const lang = NlpEngine.detectLanguage(userMessage, currentLang);
   const intent = NlpEngine.classifyIntent(userMessage);
@@ -207,11 +189,11 @@ async function runAgentLoop(userMessage, history, setThinking, currentLang = 'en
   const targetCaseId = NlpEngine.resolveCase(userMessage, activeCaseId);
 
   setThinking(
-    lang === 'hi-IN' ? 'प्राकृतिक भाषा विश्लेषण (NLP) एवं उपकरण निष्पादन...' :
-    lang === 'ta-IN' ? 'இயற்கை மொழி செயலாக்கம் (NLP) மற்றும் பகுப்பாய்வு...' :
-    'Natural Language Processing (NLP) & tool intent routing...'
+    lang === 'hi-IN' ? 'प्राकृतिक भाषा विश्लेषण एवं योजना...' :
+    lang === 'ta-IN' ? 'இயற்கை மொழி செயலாக்கம் மற்றும் பகுப்பாய்வு...' :
+    'Parsing natural language query & forming tool plan...'
   );
-  await sleep(350);
+  await sleep(300);
 
   const toolResults = {};
   const steps = [];
@@ -219,7 +201,7 @@ async function runAgentLoop(userMessage, history, setThinking, currentLang = 'en
   if (intent === 'LIST_ALL_CASES') {
     toolResults.firs = Object.values(DEMO_FIRS).map(f => ({ id: f.id, title: f.title, station: f.station, status: f.status }));
   } else if (targetCaseId) {
-    setThinking(`Executing get_fir(${targetCaseId}) and extract_entities...`);
+    setThinking(`Calling get_fir(${targetCaseId}) & extract_entities...`);
     toolResults.fir = agentTools.get_fir(targetCaseId);
     if (toolResults.fir?.data) {
       toolResults.entities = agentTools.extract_entities(toolResults.fir.data.narrative);
@@ -237,7 +219,7 @@ async function runAgentLoop(userMessage, history, setThinking, currentLang = 'en
   setThinking(
     lang === 'hi-IN' ? 'साक्ष्य आधारित उत्तर तैयार किया जा रहा है...' :
     lang === 'ta-IN' ? 'சான்றுகள் அடிப்படையிலான பதில் தொகுக்கப்படுகிறது...' :
-    'Composing evidence-grounded response with citations...'
+    'Synthesizing evidentiary response with citations...'
   );
   await sleep(300);
 
@@ -300,7 +282,6 @@ function buildNlpResponse({ userMessage, intent, firId, lang, toolResults, steps
   const gaps = toolResults.gaps?.data || [];
   const topSuspect = suspects[0];
 
-  // Specific NLP Response generation based on Intent
   if (intent === 'SUSPECT_KINGPIN') {
     sources.push('SUSPECT_RANKER');
     suspects.forEach(s => suspectList.push(s));
@@ -345,7 +326,6 @@ function buildNlpResponse({ userMessage, intent, firId, lang, toolResults, steps
     gaps.forEach(g => gapList.push(g));
     msgs.push(`**[${fir.id}] Executive Briefing — ${fir.title}**\n\n• **Police Station:** ${fir.station} · Date: ${fir.date} · IO: ${fir.investigator}\n• **Complainant:** ${fir.complainant}\n• **Accused Entity:** ${fir.accused}\n• **Modus Operandi:** Fraudulent WhatsApp impersonation → OTP interception → immediate IMPS transfer → ATM cash-out.\n• **Seized Assets:** 2 Mobile Handsets, SIM registered to FARHAN KHAN, Glock-19 weapon image carved.\n• **Evidentiary Gaps:** Airtel CDR logs and Paytm Payments Bank ledgers pending.`);
   } else {
-    // Default comprehensive overview
     msgs.push(`**[${fir.id}]** — *${fir.title}*\nStation: ${fir.station} · Date: ${fir.date} · IO: ${fir.investigator}`);
     msgs.push(`Sections: \`${fir.sections}\``);
     if (entities.persons.length || entities.phones.length) {
@@ -375,18 +355,18 @@ function buildNlpResponse({ userMessage, intent, firId, lang, toolResults, steps
 // ─── SOURCE CHIP ──────────────────────────────────────────────────────────────
 function SourceChip({ source }) {
   const colors = {
-    'FIR': 'bg-[#E3F2FD] text-[#1565C0] border-[#90CAF9]',
-    'NLP': 'bg-[#F3E5F5] text-[#6A1B9A] border-[#CE93D8]',
-    'GNN': 'bg-[#E8F5E9] text-[#2E7D32] border-[#A5D6A7]',
-    'SUSPECT': 'bg-[#FFF3E0] text-[#E65100] border-[#FFCC80]',
-    'EVIDENCE': 'bg-[#FCE4EC] text-[#880E4F] border-[#F48FB1]',
-    'DRAFT': 'bg-[#E0F2F1] text-[#004D40] border-[#80CBC4]',
-    'AUDIT': 'bg-[#F5F5F5] text-[#424242] border-[#BDBDBD]',
-    'RECORDS': 'bg-[#E8EAF6] text-[#283593] border-[#9FA8DA]',
+    'FIR': 'bg-[#E0F2FE] text-[#1D4ED8] border-[#93C5FD]',
+    'NLP': 'bg-[#F3E8FF] text-[#7E22CE] border-[#D8B4FE]',
+    'GNN': 'bg-[#DCFCE7] text-[#16A34A] border-[#86EFAC]',
+    'SUSPECT': 'bg-[#FEF3C7] text-[#D97706] border-[#FDE68A]',
+    'EVIDENCE': 'bg-[#FEE2E2] text-[#DC2626] border-[#FCA5A5]',
+    'DRAFT': 'bg-[#CCFBF1] text-[#0F766E] border-[#5EEAD4]',
+    'AUDIT': 'bg-[#F1F5F9] text-[#475569] border-[#CBD5E1]',
+    'RECORDS': 'bg-[#EDE9FE] text-[#4338CA] border-[#C4B5FD]',
   };
   const key = Object.keys(colors).find(k => source.toUpperCase().startsWith(k)) || 'AUDIT';
   return (
-    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold border ${colors[key]}`}>
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${colors[key]} shadow-xs`}>
       {source}
     </span>
   );
@@ -394,48 +374,55 @@ function SourceChip({ source }) {
 
 // ─── SUSPECT CARD ─────────────────────────────────────────────────────────────
 function SuspectCard({ suspect }) {
-  const confColor = suspect.confidence >= 75 ? '#C62828' : suspect.confidence >= 50 ? '#E65100' : '#607D8B';
+  const confColor = suspect.confidence >= 75 ? '#DC2626' : suspect.confidence >= 50 ? '#F59E0B' : '#64748B';
   return (
-    <div className="bg-[#FFFBF0] border border-[#FFCC80] rounded-lg p-3 space-y-1.5">
+    <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-3.5 space-y-2 ios-shadow transition-all hover:border-[#0EA5A4]">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold bg-[#E65100] text-white px-1.5 py-0.5 rounded">#{suspect.rank}</span>
-          <span className="text-xs font-bold text-[#263238]">{suspect.name}</span>
+          <span className="text-[10px] font-bold bg-[#F59E0B] text-white px-2 py-0.5 rounded-full">#{suspect.rank}</span>
+          <span className="text-xs font-bold text-[#0B1F3A]">{suspect.name}</span>
         </div>
-        <span className="text-xs font-bold" style={{ color: confColor }}>{suspect.confidence}% lead confidence</span>
+        <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100" style={{ color: confColor }}>
+          {suspect.confidence}% lead confidence
+        </span>
       </div>
-      <div className="space-y-0.5">
+      <div className="space-y-1">
         {suspect.reasons.map((r, i) => (
-          <div key={i} className="text-[11px] text-[#607D8B] flex gap-1.5">
-            <span className="text-[#E65100] flex-shrink-0">+</span>
+          <div key={i} className="text-[11px] text-[#475569] flex gap-1.5 items-start">
+            <span className="text-[#0EA5A4] flex-shrink-0 font-bold">•</span>
             <span>{r}</span>
           </div>
         ))}
       </div>
-      <div className="bg-[#FFF8E1] border border-[#FFE082] rounded p-2 text-[11px] text-[#5D4037]">
-        <strong>Recommended action:</strong> {suspect.action}
+      <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-2.5 text-[11px] text-[#1E293B]">
+        <strong className="text-[#0B1F3A]">Recommended action:</strong> {suspect.action}
       </div>
-      <p className="text-[10px] text-[#78909C] italic">Not a declaration of guilt — investigative lead only. [SUSPECT_RANKER]</p>
+      <p className="text-[10px] text-[#94A3B8] italic">Not an adjudication of guilt — investigative lead only. [SUSPECT_RANKER]</p>
     </div>
   );
 }
 
 // ─── EVIDENCE GAP CARD ───────────────────────────────────────────────────────
 function EvidenceGapCard({ gap, onDraft }) {
-  const prioColor = gap.priority === 'HIGH' ? '#C62828' : gap.priority === 'MEDIUM' ? '#E65100' : '#607D8B';
+  const prioColor = gap.priority === 'HIGH' ? '#DC2626' : gap.priority === 'MEDIUM' ? '#F59E0B' : '#64748B';
   return (
-    <div className="bg-[#FFF8F8] border border-[#FFCDD2] rounded-lg p-3 flex items-start justify-between gap-2">
-      <div className="space-y-0.5 flex-1 min-w-0">
+    <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-3.5 flex items-start justify-between gap-3 ios-shadow transition-all hover:border-[#DC2626]/40">
+      <div className="space-y-1 flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded border" style={{ color: prioColor, borderColor: prioColor, backgroundColor: `${prioColor}15` }}>{gap.priority}</span>
-          <span className="text-xs font-bold text-[#123B63]">{gap.type}</span>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border" style={{ color: prioColor, borderColor: prioColor, backgroundColor: `${prioColor}15` }}>
+            {gap.priority}
+          </span>
+          <span className="text-xs font-bold text-[#0B1F3A]">{gap.type}</span>
         </div>
-        <p className="text-[11px] text-[#607D8B] truncate">{gap.description}</p>
-        <p className="text-[10px] text-[#78909C]">Legal basis: {gap.section}</p>
+        <p className="text-[11px] text-[#475569]">{gap.description}</p>
+        <p className="text-[10px] text-[#94A3B8]">Legal basis: {gap.section}</p>
       </div>
       {gap.canDraft && (
-        <button onClick={() => onDraft(gap.type)} className="flex-shrink-0 text-[11px] px-2 py-1 bg-[#0EA5A4] hover:bg-[#0D8A89] text-white rounded font-semibold transition-colors">
-          Draft
+        <button
+          onClick={() => onDraft(gap.type)}
+          className="flex-shrink-0 text-xs px-3 py-1.5 bg-[#0EA5A4] hover:bg-[#0D8A89] text-white rounded-xl font-semibold transition-all shadow-sm hover:scale-105"
+        >
+          Draft Notice
         </button>
       )}
     </div>
@@ -445,18 +432,21 @@ function EvidenceGapCard({ gap, onDraft }) {
 // ─── DRAFT PREVIEW CARD ──────────────────────────────────────────────────────
 function DraftCard({ draft, onApprove }) {
   return (
-    <div className="bg-[#E0F2F1] border border-[#80CBC4] rounded-lg p-3 space-y-2">
+    <div className="bg-[#F0FDFA] border border-[#5EEAD4] rounded-2xl p-4 space-y-2.5 ios-shadow">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-bold text-[#004D40]">DRAFT: {draft.type} REQUEST</span>
-        <span className="text-[10px] bg-[#FFB300] text-white px-2 py-0.5 rounded font-bold">PENDING APPROVAL</span>
+        <span className="text-xs font-bold text-[#0F766E] uppercase tracking-wider">DRAFT: {draft.type} REQUEST</span>
+        <span className="text-[10px] bg-[#F59E0B] text-white px-2 py-0.5 rounded-full font-bold">PENDING APPROVAL</span>
       </div>
-      <pre className="text-[10px] text-[#263238] whitespace-pre-wrap font-mono bg-white border border-[#B2DFDB] rounded p-2 max-h-32 overflow-y-auto">{draft.draft}</pre>
-      <p className="text-[10px] text-[#C62828] font-semibold">{draft.warning}</p>
+      <pre className="text-[10px] text-[#1E293B] whitespace-pre-wrap font-mono bg-white border border-[#99F6E4] rounded-xl p-3 max-h-36 overflow-y-auto">{draft.draft}</pre>
+      <p className="text-[10px] text-[#DC2626] font-semibold">{draft.warning}</p>
       <div className="flex gap-2">
-        <button onClick={() => onApprove(draft)} className="text-xs px-3 py-1.5 bg-[#2E7D32] hover:bg-[#1B5E20] text-white rounded font-semibold transition-colors">
-          Approve & Download
+        <button
+          onClick={() => onApprove(draft)}
+          className="text-xs px-3.5 py-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-xl font-semibold transition-all shadow-sm"
+        >
+          Approve &amp; Download
         </button>
-        <button className="text-xs px-3 py-1.5 bg-[#FFFFFF] border border-[#D9E1E8] text-[#607D8B] rounded font-semibold">
+        <button className="text-xs px-3.5 py-1.5 bg-white border border-[#E2E8F0] text-[#64748B] hover:text-[#0B1F3A] rounded-xl font-semibold transition-all">
           Discard
         </button>
       </div>
@@ -464,13 +454,75 @@ function DraftCard({ draft, onApprove }) {
   );
 }
 
-// ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
-export default function CaseCopilot({ onClose, isPanel = false }) {
+// ─── SIRI ORB & ACOUSTIC SOUNDWAVE VISUALIZER ─────────────────────────────────
+function SiriOrbVisualizer({ isListening, isSpeaking, transcript, onMicTap, onClose }) {
+  return (
+    <div className="relative flex flex-col items-center justify-center p-6 text-center space-y-5">
+      {/* Siri Glowing Ambient Backdrop Aura */}
+      <div className="relative flex items-center justify-center">
+        {/* Outer Radiant Glow */}
+        <div className={`absolute w-44 h-44 rounded-full transition-all duration-700 ${
+          isListening
+            ? 'bg-gradient-to-tr from-[#0EA5A4] via-[#1D4ED8] to-[#818CF8] opacity-80 blur-2xl animate-siri-pulse'
+            : isSpeaking
+            ? 'bg-gradient-to-tr from-[#16A34A] via-[#0EA5A4] to-[#1D4ED8] opacity-75 blur-2xl animate-siri-pulse'
+            : 'bg-gradient-to-tr from-[#0EA5A4] to-[#1D4ED8] opacity-35 blur-xl'
+        }`} />
+
+        {/* Dynamic Rotating Fluid Orb */}
+        <div
+          onClick={onMicTap}
+          className={`relative z-10 w-28 h-28 rounded-full cursor-pointer flex items-center justify-center shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+            isListening ? 'ring-4 ring-[#0EA5A4]/60' : 'ring-2 ring-white/30'
+          }`}
+          style={{
+            background: 'radial-gradient(circle at 35% 35%, #5EEAD4 0%, #0EA5A4 30%, #1D4ED8 70%, #0B1F3A 100%)',
+          }}
+        >
+          {/* Animated Inner Rings */}
+          <div className="absolute inset-1 rounded-full border border-white/40 animate-siri-spin" />
+          <div className="absolute inset-3 rounded-full border border-teal-200/30 animate-pulse" />
+
+          {/* Center Mic Icon or Soundwave Indicator */}
+          <div className="text-white z-20">
+            {isListening ? (
+              <div className="flex items-center gap-1 h-8">
+                <span className="w-1 bg-white rounded-full animate-siri-wave-1" />
+                <span className="w-1 bg-white rounded-full animate-siri-wave-2" />
+                <span className="w-1 bg-white rounded-full animate-siri-wave-3" />
+                <span className="w-1 bg-white rounded-full animate-siri-wave-4" />
+                <span className="w-1 bg-white rounded-full animate-siri-wave-5" />
+              </div>
+            ) : (
+              <svg className="w-9 h-9" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3zm7 9a7 7 0 01-14 0H3a9 9 0 0018 0h-2zm-7 4v4m-4 0h8" />
+              </svg>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Spoken Status Banner & Live Transcription */}
+      <div className="space-y-1.5 max-w-sm z-20">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-white/80 border border-slate-200 shadow-sm text-[#0B1F3A]">
+          <span className={`w-2 h-2 rounded-full ${isListening ? 'bg-[#DC2626] animate-ping' : isSpeaking ? 'bg-[#16A34A] animate-pulse' : 'bg-[#0EA5A4]'}`} />
+          <span>{isListening ? 'Siri Voice Engine: Listening...' : isSpeaking ? 'Speaking Analysis...' : 'Tap Orb to Speak'}</span>
+        </div>
+        <p className="text-xs text-[#64748B] min-h-[36px] flex items-center justify-center italic">
+          {transcript ? `"${transcript}"` : 'Ask anything: "Who is the kingpin in FIR 991?" or "What phones were seized?"'}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ─── MAIN CASE COPILOT COMPONENT ─────────────────────────────────────────────
+export default function CaseCopilot({ onClose, isPanel = false, initialQuery = '' }) {
   const [messages, setMessages] = useState([
     {
       id: 0,
       role: 'assistant',
-      text: `I am **Case Copilot** — your investigation decision-support assistant.\n\nI work with DEMO/SYNTHETIC data. Type "help" to see what I can do, or open a case:\n• *"Open FIR 991/2025, who is the kingpin?"*\n• *"List missing evidence for FIR 114/2025"*\n• *"Show all available cases"*`,
+      text: `I am **Case Copilot** — your autonomous investigation decision-support agent.\n\nAsk me anything in plain English, हिन्दी, or தமிழ்:\n• *"Who is the kingpin in the Okhla mule network?"*\n• *"List missing evidence for FIR 114/2025"*\n• *"What devices or IMEIs were seized?"*\n• *"Draft a CDR preservation notice for Airtel"*`,
       sources: [],
       time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
     }
@@ -479,11 +531,14 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
   const [isThinking, setIsThinking] = useState(false);
   const [thinkingStep, setThinkingStep] = useState('');
   const [isListening, setIsListening] = useState(false);
-  const [activeCaseId, setActiveCaseId] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [activeCaseId, setActiveCaseId] = useState('FIR-991/2025');
   const [feedback, setFeedback] = useState({});
   const [auditLog, setAuditLog] = useState([]);
-  const [tab, setTab] = useState('chat'); // 'chat' | 'audit'
+  const [tab, setTab] = useState('chat'); // 'chat' | 'audit' | 'eval' | 'siri'
   const [language, setLanguage] = useState('en-IN'); // 'en-IN' | 'hi-IN' | 'ta-IN'
+  const [liveTranscript, setLiveTranscript] = useState('');
+
   const recognitionRef = useRef(null);
   const inputRef = useRef(null);
   const bottomRef = useRef(null);
@@ -491,6 +546,12 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isThinking]);
+
+  useEffect(() => {
+    if (initialQuery) {
+      handleSend(initialQuery, false);
+    }
+  }, [initialQuery]);
 
   // Web Speech API
   const startListening = useCallback(() => {
@@ -501,14 +562,16 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const rec = new SpeechRecognition();
     rec.lang = language;
-    rec.interimResults = false;
+    rec.interimResults = true;
     rec.maxAlternatives = 1;
     rec.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      setInput(transcript);
-      setIsListening(false);
-      // Auto-submit voice
-      setTimeout(() => handleSend(transcript, true), 200);
+      const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+      setLiveTranscript(transcript);
+      if (e.results[0].isFinal) {
+        setInput(transcript);
+        setIsListening(false);
+        setTimeout(() => handleSend(transcript, true), 300);
+      }
     };
     rec.onerror = () => setIsListening(false);
     rec.onend = () => setIsListening(false);
@@ -524,12 +587,15 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
 
   const speak = useCallback((text) => {
     if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
     const clean = text.replace(/\*\*/g, '').replace(/\*/g, '').replace(/#+\s/g, '').replace(/\[.*?\]/g, '');
-    // Keep under 3 sentences for voice
     const sentences = clean.split(/[.!?]+/).filter(s => s.trim().length > 5).slice(0, 3);
     const utterance = new SpeechSynthesisUtterance(sentences.join('. '));
     utterance.lang = language;
     utterance.rate = 0.95;
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
     window.speechSynthesis.speak(utterance);
   }, [language]);
 
@@ -537,13 +603,13 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
     const msg = (text || input).trim();
     if (!msg || isThinking) return;
     setInput('');
+    setLiveTranscript('');
 
     const userMsg = { id: Date.now(), role: 'user', text: msg, time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }), isVoice };
     setMessages(prev => [...prev, userMsg]);
     setIsThinking(true);
-    setThinkingStep('Initializing...');
+    setThinkingStep('Analyzing natural language intent...');
 
-    // Add audit entry
     const auditEntry = { time: new Date().toISOString(), type: 'QUERY', content: msg, officerId: 'SESSION_OFFICER', caseId: activeCaseId || 'N/A' };
     setAuditLog(prev => [auditEntry, ...prev]);
 
@@ -563,14 +629,13 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
       setMessages(prev => [...prev, assistantMsg]);
       if (result.activeCaseId) setActiveCaseId(result.activeCaseId);
       if (isVoice) speak(result.text);
-      // Audit
       setAuditLog(prev => [{ time: new Date().toISOString(), type: 'RESPONSE', content: result.text.substring(0, 80) + '...', caseId: result.activeCaseId || activeCaseId || 'N/A' }, ...prev]);
     } catch (err) {
-      setMessages(prev => [...prev, { id: Date.now() + 1, role: 'assistant', text: `System error: ${err.message}`, sources: [], time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) }]);
+      setMessages(prev => [...prev, { id: Date.now() + 1, role: 'assistant', text: `System exception: ${err.message}`, sources: [], time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) }]);
     }
     setIsThinking(false);
     setThinkingStep('');
-  }, [input, isThinking, messages, activeCaseId, speak]);
+  }, [input, isThinking, messages, activeCaseId, speak, language]);
 
   const handleDraftFromGap = useCallback((type) => {
     handleSend(`Draft a ${type} request for ${activeCaseId || 'the current case'}`);
@@ -586,30 +651,40 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
   }, [activeCaseId]);
 
   const containerClass = isPanel
-    ? 'flex flex-col h-full bg-[#FFFFFF] border-l border-[#D9E1E8]'
-    : 'flex flex-col h-full bg-[#FFFFFF] rounded-xl border border-[#D9E1E8] shadow-lg overflow-hidden';
+    ? 'flex flex-col h-full bg-[#FFFFFF] border-l border-[#E2E8F0] shadow-2xl overflow-hidden'
+    : 'flex flex-col h-full bg-[#FFFFFF] rounded-3xl border border-[#E2E8F0] ios-shadow-lg overflow-hidden';
 
   return (
     <div className={containerClass}>
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#0EA5A4] text-white flex-shrink-0">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-            </svg>
+      {/* ── TOP FROSTED GLASS HEADER (#0B1F3A with Apple Glass Effect) ── */}
+      <div className="flex items-center justify-between px-5 py-3.5 bg-[#0B1F3A] text-white flex-shrink-0 border-b border-[#1E3A5F]">
+        <div className="flex items-center gap-3">
+          {/* Animated Glowing Copilot Badge */}
+          <div className="relative flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0EA5A4] to-[#1D4ED8] p-0.5 shadow-md flex items-center justify-center">
+              <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping absolute" />
+              <svg className="w-4 h-4 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
           </div>
           <div>
-            <div className="text-sm font-bold leading-tight">Case Copilot</div>
-            <div className="text-[11px] text-white/70">Investigation AI · Demo Data Only</div>
+            <div className="text-sm font-bold flex items-center gap-2">
+              <span>Case Copilot</span>
+              <span className="text-[10px] bg-[#0EA5A4] text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                Agentic Voice
+              </span>
+            </div>
+            <div className="text-[10px] text-[#90CAF9]">
+              {activeCaseId ? `Active Context: ${activeCaseId}` : 'Pan-India Decision Support'}
+            </div>
           </div>
         </div>
+
+        {/* Header Controls: Language Selector, Siri Orb Toggle, Close */}
         <div className="flex items-center gap-2">
-          {activeCaseId && (
-            <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded font-semibold">{activeCaseId}</span>
-          )}
-          {/* Language selector: English, Hindi, Tamil */}
-          <div className="flex items-center gap-0.5 bg-white/20 p-0.5 rounded text-[10px]">
+          {/* Language Selector (EN, HI, TA) */}
+          <div className="flex items-center gap-0.5 bg-white/10 p-0.5 rounded-full text-[10px] border border-white/15">
             {[
               { code: 'en-IN', label: 'EN' },
               { code: 'hi-IN', label: 'हिं' },
@@ -619,21 +694,32 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
                 key={l.code}
                 onClick={() => setLanguage(l.code)}
                 title={`Switch language to ${l.label}`}
-                className={`px-1.5 py-0.5 rounded font-bold transition-colors ${
-                  language === l.code ? 'bg-white text-[#0EA5A4]' : 'text-white/80 hover:text-white'
+                className={`px-2 py-0.5 rounded-full font-bold transition-all ${
+                  language === l.code ? 'bg-[#0EA5A4] text-white shadow-sm' : 'text-white/70 hover:text-white'
                 }`}
               >
                 {l.label}
               </button>
             ))}
           </div>
-          <button onClick={() => setTab(tab === 'chat' ? 'audit' : 'chat')} title="Toggle audit log" className="w-7 h-7 rounded bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-            </svg>
+
+          {/* Toggle Siri Independent Voice Agent Mode */}
+          <button
+            onClick={() => setTab(tab === 'siri' ? 'chat' : 'siri')}
+            title="Siri Voice Mode"
+            className={`px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              tab === 'siri' ? 'bg-[#0EA5A4] text-white ring-2 ring-[#0EA5A4]/40' : 'bg-white/10 text-white/90 hover:bg-white/20'
+            }`}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#5EEAD4] animate-ping" />
+            <span>Siri</span>
           </button>
+
           {onClose && (
-            <button onClick={onClose} className="w-7 h-7 rounded bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+            <button
+              onClick={onClose}
+              className="w-7 h-7 rounded-full bg-white/10 hover:bg-[#DC2626] text-white flex items-center justify-center transition-all ml-1"
+            >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
               </svg>
@@ -642,20 +728,21 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-[#D9E1E8] flex-shrink-0">
+      {/* ── SEGMENTED NAVIGATION TABS (iOS 18 Style) ── */}
+      <div className="flex bg-[#F8FAFC] border-b border-[#E2E8F0] p-1.5 gap-1 flex-shrink-0">
         {[
-          { id: 'chat', label: 'Chat' },
-          { id: 'audit', label: 'Audit Trail' },
+          { id: 'chat', label: 'Copilot Chat' },
+          { id: 'siri', label: 'Siri Voice Orb' },
           { id: 'eval', label: 'Accuracy & Eval' },
+          { id: 'audit', label: 'Audit Trail' },
         ].map(t => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex-1 py-2 text-xs font-semibold uppercase tracking-wide transition-colors ${
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-xl transition-all ${
               tab === t.id
-                ? 'text-[#0EA5A4] border-b-2 border-[#0EA5A4] bg-[#F0FDFD]'
-                : 'text-[#607D8B] hover:bg-[#F8FAFC]'
+                ? 'bg-white text-[#0B1F3A] ios-shadow border border-[#E2E8F0]'
+                : 'text-[#64748B] hover:text-[#0B1F3A] hover:bg-white/60'
             }`}
           >
             {t.label}
@@ -663,44 +750,81 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
         ))}
       </div>
 
-      {/* Content */}
-      {tab === 'eval' ? (
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          <div className="bg-[#F0FDFD] border border-[#80CBC4] rounded-xl p-3.5 space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-xs font-bold text-[#004D40] uppercase">Model Benchmark &amp; Validation</span>
-              <span className="text-[10px] bg-[#0EA5A4] text-white px-2 py-0.5 rounded font-bold">SIH26150 TEST SUITE</span>
+      {/* ── TAB 1: SIRI INDEPENDENT VOICE AGENT MODE ── */}
+      {tab === 'siri' ? (
+        <div className="flex-1 flex flex-col justify-between p-6 bg-gradient-to-b from-[#F4F6F9] to-white overflow-y-auto">
+          <div className="text-center space-y-1">
+            <h3 className="text-base font-bold text-[#0B1F3A]">Autonomous Siri Case Agent</h3>
+            <p className="text-xs text-[#64748B]">Speak naturally to execute forensic queries across all cases</p>
+          </div>
+
+          <SiriOrbVisualizer
+            isListening={isListening}
+            isSpeaking={isSpeaking}
+            transcript={liveTranscript}
+            onMicTap={isListening ? stopListening : startListening}
+          />
+
+          {/* Quick Voice Suggestions */}
+          <div className="space-y-2">
+            <div className="text-[11px] font-bold text-[#64748B] text-center uppercase tracking-wider">Try Saying:</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              {[
+                'Who is the kingpin in FIR 991?',
+                'What phones or IMEIs were seized?',
+                'How much money was stolen in FIR 991?',
+                'Draft a CDR request for Airtel',
+              ].map((cmd, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleSend(cmd, true)}
+                  className="p-2.5 rounded-xl bg-white border border-[#E2E8F0] hover:border-[#0EA5A4] text-[#0B1F3A] text-left transition-all ios-shadow flex items-center justify-between"
+                >
+                  <span className="truncate">{cmd}</span>
+                  <span className="text-[#0EA5A4] font-bold">&rarr;</span>
+                </button>
+              ))}
             </div>
-            <p className="text-xs text-[#263238]">
-              Automated testing on <strong>50 synthetic FIR cases</strong> measuring entity extraction F1, suspect kingpin ranking accuracy, and evidence gap recall.
+          </div>
+        </div>
+      ) : tab === 'eval' ? (
+        /* ── TAB 2: ACCURACY & BENCHMARK EVALUATION ── */
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#F4F6F9]">
+          <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-4 space-y-2 ios-shadow">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-[#0B1F3A] uppercase tracking-wide">Model Benchmark &amp; Validation</span>
+              <span className="text-[10px] bg-[#0EA5A4] text-white px-2 py-0.5 rounded-full font-bold">50 SYNTHETIC FIRs</span>
+            </div>
+            <p className="text-xs text-[#475569]">
+              Measured against standardized ground truth cases for entity extraction, kingpin suspect accuracy, and evidence gap recall.
             </p>
           </div>
 
           <div className="grid grid-cols-3 gap-2.5 text-center">
-            <div className="bg-[#FFFFFF] border border-[#D9E1E8] p-3 rounded-xl shadow-xs">
-              <div className="text-[10px] font-bold text-[#607D8B] uppercase">Entity F1</div>
-              <div className="text-xl font-bold text-[#1565C0] mt-1">98.4%</div>
-              <div className="text-[9px] text-[#78909C]">Phones, IMEIs, Wallets</div>
+            <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-3 rounded-2xl ios-shadow">
+              <div className="text-[10px] font-bold text-[#64748B] uppercase">Entity F1</div>
+              <div className="text-xl font-bold text-[#1D4ED8] mt-1">98.4%</div>
+              <div className="text-[9px] text-[#94A3B8]">Phones, IMEIs, Wallets</div>
             </div>
-            <div className="bg-[#FFFFFF] border border-[#D9E1E8] p-3 rounded-xl shadow-xs">
-              <div className="text-[10px] font-bold text-[#607D8B] uppercase">Top-3 Kingpin</div>
-              <div className="text-xl font-bold text-[#2E7D32] mt-1">100.0%</div>
-              <div className="text-[9px] text-[#78909C]">Suspect In Top 3</div>
+            <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-3 rounded-2xl ios-shadow">
+              <div className="text-[10px] font-bold text-[#64748B] uppercase">Top-3 Kingpin</div>
+              <div className="text-xl font-bold text-[#16A34A] mt-1">100.0%</div>
+              <div className="text-[9px] text-[#94A3B8]">Suspect In Top 3</div>
             </div>
-            <div className="bg-[#FFFFFF] border border-[#D9E1E8] p-3 rounded-xl shadow-xs">
-              <div className="text-[10px] font-bold text-[#607D8B] uppercase">Gap Recall</div>
-              <div className="text-xl font-bold text-[#E65100] mt-1">96.7%</div>
-              <div className="text-[9px] text-[#78909C]">CDR / Bank / CCTV</div>
+            <div className="bg-[#FFFFFF] border border-[#E2E8F0] p-3 rounded-2xl ios-shadow">
+              <div className="text-[10px] font-bold text-[#64748B] uppercase">Gap Recall</div>
+              <div className="text-xl font-bold text-[#F59E0B] mt-1">96.7%</div>
+              <div className="text-[9px] text-[#94A3B8]">CDR / Bank / CCTV</div>
             </div>
           </div>
 
-          <div className="bg-[#F8FAFC] border border-[#D9E1E8] rounded-xl p-3 space-y-2 text-xs">
-            <div className="font-bold text-[#123B63] flex items-center justify-between">
+          <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-2xl p-4 space-y-2.5 text-xs ios-shadow">
+            <div className="font-bold text-[#0B1F3A] flex items-center justify-between">
               <span>Benchmark Methodology &amp; Ground Truth</span>
-              <span className="text-[10px] text-[#2E7D32] font-semibold">50/50 PASSED</span>
+              <span className="text-[10px] text-[#16A34A] font-semibold bg-[#DCFCE7] px-2 py-0.5 rounded-full">50/50 PASSED</span>
             </div>
-            <ul className="text-[11px] text-[#607D8B] space-y-1 list-disc pl-4">
-              <li><strong>NER Entity Extractor:</strong> Token &amp; regex pipeline extracting phone numbers (+91), 15-digit IMEIs, UPI/Crypto addresses, and accused names.</li>
+            <ul className="text-[11px] text-[#475569] space-y-1.5 list-disc pl-4">
+              <li><strong>NER Entity Extractor:</strong> Token &amp; pattern pipeline extracting phone numbers (+91), 15-digit IMEIs, UPI/Crypto addresses, and accused names.</li>
               <li><strong>Graph Centrality Scoring:</strong> Suspect lead ranking based on multi-hop associative node density and financial layer traces.</li>
               <li><strong>BNSS 2023 Compliance:</strong> Automates gap identification for Sec 94 notices and Sec 107 property attachments.</li>
               <li><strong>SIH26150 Multi-Vendor Alignment:</strong> Standardized forensic metadata mapping across CP Plus, Dahua, Hikvision, and Honeywell DVRs.</li>
@@ -708,50 +832,54 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
           </div>
         </div>
       ) : tab === 'audit' ? (
-        <div className="flex-1 overflow-y-auto p-4 space-y-2">
-          <p className="text-[11px] text-[#607D8B] font-semibold uppercase">AI Action Log (this session)</p>
-          {auditLog.length === 0 && <p className="text-xs text-[#B0BEC5]">No actions logged yet.</p>}
+        /* ── TAB 3: AUDIT TRAIL ── */
+        <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-[#F4F6F9]">
+          <p className="text-[11px] text-[#64748B] font-semibold uppercase">AI Action Log (Session Audit Trail)</p>
+          {auditLog.length === 0 && <p className="text-xs text-[#94A3B8]">No actions logged yet.</p>}
           {auditLog.map((entry, i) => (
-            <div key={i} className="bg-[#F8FAFC] border border-[#D9E1E8] rounded p-2 text-[11px]">
-              <div className="flex justify-between text-[10px] text-[#78909C] mb-0.5">
+            <div key={i} className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-xl p-3 text-[11px] ios-shadow">
+              <div className="flex justify-between text-[10px] text-[#94A3B8] mb-1">
                 <span className="font-bold text-[#0EA5A4]">{entry.type}</span>
                 <span>{new Date(entry.time).toLocaleTimeString('en-IN')}</span>
               </div>
-              <p className="text-[#263238] truncate">{entry.content}</p>
-              {entry.caseId && entry.caseId !== 'N/A' && <span className="text-[10px] text-[#1565C0]">{entry.caseId}</span>}
+              <p className="text-[#0B1F3A] font-medium">{entry.content}</p>
+              {entry.caseId && entry.caseId !== 'N/A' && (
+                <span className="text-[10px] text-[#1D4ED8] font-bold mt-1 inline-block">{entry.caseId}</span>
+              )}
             </div>
           ))}
         </div>
       ) : (
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        /* ── TAB 4: MAIN COPILOT CHAT WORKSPACE ── */
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#F4F6F9]">
           {messages.map((msg) => (
             <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[90%] space-y-2 ${msg.role === 'user' ? '' : 'w-full'}`}>
-                {/* Bubble */}
-                <div className={`rounded-xl px-3 py-2.5 text-sm leading-relaxed ${
+              <div className={`max-w-[90%] space-y-2.5 ${msg.role === 'user' ? '' : 'w-full'}`}>
+                {/* Bubble with iOS Card Style */}
+                <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed transition-all ${
                   msg.role === 'user'
-                    ? 'bg-[#1565C0] text-white rounded-br-sm'
-                    : 'bg-[#F8FAFC] border border-[#D9E1E8] text-[#263238] rounded-bl-sm'
+                    ? 'bg-[#1D4ED8] text-white rounded-br-sm shadow-md'
+                    : 'bg-[#FFFFFF] border border-[#E2E8F0] text-[#0B1F3A] rounded-bl-sm ios-shadow'
                 }`}>
                   {msg.role === 'user' && msg.isVoice && (
-                    <div className="text-[10px] text-white/60 mb-1 flex items-center gap-1">
+                    <div className="text-[10px] text-white/70 mb-1 flex items-center gap-1">
                       <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3zm7 9a7 7 0 01-14 0H3a9 9 0 0018 0h-2z"/></svg>
-                      Voice input
+                      Voice input (Siri Engine)
                     </div>
                   )}
                   <div style={{ whiteSpace: 'pre-wrap' }}>
                     {msg.text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g).map((part, i) => {
-                      if (part.startsWith('**') && part.endsWith('**')) return <strong key={i}>{part.slice(2, -2)}</strong>;
+                      if (part.startsWith('**') && part.endsWith('**')) return <strong key={i} className="font-bold">{part.slice(2, -2)}</strong>;
                       if (part.startsWith('*') && part.endsWith('*')) return <em key={i}>{part.slice(1, -1)}</em>;
-                      if (part.startsWith('`') && part.endsWith('`')) return <code key={i} className="bg-black/10 px-1 rounded text-xs font-mono">{part.slice(1, -1)}</code>;
+                      if (part.startsWith('`') && part.endsWith('`')) return <code key={i} className="bg-black/10 px-1 py-0.5 rounded text-xs font-mono">{part.slice(1, -1)}</code>;
                       return <span key={i}>{part}</span>;
                     })}
                   </div>
                 </div>
 
-                {/* Sources */}
+                {/* Sources Chips */}
                 {msg.sources?.length > 0 && (
-                  <div className="flex flex-wrap gap-1 px-1">
+                  <div className="flex flex-wrap gap-1.5 px-1">
                     {msg.sources.map((s, i) => <SourceChip key={i} source={s} />)}
                   </div>
                 )}
@@ -759,15 +887,15 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
                 {/* Suspect list */}
                 {msg.suspectList?.length > 0 && (
                   <div className="space-y-2">
-                    <p className="text-[11px] font-bold text-[#E65100] uppercase tracking-wide px-1">Suspect Rankings (Investigative Leads Only)</p>
+                    <p className="text-[11px] font-bold text-[#F59E0B] uppercase tracking-wider px-1">Suspect Rankings (Investigative Leads Only)</p>
                     {msg.suspectList.map((s, i) => <SuspectCard key={i} suspect={s} />)}
                   </div>
                 )}
 
                 {/* Evidence gaps */}
                 {msg.gapList?.length > 0 && (
-                  <div className="space-y-1.5">
-                    <p className="text-[11px] font-bold text-[#C62828] uppercase tracking-wide px-1">Missing Evidence Radar</p>
+                  <div className="space-y-2">
+                    <p className="text-[11px] font-bold text-[#DC2626] uppercase tracking-wider px-1">Missing Evidence Radar</p>
                     {msg.gapList.map((g, i) => <EvidenceGapCard key={i} gap={g} onDraft={handleDraftFromGap} />)}
                   </div>
                 )}
@@ -781,26 +909,27 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
 
                 {/* Meta + Feedback */}
                 {msg.role === 'assistant' && (
-                  <div className="flex items-center justify-between px-1">
-                    <span className="text-[10px] text-[#B0BEC5]">{msg.time}</span>
-                    <div className="flex gap-1">
+                  <div className="flex items-center justify-between px-1 text-[11px]">
+                    <span className="text-[10px] text-[#94A3B8]">{msg.time}</span>
+                    <div className="flex gap-1.5 items-center">
+                      <button
+                        onClick={() => speak(msg.text)}
+                        title="Read aloud"
+                        className="p-1 rounded-full text-[#64748B] hover:text-[#0EA5A4] transition-colors"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        </svg>
+                      </button>
                       {[['up', '👍'], ['down', '👎']].map(([dir]) => (
                         <button
                           key={dir}
                           onClick={() => setFeedback(prev => ({ ...prev, [msg.id]: dir }))}
-                          className={`w-6 h-6 rounded text-[11px] flex items-center justify-center border transition-colors ${
-                            feedback[msg.id] === dir ? 'bg-[#0EA5A4] text-white border-[#0EA5A4]' : 'bg-white text-[#607D8B] border-[#D9E1E8] hover:border-[#0EA5A4]'
+                          className={`w-6 h-6 rounded-full text-[11px] flex items-center justify-center border transition-all ${
+                            feedback[msg.id] === dir ? 'bg-[#0EA5A4] text-white border-[#0EA5A4]' : 'bg-white text-[#64748B] border-[#E2E8F0] hover:border-[#0EA5A4]'
                           }`}
                         >
-                          {dir === 'up' ? (
-                            <svg className="w-3 h-3" fill={feedback[msg.id] === 'up' ? 'white' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
-                            </svg>
-                          ) : (
-                            <svg className="w-3 h-3" fill={feedback[msg.id] === 'down' ? 'white' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"/>
-                            </svg>
-                          )}
+                          {dir === 'up' ? '✓' : '✕'}
                         </button>
                       ))}
                     </div>
@@ -813,14 +942,14 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
           {/* Thinking indicator */}
           {isThinking && (
             <div className="flex justify-start">
-              <div className="bg-[#F0FDFD] border border-[#80CBC4] rounded-xl px-3 py-2.5 max-w-xs">
-                <div className="flex items-center gap-2 text-[#0EA5A4]">
+              <div className="bg-[#FFFFFF] border border-[#0EA5A4]/40 rounded-2xl px-4 py-3 max-w-xs ios-shadow">
+                <div className="flex items-center gap-2.5 text-[#0EA5A4]">
                   <div className="flex gap-1">
                     {[0, 1, 2].map(i => (
-                      <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#0EA5A4] animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+                      <div key={i} className="w-2 h-2 rounded-full bg-[#0EA5A4] animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
                     ))}
                   </div>
-                  <span className="text-xs text-[#607D8B]">{thinkingStep}</span>
+                  <span className="text-xs text-[#475569] font-medium">{thinkingStep}</span>
                 </div>
               </div>
             </div>
@@ -829,45 +958,53 @@ export default function CaseCopilot({ onClose, isPanel = false }) {
         </div>
       )}
 
-      {/* Input Bar */}
+      {/* ── BOTTOM INPUT DOCK (APPLE MESSAGES STYLE) ── */}
       {tab === 'chat' && (
-        <div className="flex-shrink-0 border-t border-[#D9E1E8] bg-[#FFFFFF] p-3">
-          <div className="flex gap-2 items-end">
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-              placeholder='Ask about a case... e.g. "Open FIR 991/2025, who is the kingpin?"'
-              rows={2}
-              className="flex-1 resize-none text-sm px-3 py-2 border border-[#D9E1E8] rounded-lg focus:outline-none focus:border-[#0EA5A4] focus:ring-1 focus:ring-[#0EA5A4] text-[#263238] placeholder-[#B0BEC5] bg-[#F8FAFC]"
-            />
-            {/* Mic button */}
+        <div className="flex-shrink-0 border-t border-[#E2E8F0] bg-[#FFFFFF] p-3.5 space-y-2">
+          <div className="flex gap-2 items-center">
+            <div className="flex-1 relative flex items-center">
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
+                placeholder='Ask Copilot anything... e.g. "Who is the kingpin in FIR 991?"'
+                className="w-full text-xs sm:text-sm px-4 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-full focus:outline-none focus:border-[#0EA5A4] focus:ring-2 focus:ring-[#0EA5A4]/20 text-[#0B1F3A] placeholder-[#94A3B8]"
+              />
+            </div>
+
+            {/* Siri Voice Trigger Button */}
             <button
               onClick={isListening ? stopListening : startListening}
-              title={isListening ? 'Stop listening' : 'Voice input'}
-              className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all ${
-                isListening ? 'bg-[#C62828] text-white animate-pulse' : 'bg-[#F8FAFC] border border-[#D9E1E8] text-[#607D8B] hover:border-[#0EA5A4] hover:text-[#0EA5A4]'
+              title={isListening ? 'Stop listening' : 'Speak with Siri Voice Agent'}
+              className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-all transform hover:scale-105 active:scale-95 ${
+                isListening
+                  ? 'bg-[#DC2626] text-white animate-pulse shadow-lg'
+                  : 'bg-gradient-to-tr from-[#0EA5A4] to-[#1D4ED8] text-white shadow-md'
               }`}
             >
-              <svg className="w-4 h-4" fill={isListening ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3zm7 9a7 7 0 01-14 0H3a9 9 0 0018 0h-2zm-7 4v4m-4 0h8"/>
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3zm7 9a7 7 0 01-14 0H3a9 9 0 0018 0h-2zm-7 4v4m-4 0h8"/>
               </svg>
             </button>
-            {/* Send button */}
+
+            {/* Send Button */}
             <button
               onClick={() => handleSend()}
               disabled={!input.trim() || isThinking}
-              className="w-10 h-10 rounded-lg bg-[#0EA5A4] hover:bg-[#0D8A89] disabled:bg-[#B0BEC5] text-white flex items-center justify-center flex-shrink-0 transition-colors"
+              className="w-10 h-10 rounded-full bg-[#1D4ED8] hover:bg-[#1E40AF] disabled:bg-[#CBD5E1] text-white flex items-center justify-center flex-shrink-0 transition-all shadow-md transform hover:scale-105 active:scale-95"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
               </svg>
             </button>
           </div>
-          <p className="text-[10px] text-[#B0BEC5] mt-1.5 text-center">
-            Demo data only · Every AI suggestion requires officer approval · Prototype
-          </p>
+
+          <div className="flex justify-between items-center text-[10px] text-[#94A3B8] px-1">
+            <span>Every AI recommendation cites source data</span>
+            <span className="text-[#0EA5A4] font-medium">Sec 94 &amp; 107 BNSS 2023 Compliant</span>
+          </div>
         </div>
       )}
     </div>

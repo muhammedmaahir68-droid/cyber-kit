@@ -87,9 +87,10 @@ export default function App() {
   const [sha256Hash, setSha256Hash]         = useState('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
 
   // Case Copilot drawer & mobile states
-  const [isCopilotOpen, setIsCopilotOpen]   = useState(false);
+  const [isCopilotOpen, setIsCopilotOpen]       = useState(false);
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen]       = useState(true);
 
   const getApiBase = () => {
     if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
@@ -252,8 +253,25 @@ export default function App() {
       <header className="w-full bg-[#0B1F3A] text-white border-b border-[#1E3A5F] shadow-md flex-shrink-0">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
 
-          {/* Left: Indian Emblem + NCIS Platform Identity */}
-          <div className="flex items-center gap-3.5 min-w-0">
+          {/* Left: 3-Bar Sidebar Toggle + Indian Emblem + NCIS Platform Identity */}
+          <div className="flex items-center gap-3 min-w-0">
+            {/* 3-Bar Hamburger Toggle to Open/Close Sidebar (iOS glass style) */}
+            <button
+              onClick={() => {
+                setIsSidebarOpen(!isSidebarOpen);
+                if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                  setIsMobileMoreOpen(!isMobileMoreOpen);
+                }
+              }}
+              title={isSidebarOpen ? "Collapse sidebar (Ctrl+B)" : "Open sidebar (Ctrl+B)"}
+              aria-label="Toggle Navigation Sidebar"
+              className="p-2 sm:p-2.5 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white transition-all flex items-center justify-center border border-white/15 shadow-sm backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#0EA5A4]/60"
+            >
+              <svg className={`w-5 h-5 transition-transform duration-300 ${isSidebarOpen ? '' : 'rotate-90'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
             {/* Authentic State Emblem of India (Ashoka Lion Capital) */}
             <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white p-1 border-2 border-[#D9E1E8] shadow-sm overflow-hidden flex items-center justify-center">
               <AshokaLionCapital className="w-10 h-10 object-contain text-[#123B63]" />
@@ -340,10 +358,12 @@ export default function App() {
       {/* ── CORE LAYOUT: SIDEBAR (#0B1F3A) + MAIN WORKSPACE (#F4F6F9) ── */}
       <div className="flex-1 flex max-w-screen-2xl mx-auto w-full relative">
 
-        {/* ── DESKTOP SIDEBAR: EXPANDABLE / COLLAPSIBLE ── */}
+        {/* ── DESKTOP SIDEBAR: EXPANDABLE / COLLAPSIBLE WITH SMOOTH TRANSITION ── */}
         <aside
-          className={`bg-[#0B1F3A] text-white flex-shrink-0 hidden md:flex flex-col justify-between border-r border-[#1E3A5F] shadow-lg transition-all duration-200 ${
-            isSidebarCollapsed ? 'w-20' : 'w-64'
+          className={`bg-[#0B1F3A] text-white flex-shrink-0 hidden md:flex flex-col justify-between border-r border-[#1E3A5F] shadow-2xl transition-all duration-300 ease-in-out ${
+            isSidebarOpen
+              ? (isSidebarCollapsed ? 'w-20 opacity-100' : 'w-64 opacity-100')
+              : 'w-0 overflow-hidden border-r-0 opacity-0 pointer-events-none'
           }`}
         >
           <div className="py-4">
@@ -596,17 +616,36 @@ export default function App() {
 
       </div>
 
-      {/* ── FLOATING MIC / COPILOT TRIGGER BUTTON ── */}
-      <button
-        onClick={() => setIsCopilotOpen(!isCopilotOpen)}
-        title="Open Case Copilot (Voice / Chat)"
-        className="fixed bottom-20 md:bottom-6 right-5 z-40 w-14 h-14 rounded-full bg-[#0EA5A4] hover:bg-[#0D8A89] text-white shadow-xl flex items-center justify-center transition-transform hover:scale-105 active:scale-95 group focus:outline-none focus:ring-4 focus:ring-[#0EA5A4]/30"
-      >
-        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#16A34A] border-2 border-white" />
-        <svg className="w-6 h-6 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-        </svg>
-      </button>
+      {/* ── FLOATING SIRI GLOWING ORB / COPILOT TRIGGER (APPLE INTELLIGENCE STYLE) ── */}
+      <div className="fixed bottom-20 md:bottom-6 right-5 z-40 flex items-center">
+        <button
+          onClick={() => setIsCopilotOpen(!isCopilotOpen)}
+          title="Open Case Copilot (Voice & Agentic AI)"
+          aria-label="Open Case Copilot"
+          className="relative w-14 h-14 rounded-full p-[2.5px] transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none group shadow-2xl"
+          style={{
+            background: 'conic-gradient(from 180deg at 50% 50%, #5EEAD4 0deg, #0EA5A4 110deg, #1D4ED8 230deg, #38BDF8 320deg, #5EEAD4 360deg)',
+            boxShadow: '0 8px 32px rgba(14, 165, 164, 0.45), 0 0 24px rgba(29, 78, 216, 0.35)'
+          }}
+        >
+          {/* Pulsing blurred ambient glow */}
+          <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#0EA5A4] via-[#38BDF8] to-[#1D4ED8] opacity-75 blur-md group-hover:opacity-100 transition-opacity animate-pulse pointer-events-none" />
+
+          {/* Inner glass core */}
+          <div className="relative w-full h-full rounded-full bg-[#0B1F3A]/90 backdrop-blur-xl flex items-center justify-center border border-white/25 text-white overflow-hidden">
+            {/* Spinning iridescent overlay */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#0EA5A4]/40 via-transparent to-[#38BDF8]/30 animate-spin" style={{ animationDuration: '9s' }} />
+
+            {/* Mic / Waveform icon */}
+            <svg className="w-6 h-6 text-white relative z-10 transition-transform group-hover:scale-115 drop-shadow-[0_2px_8px_rgba(255,255,255,0.7)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+            </svg>
+
+            {/* Online verified indicator badge */}
+            <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-[#16A34A] border-2 border-[#0B1F3A] shadow-sm z-20" />
+          </div>
+        </button>
+      </div>
 
       {/* ── MOBILE BOTTOM TAB BAR (SM SCREENS) ── */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0B1F3A] border-t border-[#1E3A5F] z-40 flex justify-around items-center py-2 px-1">
