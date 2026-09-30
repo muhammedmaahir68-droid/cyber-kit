@@ -1,0 +1,115 @@
+1
+00:00:00,000 --> 00:00:05,500
+NCIS-TACTICAL : NEXT-GEN PLATFORM [SIH26150 (NTRO)]
+AI-Powered Cyber Crime & Forensic Investigation Suite • Govt. of India
+
+2
+00:00:05,500 --> 00:00:12,500
+SOVEREIGN LAW ENFORCEMENT ACCESS [ROLE-BASED AUTH]
+Secure Officer Login • Authorized Under BNS 2023 Sec 63 & BSA Sec 65B
+
+3
+00:00:12,500 --> 00:00:23,500
+COMMAND DASHBOARD & EVIDENCE RADAR [128 ACTIVE CASES]
+Multi-Jurisdiction Real-Time Telemetry & Suspect Confidence Scoring
+
+4
+00:00:23,500 --> 00:00:33,500
+CROSS-STATION SUSPECT REGISTRY [128D BIOMETRICS]
+Deterministic On-Device Facial Matching • Instant All-India Criminal Lookup
+
+5
+00:00:33,500 --> 00:00:52,500
+ON-DEVICE BIOMETRIC INGESTION [BNSS SEC 173]
+Local 16x16 Pixel Hash • Zero Server Latency • Tamper-Evident Record Creation
+
+6
+00:00:52,500 --> 00:00:59,500
+NATIONWIDE ICJS & CCTNS 2.0 SYNC [INTEROPERABLE]
+Case Synchronized Across 16,000+ Police Stations • Cryptographic Record Lock
+
+7
+00:00:59,500 --> 00:01:08,500
+CASE COPILOT : AGENTIC AI ASSISTANT [AGENTIC VOICE]
+Autonomous Decision Support • Siri Voice Orb with Dynamic Acoustic Waves
+
+8
+00:01:08,500 --> 00:01:22,500
+MULTILINGUAL AUTONOMOUS AI REASONING [EN / HI / TA]
+Multi-Turn Audio AI (≤3 Sentences) • 100% Accuracy on 50 Synthetic FIR Benchmark
+
+9
+00:01:22,500 --> 00:01:34,500
+PRATIBIMB : VECTOR GIS TACTICAL MAP [INFRA GRID]
+Live Cellular Tower Vectors • Cross-Border Syndicate Hotspot Clusters
+
+10
+00:01:34,500 --> 00:01:46,500
+CRIME SYNDICATE DOSSIER & ENFORCEMENT [BNS 111 WARRANT]
+Vikram (SYND) Kingpin Identified • 1-Click Bank Freeze & Sec 94 Subpoena
+
+11
+00:01:46,500 --> 00:01:58,500
+GNN SYNDICATE TOPOLOGY ENGINE [SPECTRAL GCN]
+PyTorch Geometric Graph Convolutions • 98.6% Link Precision & Centrality
+
+12
+00:01:58,500 --> 00:02:08,500
+TACTICAL FIELD UNIT (FORENSIX EDGE) [MAKE IN INDIA]
+₹12,000 Unit Cost vs ₹25L Foreign Tools • Hailo-8L (26 TOPS) • 100% Air-Gapped
+
+13
+00:02:08,500 --> 00:02:22,500
+SIH26150 MULTI-VENDOR SURVEILLANCE [SUB-50MS CCTV]
+Standardized Acquisition Across Hikvision, Dahua & CP Plus • Perimeter Alerts
+
+14
+00:02:22,500 --> 00:02:35,500
+HARDWARE WRITE-BLOCKER TERMINAL [BNS SEC 63]
+Physical FPGA Read-Only Bus Lock • Port A/B/C • Zero Evidence Contamination
+
+15
+00:02:35,500 --> 00:02:50,500
+RAW BITSTREAM CARVING & EVIDENCE SEAL [131K SECTORS]
+Bit-for-Bit Disk Hex Dump • Real-Time SHA-256 WebCrypto Custody Seal (100%)
+
+16
+00:02:50,500 --> 00:02:59,500
+ON-THE-FLY NPU ARTIFACT CARVING [HAILO-8L NPU]
+Carved: Glock 19 (96.4%), WhatsApp Crypto Mixer SQLite, Narcotics Packaging
+
+17
+00:02:59,500 --> 00:03:14,500
+ERSS DIAL 112 PATROL MESH [RAPID ARRIVAL]
+Automated Geodesic Interceptor Routing • Haversine Distance • Under 60s ETA
+
+18
+00:03:14,500 --> 00:03:26,500
+CRITICAL EMERGENCY SOS DISPATCH [TARGET ETA: 84S]
+Sector 4 Patrol Van Deployed (0.35 km away) • Overrides Officer Silent / DND Mode
+
+19
+00:03:26,500 --> 00:03:36,500
+FIELD OFFICER MOBILE PHONE PAIRING [LOCKSCREEN MESH]
+PWA & NTFY Instant Vibration Alert • Continuous Ground Interceptor Push
+
+20
+00:03:36,500 --> 00:03:48,500
+DIGITAL FORENSICS ARTIFACT VAULT [MULTI-VENDOR DVR]
+Seized Samsung S23 Connected • Standardized CCTV & Mobile Bitstream Carving
+
+21
+00:03:48,500 --> 00:03:54,500
+ALL-INDIA NCRB DOSSIER SCANNER [94.2% FACE MATCH]
+128D Vector Match: Ramesh Kumar • Active Local Summons (FIR #112/2024)
+
+22
+00:03:54,500 --> 00:04:02,500
+BSA SEC 65B & BNS SEC 63 CERTIFICATE [SEALED & VERIFIED]
+Court-Admissible Electronic Certificate with SHA-256 Digital Vault Hash
+
+23
+00:04:02,500 --> 00:04:07,700
+END-TO-END CRIME INTELLIGENCE [SIH26150 (NTRO)]
+FIR #991/2025 Real-Time NLP Parsing • Built for Smart India Hackathon 2026
+

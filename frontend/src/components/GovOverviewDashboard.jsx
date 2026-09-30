@@ -232,6 +232,7 @@ export default function GovOverviewDashboard({ onNavigateToSection, officerSessi
             'List missing evidence for FIR 114/2025',
             'Draft CDR request for Airtel',
             'Show SIH26150 DVR Forensics',
+            'Launch SIH26152 Social Media Intelligence',
           ].map((prompt, idx) => (
             <button
               key={idx}

@@ -1,0 +1,38 @@
+[Script Info]
+Title: NCIS Tactical SIH26150 Lower Thirds
+ScriptType: v4.00+
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+YCbCr Matrix: TV.709
+PlayResX: 3840
+PlayResY: 1732
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: TacticalBadge,Segoe UI,40,&H00FFFFFF,&H00000000,&H00000000,&HEE071326,-1,0,0,0,100,100,1,0,3,18,0,2,100,100,18,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:05.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}NCIS-TACTICAL : NEXT-GEN PLATFORM  {\b1\fs30\c&H00A4A50E}●  SIH26150 (NTRO)\N{\b0\fs28\c&H00E2E8F0}AI-Powered Cyber Crime & Forensic Investigation Suite • Govt. of India
+Dialogue: 0,0:00:05.50,0:00:12.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}SOVEREIGN LAW ENFORCEMENT ACCESS  {\b1\fs30\c&H00A4A50E}●  ROLE-BASED AUTH\N{\b0\fs28\c&H00E2E8F0}Secure Officer Login • Authorized Under BNS 2023 Sec 63 & BSA Sec 65B
+Dialogue: 0,0:00:12.50,0:00:23.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}COMMAND DASHBOARD & EVIDENCE RADAR  {\b1\fs30\c&H00A4A50E}●  128 ACTIVE CASES\N{\b0\fs28\c&H00E2E8F0}Multi-Jurisdiction Real-Time Telemetry & Suspect Confidence Scoring
+Dialogue: 0,0:00:23.50,0:00:33.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}CROSS-STATION SUSPECT REGISTRY  {\b1\fs30\c&H00A4A50E}●  128D BIOMETRICS\N{\b0\fs28\c&H00E2E8F0}Deterministic On-Device Facial Matching • Instant All-India Criminal Lookup
+Dialogue: 0,0:00:33.50,0:00:52.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}ON-DEVICE BIOMETRIC INGESTION  {\b1\fs30\c&H00A4A50E}●  BNSS SEC 173\N{\b0\fs28\c&H00E2E8F0}Local 16x16 Pixel Hash • Zero Server Latency • Tamper-Evident Record Creation
+Dialogue: 0,0:00:52.50,0:00:59.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}NATIONWIDE ICJS & CCTNS 2.0 SYNC  {\b1\fs30\c&H00A4A50E}●  INTEROPERABLE\N{\b0\fs28\c&H00E2E8F0}Case Synchronized Across 16,000+ Police Stations • Cryptographic Record Lock
+Dialogue: 0,0:00:59.50,0:01:08.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}CASE COPILOT : AGENTIC AI ASSISTANT  {\b1\fs30\c&H00A4A50E}●  AGENTIC VOICE\N{\b0\fs28\c&H00E2E8F0}Autonomous Decision Support • Siri Voice Orb with Dynamic Acoustic Waves
+Dialogue: 0,0:01:08.50,0:01:22.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}MULTILINGUAL AUTONOMOUS AI REASONING  {\b1\fs30\c&H00A4A50E}●  EN / HI / TA\N{\b0\fs28\c&H00E2E8F0}Multi-Turn Audio AI (≤3 Sentences) • 100% Accuracy on 50 Synthetic FIR Benchmark
+Dialogue: 0,0:01:22.50,0:01:34.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}PRATIBIMB : VECTOR GIS TACTICAL MAP  {\b1\fs30\c&H00A4A50E}●  INFRA GRID\N{\b0\fs28\c&H00E2E8F0}Live Cellular Tower Vectors • Cross-Border Syndicate Hotspot Clusters
+Dialogue: 0,0:01:34.50,0:01:46.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}CRIME SYNDICATE DOSSIER & ENFORCEMENT  {\b1\fs30\c&H00A4A50E}●  BNS 111 WARRANT\N{\b0\fs28\c&H00E2E8F0}Vikram (SYND) Kingpin Identified • 1-Click Bank Freeze & Sec 94 Subpoena
+Dialogue: 0,0:01:46.50,0:01:58.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}GNN SYNDICATE TOPOLOGY ENGINE  {\b1\fs30\c&H00A4A50E}●  SPECTRAL GCN\N{\b0\fs28\c&H00E2E8F0}PyTorch Geometric Graph Convolutions • 98.6% Link Precision & Centrality
+Dialogue: 0,0:01:58.50,0:02:08.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}TACTICAL FIELD UNIT (FORENSIX EDGE)  {\b1\fs30\c&H00A4A50E}●  MAKE IN INDIA\N{\b0\fs28\c&H00E2E8F0}₹12,000 Unit Cost vs ₹25L Foreign Tools • Hailo-8L (26 TOPS) • 100% Air-Gapped
+Dialogue: 0,0:02:08.50,0:02:22.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}SIH26150 MULTI-VENDOR SURVEILLANCE  {\b1\fs30\c&H00A4A50E}●  SUB-50MS CCTV\N{\b0\fs28\c&H00E2E8F0}Standardized Acquisition Across Hikvision, Dahua & CP Plus • Perimeter Alerts
+Dialogue: 0,0:02:22.50,0:02:35.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}HARDWARE WRITE-BLOCKER TERMINAL  {\b1\fs30\c&H00A4A50E}●  BNS SEC 63\N{\b0\fs28\c&H00E2E8F0}Physical FPGA Read-Only Bus Lock • Port A/B/C • Zero Evidence Contamination
+Dialogue: 0,0:02:35.50,0:02:50.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}RAW BITSTREAM CARVING & EVIDENCE SEAL  {\b1\fs30\c&H00A4A50E}●  131K SECTORS\N{\b0\fs28\c&H00E2E8F0}Bit-for-Bit Disk Hex Dump • Real-Time SHA-256 WebCrypto Custody Seal (100%)
+Dialogue: 0,0:02:50.50,0:02:59.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}ON-THE-FLY NPU ARTIFACT CARVING  {\b1\fs30\c&H00A4A50E}●  HAILO-8L NPU\N{\b0\fs28\c&H00E2E8F0}Carved: Glock 19 (96.4%), WhatsApp Crypto Mixer SQLite, Narcotics Packaging
+Dialogue: 0,0:02:59.50,0:03:14.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}ERSS DIAL 112 PATROL MESH  {\b1\fs30\c&H00A4A50E}●  RAPID ARRIVAL\N{\b0\fs28\c&H00E2E8F0}Automated Geodesic Interceptor Routing • Haversine Distance • Under 60s ETA
+Dialogue: 0,0:03:14.50,0:03:26.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}CRITICAL EMERGENCY SOS DISPATCH  {\b1\fs30\c&H00A4A50E}●  TARGET ETA: 84S\N{\b0\fs28\c&H00E2E8F0}Sector 4 Patrol Van Deployed (0.35 km away) • Overrides Officer Silent / DND Mode
+Dialogue: 0,0:03:26.50,0:03:36.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}FIELD OFFICER MOBILE PHONE PAIRING  {\b1\fs30\c&H00A4A50E}●  LOCKSCREEN MESH\N{\b0\fs28\c&H00E2E8F0}PWA & NTFY Instant Vibration Alert • Continuous Ground Interceptor Push
+Dialogue: 0,0:03:36.50,0:03:48.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}DIGITAL FORENSICS ARTIFACT VAULT  {\b1\fs30\c&H00A4A50E}●  MULTI-VENDOR DVR\N{\b0\fs28\c&H00E2E8F0}Seized Samsung S23 Connected • Standardized CCTV & Mobile Bitstream Carving
+Dialogue: 0,0:03:48.50,0:03:54.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}ALL-INDIA NCRB DOSSIER SCANNER  {\b1\fs30\c&H00A4A50E}●  94.2% FACE MATCH\N{\b0\fs28\c&H00E2E8F0}128D Vector Match: Ramesh Kumar • Active Local Summons (FIR #112/2024)
+Dialogue: 0,0:03:54.50,0:04:02.50,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}BSA SEC 65B & BNS SEC 63 CERTIFICATE  {\b1\fs30\c&H00A4A50E}●  SEALED & VERIFIED\N{\b0\fs28\c&H00E2E8F0}Court-Admissible Electronic Certificate with SHA-256 Digital Vault Hash
+Dialogue: 0,0:04:02.50,0:04:07.70,TacticalBadge,,0,0,18,,{\fad(250,250)}{\b1\fs42\c&H00FFFFFF}END-TO-END CRIME INTELLIGENCE  {\b1\fs30\c&H00A4A50E}●  SIH26150 (NTRO)\N{\b0\fs28\c&H00E2E8F0}FIR #991/2025 Real-Time NLP Parsing • Built for Smart India Hackathon 2026
