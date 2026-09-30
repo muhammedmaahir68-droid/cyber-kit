@@ -10,7 +10,6 @@ import EdgeHardwareConsole from './components/EdgeHardwareConsole';
 import GovernmentAuthPortal from './components/GovernmentAuthPortal';
 import IntroSplash from './components/IntroSplash';
 import CaseCopilot from './components/CaseCopilot';
-import SihSlideViewerModal from './components/SihSlideViewerModal';
 import SocialMediaIntelligence from './components/SocialMediaIntelligence';
 import { AshokaLionCapital, IndianFlag } from './components/NationalEmblems';
 
@@ -93,7 +92,6 @@ export default function App() {
   const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen]       = useState(true);
-  const [isSlideModalOpen, setIsSlideModalOpen] = useState(false);
 
   const getApiBase = () => {
     if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
@@ -255,17 +253,6 @@ export default function App() {
         </svg>
       )
     },
-    {
-      id: 'slides',
-      label: 'SIH 6-SLIDE PPT',
-      sub: 'Jury Presentation Deck',
-      isSpecialModal: true,
-      icon: (
-        <svg className="w-4 h-4 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-        </svg>
-      )
-    },
   ];
 
   return (
@@ -320,18 +307,6 @@ export default function App() {
 
           {/* Right: Ask Copilot Quick Button, Officer Profile & Logout */}
           <div className="flex items-center gap-2.5 self-end sm:self-center">
-            {/* SIH 6-Slide Presentation Deck Trigger */}
-            <button
-              onClick={() => setIsSlideModalOpen(true)}
-              className="px-2.5 sm:px-3 py-1.5 bg-[#1D4ED8] hover:bg-[#1E40AF] text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
-              title="Open SIH 2026 Presentation Deck (6 Slides)"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-              </svg>
-              <span>SIH PPT Deck</span>
-            </button>
-
             {/* Quick Copilot Trigger in Header */}
             <button
               onClick={() => setIsCopilotOpen(true)}
@@ -431,8 +406,6 @@ export default function App() {
                     onClick={() => {
                       if (item.id === 'copilot') {
                         setIsCopilotOpen(true);
-                      } else if (item.id === 'slides') {
-                        setIsSlideModalOpen(true);
                       } else {
                         setActiveNav(item.id);
                       }
@@ -767,8 +740,6 @@ export default function App() {
                   onClick={() => {
                     if (item.id === 'copilot') {
                       setIsCopilotOpen(true);
-                    } else if (item.id === 'slides') {
-                      setIsSlideModalOpen(true);
                     } else {
                       setActiveNav(item.id);
                     }
@@ -796,23 +767,10 @@ export default function App() {
             NCIS – Cyber Intelligence &amp; Investigation Platform | Case Copilot Voice Decision Support
           </span>
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsSlideModalOpen(true)}
-              className="text-[#1D4ED8] hover:underline font-semibold flex items-center gap-1"
-            >
-              <span>SIH 6-Slide Presentation Deck</span>
-            </button>
-            <span>|</span>
             <span>SIH26150 Multi-Vendor DVR/NVR Forensics (NTRO) | BSA Sec 65B</span>
           </div>
         </div>
       </footer>
-
-      {/* ── SIH 6-SLIDE PRESENTATION MODAL ── */}
-      <SihSlideViewerModal
-        isOpen={isSlideModalOpen}
-        onClose={() => setIsSlideModalOpen(false)}
-      />
 
     </div>
   );
